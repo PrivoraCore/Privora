@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Firo Core Developers
+// Copyright (c) 2019 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FIRO_HDMINTWALLET_H
-#define FIRO_HDMINTWALLET_H
+#ifndef PRIVORA_HDMINTWALLET_H
+#define PRIVORA_HDMINTWALLET_H
 
 #include <map>
 #include "hdmint/mintpool.h"
@@ -66,4 +66,4 @@ private:
     bool CreateMintSeed(CWalletDB& walletdb, uint512& mintSeed, const int32_t& n, CKeyID& seedId, bool nWriteChain = true);
 };
 
-#endif //FIRO_HDMINTWALLET_H
+#endif //PRIVORA_HDMINTWALLET_H

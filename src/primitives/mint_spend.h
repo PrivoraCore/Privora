@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The Firo Core Developers
+// Copyright (c) 2019 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,7 +12,7 @@
 #include "key.h"
 #include "sigma/coin.h"
 #include "serialize.h"
-#include "firo_params.h"
+#include "privora_params.h"
 
 //struct that is safe to store essential mint data, without holding any information that allows for actual spending (serial, randomness, private key)
 struct MintMeta
@@ -88,7 +88,7 @@ private:
     // to it. In these cases the value is automatically converted to int,
     // which is not what we want.
     // Starting from Version 3 == sigma, this number is coin value * COIN,
-    // I.E. it is set to 100.000.000 for 1 firo.
+    // I.E. it is set to 100.000.000 for 1 privora.
     int64_t denomination;
 
 public:
@@ -171,7 +171,7 @@ struct CLelantusEntry {
     int id;
 
     // Starting from Version 3 == sigma, this number is coin value * COIN,
-    // I.E. it is set to 100.000.000 for 1 firo.
+    // I.E. it is set to 100.000.000 for 1 privora.
     int64_t amount;
 };
 
@@ -230,7 +230,7 @@ private:
     // to it. In these cases the value is automatically converted to int,
     // which is not what we want.
     // Starting from Version 3 == sigma, this number is coin value * COIN,
-    // I.E. it is set to 100.000.000 for 1 firo.
+    // I.E. it is set to 100.000.000 for 1 privora.
     int64_t denomination;
 };
 

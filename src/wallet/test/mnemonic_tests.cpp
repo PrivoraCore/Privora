@@ -2,7 +2,7 @@
 #include "key.h"
 #include "base58.h"
 
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(mnemonic_test)
         key.SetMaster(&seed[0], 64);
         pubkey = key.Neuter();
 
-        CBitcoinExtKey b58key;
+        CPrivoraExtKey b58key;
         b58key.SetKey(key);
         BOOST_CHECK(b58key.ToString() == cases[i][3].c_str());
     }

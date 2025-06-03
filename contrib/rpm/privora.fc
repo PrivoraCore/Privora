@@ -1,0 +1,8 @@
+/usr/bin/privora-cli		--	gen_context(system_u:object_r:privora_exec_t,s0)
+/usr/sbin/privorad		--	gen_context(system_u:object_r:privora_exec_t,s0)
+/usr/lib(64)?/privora/privorad		--	gen_context(system_u:object_r:privora_exec_t,s0)
+
+/etc/privora(/.*)?		gen_context(system_u:object_r:privora_conf_t,s0)
+/var/lib/privora(/.*)?		gen_context(system_u:object_r:privora_var_lib_t,s0)
+
+(/var)?/run/privorad(/.*)?   gen_context(system_u:object_r:privora_var_run_t,s0)

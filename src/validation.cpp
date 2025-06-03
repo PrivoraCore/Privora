@@ -1,12 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "validation.h"
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/privora-config.h"
 #endif
 
 #include "arith_uint256.h"
@@ -83,7 +83,7 @@
 #include <boost/thread.hpp>
 
 #if defined(NDEBUG)
-# error "Firo cannot be compiled without assertions."
+# error "Privora cannot be compiled without assertions."
 #endif
 
 bool AbortNode(const std::string& strMessage, const std::string& userMessage="");
@@ -128,7 +128,7 @@ CTxMemPool mempool(::minRelayTxFee);
 FeeFilterRounder filterRounder(::minRelayTxFee);
 CTxPoolAggregate txpools(::minRelayTxFee);
 
-// Firo znode
+// Privora znode
 std::map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 
@@ -867,7 +867,7 @@ static bool IsCurrentForFeeEstimation()
 bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const CTransactionRef& ptx, bool fLimitFree,
                               bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
                               bool fOverrideMempoolLimit, const CAmount& nAbsurdFee, std::vector<COutPoint>& coins_to_uncache,
-                              bool isCheckWalletTransaction, bool markFiroSpendTransactionSerial)
+                              bool isCheckWalletTransaction, bool markPrivoraSpendTransactionSerial)
 {
     bool fTestNet = Params().GetConsensus().IsTestnet();
     LogPrintf("AcceptToMemoryPoolWorker(), tx.IsSpend()=%s, fTestNet=%s\n", ptx->IsSigmaSpend() || ptx->IsLelantusJoinSplit(), fTestNet);
@@ -1566,7 +1566,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
             // Remove conflicting transactions from the mempool
             BOOST_FOREACH(const CTxMemPool::txiter it, allConflicting)
             {
-                LogPrint("mempool", "replacing tx %s with %s for %s BTC additional fees, %d delta bytes\n",
+                LogPrint("mempool", "replacing tx %s with %s for %s VORA additional fees, %d delta bytes\n",
                          it->GetTx().GetHash().ToString(),
                          hash.ToString(),
                          FormatMoney(nModifiedFees - nConflictingFees),
@@ -1605,7 +1605,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     }
 
     if (tx.IsSigmaSpend()) {
-        if(markFiroSpendTransactionSerial)
+        if(markPrivoraSpendTransactionSerial)
             sigmaState->AddSpendToMempool(zcSpendSerialsV3, hash);
         LogPrintf("Updating mint tracker state from Mempool..\n");
 #ifdef ENABLE_WALLET
@@ -1617,7 +1617,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     }
 
     if (tx.IsLelantusJoinSplit()) {
-        if(markFiroSpendTransactionSerial) {
+        if(markPrivoraSpendTransactionSerial) {
             for (const auto &spendSerial: lelantusSpendSerials)
                 pool.lelantusState.AddSpendToMempool(spendSerial, hash);
         }
@@ -1633,7 +1633,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 
 
     if (tx.IsSparkSpend()) {
-        if(markFiroSpendTransactionSerial) {
+        if(markPrivoraSpendTransactionSerial) {
             LogPrintf("Adding spends to mempool state..\n");
             for (const auto &usedLTag: sparkUsedLTags)
                 pool.sparkState.AddSpendToMempool(usedLTag, hash);
@@ -1650,7 +1650,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 #endif
     }
 
-    if(markFiroSpendTransactionSerial) {
+    if(markPrivoraSpendTransactionSerial) {
         sigmaState->AddMintsToMempool(zcMintPubcoinsV3);
         for (const auto &pubCoin: lelantusMintPubcoins)
             pool.lelantusState.AddMintToMempool(pubCoin);
@@ -1706,13 +1706,13 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
                         bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
                         bool fOverrideMempoolLimit, const CAmount nAbsurdFee,
-                        bool isCheckWalletTransaction, bool markFiroSpendTransactionSerial)
+                        bool isCheckWalletTransaction, bool markPrivoraSpendTransactionSerial)
 {
     LogPrintf("AcceptToMemoryPool(), transaction: %s\n", tx->GetHash().ToString());
     std::vector<COutPoint> coins_to_uncache;
     bool res = false;
     try {
-        res = AcceptToMemoryPoolWorker(pool, state, tx, fLimitFree, pfMissingInputs, nAcceptTime, plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, coins_to_uncache, isCheckWalletTransaction, markFiroSpendTransactionSerial);
+        res = AcceptToMemoryPoolWorker(pool, state, tx, fLimitFree, pfMissingInputs, nAcceptTime, plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, coins_to_uncache, isCheckWalletTransaction, markPrivoraSpendTransactionSerial);
     }
     catch (const std::exception &x) {
         state.Error(x.what());
@@ -1731,16 +1731,16 @@ bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
                         bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced,
                         bool fOverrideMempoolLimit, const CAmount nAbsurdFee,
-                        bool isCheckWalletTransaction, bool markFiroSpendTransactionSerial)
+                        bool isCheckWalletTransaction, bool markPrivoraSpendTransactionSerial)
 {
-    return AcceptToMemoryPoolWithTime(pool, state, tx, fLimitFree, pfMissingInputs, GetTime(), plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, isCheckWalletTransaction, markFiroSpendTransactionSerial);
+    return AcceptToMemoryPoolWithTime(pool, state, tx, fLimitFree, pfMissingInputs, GetTime(), plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, isCheckWalletTransaction, markPrivoraSpendTransactionSerial);
 }
 
 
 bool AcceptToMemoryPool(CTxPoolAggregate& poolAggregate, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
                         bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced,
-                        bool fOverrideMempoolLimit, const CAmount nAbsurdFee, bool isCheckWalletTransaction, bool markFiroSpendTransactionSerial) {
-    bool res = AcceptToMemoryPool(mempool, state, tx, fLimitFree, pfMissingInputs, plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, isCheckWalletTransaction, markFiroSpendTransactionSerial);
+                        bool fOverrideMempoolLimit, const CAmount nAbsurdFee, bool isCheckWalletTransaction, bool markPrivoraSpendTransactionSerial) {
+    bool res = AcceptToMemoryPool(mempool, state, tx, fLimitFree, pfMissingInputs, plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, isCheckWalletTransaction, markPrivoraSpendTransactionSerial);
     AcceptToMemoryPool(txpools.getStemTxPool(), state, tx, fLimitFree, pfMissingInputs, plTxnReplaced, fOverrideMempoolLimit, nAbsurdFee, isCheckWalletTransaction, false);
     return res;
 }
@@ -1897,7 +1897,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, int nHeight, con
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    // Firo - MTP
+    // Privora - MTP
     if (!CheckMerkleTreeProof(block, consensusParams)){
     	return error("ReadBlockFromDisk: CheckMerkleTreeProof: Errors in block header at %s", pos.ToString());
     }
@@ -2238,26 +2238,26 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
         CScript FOUNDER_5_SCRIPT;
         if (nHeight < params.nZnodePaymentsStartBlock) {
             if (params.IsMain() && GetAdjustedTime() > nStartRewardTime) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
                 if (nHeight < 14000) {
                     FOUNDER_2_SCRIPT = GetScriptForDestination(
-                            CBitcoinAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
+                            CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
                 } else {
                     FOUNDER_2_SCRIPT = GetScriptForDestination(
-                            CBitcoinAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
+                            CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
                 }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
             } else if (params.IsMain() && GetAdjustedTime() <= nStartRewardTime) {
                 return state.DoS(100, false, REJECT_TRANSACTION_TOO_EARLY,
                                  "CTransaction::CheckTransaction() : transaction is too early");
             } else {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
             }
 
             BOOST_FOREACH(const CTxOut &output, tx.vout) {
@@ -2280,26 +2280,26 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
         } else {
 
             if (params.IsMain() && GetAdjustedTime() > nStartRewardTime) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
                 if (nHeight < 14000) {
                     FOUNDER_2_SCRIPT = GetScriptForDestination(
-                            CBitcoinAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
+                            CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
                 } else {
                     FOUNDER_2_SCRIPT = GetScriptForDestination(
-                            CBitcoinAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
+                            CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
                 }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
             } else if (params.IsMain() && GetAdjustedTime() <= nStartRewardTime) {
                 return state.DoS(100, false, REJECT_TRANSACTION_TOO_EARLY,
                                  "CTransaction::CheckTransaction() : transaction is too early");
             } else {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
             }
 
             CAmount znodePayment = GetZnodePayment(params, fMTP);
@@ -2410,7 +2410,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 return state.DoS(
                     100, false,
                     REJECT_MALFORMED,
-                    "CheckSpendFiroTransaction: can't mix zerocoin spend input with regular ones");
+                    "CheckSpendPrivoraTransaction: can't mix zerocoin spend input with regular ones");
             }
             CDataStream serializedCoinSpend((const char *)&*(txin.scriptSig.begin() + 1),
                                             (const char *)&*txin.scriptSig.end(),
@@ -2730,7 +2730,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("firo-scriptch");
+    RenameThread("privora-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -3717,7 +3717,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
                     false, /* fOverrideMempoolLimit */
                     0, /* nAbsurdFee */
                     false, /* isCheckWalletTransaction */
-                    false /* markFiroSpendTransactionSerial */
+                    false /* markPrivoraSpendTransactionSerial */
                 );
             }
             if (tx.IsCoinBase() || !AcceptToMemoryPool(mempool, stateDummy, MakeTransactionRef(tx), false, NULL)) {
@@ -3924,7 +3924,7 @@ CAmount GetZnodePayment(const Consensus::Params &params, bool fMTP) {
 //    if (nHeight > nMNPIBlock + (nMNPIPeriod * 7)) ret += blockValue / 40; // 278960 - 47.5% - 2015-06-01
 //    if (nHeight > nMNPIBlock + (nMNPIPeriod * 9)) ret += blockValue / 40; // 313520 - 50.0% - 2015-08-03
     CAmount coin = fMTP ? COIN/params.nMTPRewardReduction : COIN;
-    CAmount ret = 15 * coin; //15 or 7.5 FIRO
+    CAmount ret = 15 * coin; //15 or 7.5 PRIVORA
 
     return ret;
 }
@@ -4617,7 +4617,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-duplicate", true, "duplicate transaction");
 
         if (!block.IsProgPow()) {
-            // Firo - MTP
+            // Privora - MTP
             if (block.IsMTP() && !CheckMerkleTreeProof(block, consensusParams))
                 return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
         }
@@ -4759,7 +4759,7 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
 
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, CBlockIndex * const pindexPrev, int64_t nAdjustedTime)
 {
-	// Firo - MTP
+	// Privora - MTP
     bool fBlockHasMTP = (block.nVersion & 4096) != 0 || (pindexPrev && consensusParams.nMTPSwitchTime == 0);
 
     if (block.IsMTP() != fBlockHasMTP)
@@ -4858,8 +4858,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
             bool fStage3 = nHeight < consensusParams.nSubsidyHalvingSecond;
             bool fStage4 = nHeight >= consensusParams.stage4StartBlock;
             CAmount devPayoutValue = 0, communityPayoutValue = 0;
-            CScript devPayoutScript = GetScriptForDestination(CBitcoinAddress(consensusParams.stage3DevelopmentFundAddress).Get());
-            CScript communityPayoutScript = GetScriptForDestination(CBitcoinAddress(consensusParams.stage3CommunityFundAddress).Get());
+            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get());
+            CScript communityPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get());
 
             // There is no dev/community payout for testnet for some time
             if (fStage3 || fStage4) {
@@ -4881,7 +4881,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
         }
         else {
             // "stage 2" interval between first and second halvings
-            CScript devPayoutScript = GetScriptForDestination(CBitcoinAddress(consensusParams.stage2DevelopmentFundAddress).Get());
+            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get());
             CAmount devPayoutValue = (GetBlockSubsidy(nHeight, consensusParams, block.nTime) * consensusParams.stage2DevelopmentFundShare) / 100;
             bool found = false;
             for (const CTxOut &txout: block.vtx[0]->vout) {

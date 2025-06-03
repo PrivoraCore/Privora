@@ -24,7 +24,7 @@ using namespace ethash;  // Include ethash namespace.
 /// https://github.com/ifdefelse/ProgPOW#change-history.
 constexpr auto revision = "0.9.4";
 
-constexpr int period_length = 1;  // Firo period length
+constexpr int period_length = 1;  // Privora period length
 constexpr uint32_t num_regs = 32;
 constexpr size_t num_lanes = 16;
 constexpr uint32_t num_rounds = 64;

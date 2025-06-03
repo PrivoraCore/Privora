@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2016 The Bitcoin Core developers
+# Copyright (c) 2013-2016 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -44,34 +44,34 @@ TOR_LIBS = -ltor
 LIBBLSSIG_LIBS=-lbls-dash
 LIBBLSSIG_DEPENDS=-lgmp
 
-BITCOIN_CONFIG_INCLUDES=-I$(builddir)/config
-BITCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
+PRIVORA_CONFIG_INCLUDES=-I$(builddir)/config
+PRIVORA_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
 
-BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/include
-BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/src
-BITCOIN_INCLUDES += $(UNIVALUE_CFLAGS)
+PRIVORA_INCLUDES += -I$(srcdir)/secp256k1/include
+PRIVORA_INCLUDES += -I$(srcdir)/secp256k1/src
+PRIVORA_INCLUDES += $(UNIVALUE_CFLAGS)
 
-LIBBITCOIN_SERVER=libbitcoin_server.a
-LIBBITCOIN_COMMON=libbitcoin_common.a
-LIBBITCOIN_CONSENSUS=libbitcoin_consensus.a
-LIBBITCOIN_CLI=libbitcoin_cli.a
-LIBBITCOIN_UTIL=libbitcoin_util.a
+LIBPRIVORA_SERVER=libprivora_server.a
+LIBPRIVORA_COMMON=libprivora_common.a
+LIBPRIVORA_CONSENSUS=libprivora_consensus.a
+LIBPRIVORA_CLI=libprivora_cli.a
+LIBPRIVORA_UTIL=libprivora_util.a
 LIBLELANTUS=liblelantus.a
 LIBSPARK=libspark.a
-LIBBITCOIN_CRYPTO=crypto/libbitcoin_crypto.a
-LIBBITCOINQT=qt/libfiroqt.a
+LIBPRIVORA_CRYPTO=crypto/libprivora_crypto.a
+LIBPRIVORAQT=qt/libprivoraqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
-LIBFIRO_SIGMA=libsigma.a
+LIBPRIVORA_SIGMA=libsigma.a
 
 if ENABLE_ZMQ
-LIBBITCOIN_ZMQ=libbitcoin_zmq.a
+LIBPRIVORA_ZMQ=libprivora_zmq.a
 endif
-if BUILD_BITCOIN_LIBS
-LIBBITCOINCONSENSUS=libbitcoinconsensus.la
+if BUILD_PRIVORA_LIBS
+LIBPRIVORACONSENSUS=libprivoraconsensus.la
 endif
 if ENABLE_WALLET
-LIBBITCOIN_WALLET=libbitcoin_wallet.a
+LIBPRIVORA_WALLET=libprivora_wallet.a
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
@@ -80,36 +80,36 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBBITCOIN_CRYPTO) \
-  $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_COMMON) \
-  $(LIBBITCOIN_CONSENSUS) \
-  $(LIBBITCOIN_SERVER) \
-  $(LIBBITCOIN_CLI) \
-  $(LIBBITCOIN_WALLET) \
-  $(LIBBITCOIN_ZMQ) \
-  $(LIBFIRO_SIGMA) \
+  $(LIBPRIVORA_CRYPTO) \
+  $(LIBPRIVORA_UTIL) \
+  $(LIBPRIVORA_COMMON) \
+  $(LIBPRIVORA_CONSENSUS) \
+  $(LIBPRIVORA_SERVER) \
+  $(LIBPRIVORA_CLI) \
+  $(LIBPRIVORA_WALLET) \
+  $(LIBPRIVORA_ZMQ) \
+  $(LIBPRIVORA_SIGMA) \
   $(LIBLELANTUS) \
   $(LIBSPARK)
 
-lib_LTLIBRARIES = $(LIBBITCOINCONSENSUS)
+lib_LTLIBRARIES = $(LIBPRIVORACONSENSUS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
 TESTS =
 BENCHMARKS =
 
-if BUILD_BITCOIND
-  bin_PROGRAMS += firod
+if BUILD_PRIVORAD
+  bin_PROGRAMS += privorad
 endif
 
-if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += firo-cli firo-tx
+if BUILD_PRIVORA_UTILS
+  bin_PROGRAMS += privora-cli privora-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
-# bitcoin core #
-BITCOIN_CORE_H = \
+# privora core #
+PRIVORA_CORE_H = \
   activemasternode.h \
   addressindex.h \
   spentindex.h \
@@ -249,7 +249,7 @@ BITCOIN_CORE_H = \
   sparkname.h \
   blacklists.h \
   coin_containers.h \
-  firo_params.h \
+  privora_params.h \
   addresstype.h \
   mtpstate.h \
   messagesigner.h \
@@ -346,12 +346,12 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	@$(top_srcdir)/share/genbuild.sh $(abs_top_builddir)/src/obj/build.h \
 	  $(abs_top_srcdir)
-libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
+libprivora_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between firod and firo-qt
-libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(LEVELDB_CPPFLAGS)
-libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_server_a_SOURCES = \
+# server: shared between privorad and privora-qt
+libprivora_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(LEVELDB_CPPFLAGS)
+libprivora_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_server_a_SOURCES = \
   activemasternode.cpp \
   addrman.cpp \
   addrdb.cpp \
@@ -430,23 +430,23 @@ libbitcoin_server_a_SOURCES = \
   sparkname.cpp \
   coin_containers.cpp \
   mtpstate.cpp \
-  $(BITCOIN_CORE_H)
+  $(PRIVORA_CORE_H)
 
 if ENABLE_ZMQ
-libbitcoin_zmq_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(ZMQ_CFLAGS)
-libbitcoin_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_zmq_a_SOURCES = \
+libprivora_zmq_a_CPPFLAGS = $(PRIVORA_INCLUDES) $(ZMQ_CFLAGS)
+libprivora_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_zmq_a_SOURCES = \
   zmq/zmqabstractnotifier.cpp \
   zmq/zmqnotificationinterface.cpp \
   zmq/zmqpublishnotifier.cpp
 endif
 
 
-# wallet: shared between firod and firo-qt, but only linked
+# wallet: shared between privorad and privora-qt, but only linked
 # when wallet enabled
-libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_wallet_a_SOURCES = \
+libprivora_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+libprivora_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_wallet_a_SOURCES = \
   activemasternode.cpp \
   hdmint/hdmint.cpp \
   masternode-sync.cpp \
@@ -478,13 +478,13 @@ libbitcoin_wallet_a_SOURCES = \
   bip47/paymentcode.cpp \
   bip47/secretpoint.cpp \
   primitives/mint_spend.cpp \
-  $(BITCOIN_CORE_H)
+  $(PRIVORA_CORE_H)
 
 # crypto primitives library
-crypto_libbitcoin_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES)
-crypto_libbitcoin_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libbitcoin_crypto_a_CFLAGS = $(AM_CFLAGS) $(PIE_FLAGS)
-crypto_libbitcoin_crypto_a_SOURCES = \
+crypto_libprivora_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_CONFIG_INCLUDES)
+crypto_libprivora_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_libprivora_crypto_a_CFLAGS = $(AM_CFLAGS) $(PIE_FLAGS)
+crypto_libprivora_crypto_a_SOURCES = \
   crypto/aes.cpp \
   crypto/aes.h \
   crypto/common.h \
@@ -503,7 +503,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-crypto_libbitcoin_crypto_a_SOURCES += \
+crypto_libprivora_crypto_a_SOURCES += \
   crypto/progpow/include/ethash/ethash.h \
   crypto/progpow/include/ethash/ethash.hpp \
   crypto/progpow/include/ethash/hash_types.h \
@@ -527,14 +527,14 @@ crypto_libbitcoin_crypto_a_SOURCES += \
   crypto/progpow/lib/keccak/keccakf800.c \
   crypto/progpow/lib/support/attributes.h \
   crypto/progpow/helpers.hpp \
-  crypto/progpow/firopow_test_vectors.hpp \
+  crypto/progpow/privorapow_test_vectors.hpp \
   crypto/progpow.h \
   crypto/progpow.cpp
 
 # consensus: shared between all executables that validate any consensus rules.
-libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS)
-libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PIC_FLAGS)
-libbitcoin_consensus_a_SOURCES = \
+libprivora_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES) $(PIC_FLAGS)
+libprivora_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PIC_FLAGS)
+libprivora_consensus_a_SOURCES = \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -555,7 +555,7 @@ libbitcoin_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/bitcoinconsensus.cpp \
+  script/privoraconsensus.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -593,10 +593,10 @@ libbitcoin_consensus_a_SOURCES = \
   crypto/MerkleTreeProof/ref.c \
   crypto/MerkleTreeProof/blake2/blake2b.c
 
-# common: shared between firod, and firo-qt and non-server tools
-libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_common_a_SOURCES = \
+# common: shared between privorad, and privora-qt and non-server tools
+libprivora_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+libprivora_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_common_a_SOURCES = \
   amount.cpp \
   base58.cpp \
   chainparams.cpp \
@@ -615,14 +615,14 @@ libbitcoin_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   warnings.cpp \
-  $(BITCOIN_CORE_H)
+  $(PRIVORA_CORE_H)
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_util_a_SOURCES = \
+libprivora_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+libprivora_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_util_a_SOURCES = \
   bls/bls_batchverifier.h \
   bls/bls_ies.cpp \
   bls/bls_ies.h \
@@ -647,15 +647,15 @@ libbitcoin_util_a_SOURCES = \
   utiltime.cpp \
   crypto/scrypt.cpp \
   primitives/block.cpp \
-  bitcoin_bignum/allocators.h \
-  bitcoin_bignum/bignum.h \
-  bitcoin_bignum/compat.h \
-  bitcoin_bignum/netbase.h \
+  privora_bignum/allocators.h \
+  privora_bignum/bignum.h \
+  privora_bignum/compat.h \
+  privora_bignum/netbase.h \
   crypto/MerkleTreeProof/mtp.cpp \
   crypto/MerkleTreeProof/merkle-tree.cpp \
-  $(BITCOIN_CORE_H)
+  $(PRIVORA_CORE_H)
 
-libspark_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libspark_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
 libspark_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libspark_a_SOURCES = \
   libspark/transcript.h \
@@ -696,7 +696,7 @@ libspark_a_SOURCES = \
   libspark/bech32.h \
   libspark/bech32.cpp
 
-liblelantus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+liblelantus_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
 liblelantus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 liblelantus_a_SOURCES = \
   liblelantus/challenge_generator.h \
@@ -738,7 +738,7 @@ liblelantus_a_SOURCES = \
   liblelantus/params.h \
   liblelantus/params.cpp
 
-libsigma_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libsigma_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
 libsigma_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libsigma_a_SOURCES = \
   sigma/r1_proof.h \
@@ -764,108 +764,108 @@ libsigma_a_SOURCES = \
   sigma/openssl_context.h
 
 if GLIBC_BACK_COMPAT
-libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
+libprivora_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
 if ENABLE_CRASH_HOOKS
-libbitcoin_util_a_SOURCES += stacktraces.cpp
-libbitcoin_consensus_a_SOURCES += stacktraces.h
+libprivora_util_a_SOURCES += stacktraces.cpp
+libprivora_consensus_a_SOURCES += stacktraces.h
 endif
 
-# cli: shared between firo-cli and firo-qt
-libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_cli_a_SOURCES = \
+# cli: shared between privora-cli and privora-qt
+libprivora_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+libprivora_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivora_cli_a_SOURCES = \
   rpc/client.cpp \
-  $(BITCOIN_CORE_H)
+  $(PRIVORA_CORE_H)
 
-nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libprivora_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# bitcoind binary #
-firod_SOURCES = bitcoind.cpp
-firod_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-firod_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-firod_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# privorad binary #
+privorad_SOURCES = privorad.cpp
+privorad_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+privorad_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+privorad_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-firod_SOURCES += bitcoind-res.rc
+privorad_SOURCES += privorad-res.rc
 endif
 
-firod_LDADD = \
-  $(LIBBITCOIN_SERVER) \
-  $(LIBBITCOIN_COMMON) \
+privorad_LDADD = \
+  $(LIBPRIVORA_SERVER) \
+  $(LIBPRIVORA_COMMON) \
   $(LIBUNIVALUE) \
-  $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_WALLET) \
-  $(LIBFIRO_SIGMA) \
+  $(LIBPRIVORA_UTIL) \
+  $(LIBPRIVORA_WALLET) \
+  $(LIBPRIVORA_SIGMA) \
   $(LIBLELANTUS) \
   $(LIBSPARK) \
-  $(LIBBITCOIN_ZMQ) \
-  $(LIBBITCOIN_CONSENSUS) \
-  $(LIBBITCOIN_CRYPTO) \
+  $(LIBPRIVORA_ZMQ) \
+  $(LIBPRIVORA_CONSENSUS) \
+  $(LIBPRIVORA_CRYPTO) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1) \
   $(LIBBLSSIG_LIBS)
 
-firod_LDADD += $(BACKTRACE_LIB) $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(LIBBLSSIG_DEPENDS) -lz
+privorad_LDADD += $(BACKTRACE_LIB) $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(LIBBLSSIG_DEPENDS) -lz
 
-# bitcoin-cli binary #
-firo_cli_SOURCES = bitcoin-cli.cpp
-firo_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-firo_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-firo_cli_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# privora-cli binary #
+privora_cli_SOURCES = privora-cli.cpp
+privora_cli_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES) $(EVENT_CFLAGS)
+privora_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+privora_cli_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-firo_cli_SOURCES += bitcoin-cli-res.rc
+privora_cli_SOURCES += privora-cli-res.rc
 endif
 
-firo_cli_LDADD = \
-  $(LIBBITCOIN_CLI) \
+privora_cli_LDADD = \
+  $(LIBPRIVORA_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBBITCOIN_UTIL) \
+  $(LIBPRIVORA_UTIL) \
   $(LIBMEMENV) \
-  $(LIBBITCOIN_CRYPTO)
+  $(LIBPRIVORA_CRYPTO)
 
-firo_cli_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+privora_cli_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# bitcoin-tx binary #
-firo_tx_SOURCES = bitcoin-tx.cpp
-firo_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-firo_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-firo_tx_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# privora-tx binary #
+privora_tx_SOURCES = privora-tx.cpp
+privora_tx_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES)
+privora_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+privora_tx_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-firo_tx_SOURCES += bitcoin-tx-res.rc
+privora_tx_SOURCES += privora-tx-res.rc
 endif
 
-firo_tx_LDADD = \
+privora_tx_LDADD = \
   $(LIBUNIVALUE) \
-  $(LIBBITCOIN_COMMON) \
-  $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_CONSENSUS) \
-  $(LIBBITCOIN_CRYPTO) \
+  $(LIBPRIVORA_COMMON) \
+  $(LIBPRIVORA_UTIL) \
+  $(LIBPRIVORA_CONSENSUS) \
+  $(LIBPRIVORA_CRYPTO) \
   $(LIBSECP256K1)
 
-firo_tx_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(CRYPTO_LIBS)
+privora_tx_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# bitcoinconsensus library #
-if BUILD_BITCOIN_LIBS
-include_HEADERS = script/bitcoinconsensus.h
-libbitcoinconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_a_SOURCES) $(libbitcoin_consensus_a_SOURCES)
+# privoraconsensus library #
+if BUILD_PRIVORA_LIBS
+include_HEADERS = script/privoraconsensus.h
+libprivoraconsensus_la_SOURCES = $(crypto_libprivora_crypto_a_SOURCES) $(libprivora_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
-  libbitcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libprivoraconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libbitcoinconsensus_la_LIBADD = $(LIBBLSSIG_LIBS) $(LIBBLSSIG_DEPENDS) $(LIBSECP256K1)
-libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include $(LIBBLSSIG_INCLUDES) -DBUILD_BITCOIN_INTERNAL
-libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libprivoraconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
+libprivoraconsensus_la_LIBADD = $(LIBBLSSIG_LIBS) $(LIBBLSSIG_DEPENDS) $(LIBSECP256K1)
+libprivoraconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include $(LIBBLSSIG_INCLUDES) -DBUILD_PRIVORA_INTERNAL
+libprivoraconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #
@@ -896,12 +896,12 @@ DISTCLEANFILES = obj/build.h
 
 EXTRA_DIST = $(CTAES_DIST)
 
-config/bitcoin-config.h: config/stamp-h1
+config/privora-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-config/stamp-h1: $(top_srcdir)/$(subdir)/config/bitcoin-config.h.in $(top_builddir)/config.status
+config/stamp-h1: $(top_srcdir)/$(subdir)/config/privora-config.h.in $(top_builddir)/config.status
 	$(AM_V_at)$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-$(top_srcdir)/$(subdir)/config/bitcoin-config.h.in:  $(am__configure_deps)
-	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/bitcoin-config.h.in
+$(top_srcdir)/$(subdir)/config/privora-config.h.in:  $(am__configure_deps)
+	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/privora-config.h.in
 
 clean-local:
 	-$(MAKE) -C secp256k1 clean

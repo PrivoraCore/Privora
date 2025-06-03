@@ -1,11 +1,11 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "guiutil.h"
 
-#include "bitcoinaddressvalidator.h"
-#include "bitcoinunits.h"
+#include "privoraaddressvalidator.h"
+#include "privoraunits.h"
 #include "qvalidatedlineedit.h"
 #include "walletmodel.h"
 
@@ -85,7 +85,7 @@ extern double NSAppKitVersionNumber;
 namespace GUIUtil {
 
 static QString stylesheetDirectory = ":css";
-static QString firoTheme = "firoTheme";
+static QString privoraTheme = "privoraTheme";
 static CCriticalSection cs_css;
 
 QString dateTimeStr(const QDateTime &date)
@@ -123,7 +123,7 @@ static std::string DummyAddress(const CChainParams &params)
     sourcedata.insert(sourcedata.end(), dummydata, dummydata + sizeof(dummydata));
     for(int i=0; i<256; ++i) { // Try every trailing byte
         std::string s = EncodeBase58(sourcedata.data(), sourcedata.data() + sourcedata.size());
-        if (!CBitcoinAddress(s).IsValid())
+        if (!CPrivoraAddress(s).IsValid())
             return s;
         sourcedata[sourcedata.size()-1] += 1;
     }
@@ -138,12 +138,12 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a Firo address (e.g. %1)").arg(
+    widget->setPlaceholderText(QObject::tr("Enter a Privora address (e.g. %1)").arg(
         QString::fromStdString(DummyAddress(Params()))) +
-        QObject::tr(" or a payment code") + QObject::tr(" or a Firo spark address (e.g. pr1cjgedy25xhr4fmzx8cm5gf940v5j2482m94uaa0yguxxw2yrel0f0hyjesg77px7at47f4s3jy8hthmyr6ajhvn025yp28fyuwzvar0gcc7p27rvttn2tyl9ejwthjpaavlmy3cm3sysz)"));
+        QObject::tr(" or a payment code") + QObject::tr(" or a Privora spark address (e.g. pr1cjgedy25xhr4fmzx8cm5gf940v5j2482m94uaa0yguxxw2yrel0f0hyjesg77px7at47f4s3jy8hthmyr6ajhvn025yp28fyuwzvar0gcc7p27rvttn2tyl9ejwthjpaavlmy3cm3sysz)"));
 #endif
-    widget->setValidator(new BitcoinAddressEntryValidator(parent));
-    widget->setCheckValidator(new BitcoinAddressCheckValidator(parent));
+    widget->setValidator(new PrivoraAddressEntryValidator(parent));
+    widget->setCheckValidator(new PrivoraAddressCheckValidator(parent));
 }
 
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
@@ -155,10 +155,10 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
     widget->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 }
 
-bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
+bool parsePrivoraURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no firo: URI
-    if(!uri.isValid() || uri.scheme() != QString("firo"))
+    // return if URI is not valid or is no privora: URI
+    if(!uri.isValid() || uri.scheme() != QString("privora"))
         return false;
 
     SendCoinsRecipient rv;
@@ -198,7 +198,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!BitcoinUnits::parse(BitcoinUnits::BTC, i->second, &rv.amount))
+                if(!PrivoraUnits::parse(PrivoraUnits::VORA, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -216,28 +216,28 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
     return true;
 }
 
-bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
+bool parsePrivoraURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert firo:// to firo:
+    // Convert privora:// to privora:
     //
-    //    Cannot handle this later, because firo:// will cause Qt to see the part after // as host,
+    //    Cannot handle this later, because privora:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("firo://", Qt::CaseInsensitive))
+    if(uri.startsWith("privora://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 10, "firo:");
+        uri.replace(0, 10, "privora:");
     }
     QUrl uriInstance(uri);
-    return parseBitcoinURI(uriInstance, out);
+    return parsePrivoraURI(uriInstance, out);
 }
 
-QString formatBitcoinURI(const SendCoinsRecipient &info)
+QString formatPrivoraURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("firo:%1").arg(info.address);
+    QString ret = QString("privora:%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnits::BTC, info.amount, false, BitcoinUnits::separatorNever));
+        ret += QString("?amount=%1").arg(PrivoraUnits::format(PrivoraUnits::VORA, info.amount, false, PrivoraUnits::separatorNever));
         paramCount++;
     }
 
@@ -260,7 +260,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 
 bool isDust(const QString& address, const CAmount& amount)
 {
-    CTxDestination dest = CBitcoinAddress(address.toStdString()).Get();
+    CTxDestination dest = CPrivoraAddress(address.toStdString()).Get();
     CScript script = GetScriptForDestination(dest);
     CTxOut txOut(amount, script);
     return txOut.IsDust(dustRelayFee);
@@ -493,15 +493,15 @@ boost::filesystem::path static StartupShortcutPath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Firo.lnk";
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "Privora.lnk";
     if (chain == CBaseChainParams::TESTNET) // Remove this special case when CBaseChainParams::TESTNET = "testnet4"
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Firo (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("Firo (%s).lnk", chain);
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "Privora (testnet).lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("Privora (%s).lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
 {
-    // check for Bitcoin*.lnk
+    // check for Privora*.lnk
     return boost::filesystem::exists(StartupShortcutPath());
 }
 
@@ -593,8 +593,8 @@ boost::filesystem::path static GetAutostartFilePath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetAutostartDir() / "firo.desktop";
-    return GetAutostartDir() / strprintf("firo-%s.lnk", chain);
+        return GetAutostartDir() / "privora.desktop";
+    return GetAutostartDir() / strprintf("privora-%s.lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -633,13 +633,13 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         if (!optionFile.good())
             return false;
         std::string chain = ChainNameFromCommandLine();
-        // Write a firo.desktop file to the autostart directory:
+        // Write a privora.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         if (chain == CBaseChainParams::MAIN)
-            optionFile << "Name=Firo\n";
+            optionFile << "Name=Privora\n";
         else
-            optionFile << strprintf("Name=Firo (%s)\n", chain);
+            optionFile << strprintf("Name=Privora (%s)\n", chain);
         optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", GetBoolArg("-testnet", false), GetBoolArg("-regtest", false));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
@@ -660,7 +660,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl);
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl)
 {
-    // loop through the list of startup items and try to find the Firo app
+    // loop through the list of startup items and try to find the Privora app
     CFArrayRef listSnapshot = LSSharedFileListCopySnapshot(list, NULL);
     for(int i = 0; i < CFArrayGetCount(listSnapshot); i++) {
         LSSharedFileListItemRef item = (LSSharedFileListItemRef)CFArrayGetValueAtIndex(listSnapshot, i);
@@ -692,21 +692,21 @@ LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef
 
 bool GetStartOnSystemStartup()
 {
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef privoraAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, privoraAppUrl);
     return !!foundItem; // return boolified object
 }
 
 bool SetStartOnSystemStartup(bool fAutoStart)
 {
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef privoraAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, privoraAppUrl);
 
     if(fAutoStart && !foundItem) {
-        // add Firo app to startup item list
-        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, bitcoinAppUrl, NULL, NULL);
+        // add Privora app to startup item list
+        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, privoraAppUrl, NULL, NULL);
     }
     else if(!fAutoStart && foundItem) {
         // remove item
@@ -880,7 +880,7 @@ void loadTheme()
 
     static std::unique_ptr<QString> stylesheet;
 
-    QString fileName = stylesheetDirectory + "/" + firoTheme;
+    QString fileName = stylesheetDirectory + "/" + privoraTheme;
     QFile qFile(fileName);
     if (!qFile.open(QFile::ReadOnly)) {
         throw std::runtime_error(strprintf("%s: Failed to open file: %s", __func__, fileName.toStdString()));

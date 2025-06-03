@@ -4,7 +4,7 @@ UNIX BUILD NOTES
 Quick Install
 ---------------------
 
-The instructions below describe how to manually build Firo with system level or
+The instructions below describe how to manually build Privora with system level or
 manually compiled dependencies. It is only recommended for experienced users.
 
 For most users it is easier to use the simple install instructions in the
@@ -14,7 +14,7 @@ For OpenBSD specific instructions, see [build-openbsd.md](build-openbsd.md)
 
 Note
 ---------------------
-Always use absolute paths to configure and compile Firo and the dependencies,
+Always use absolute paths to configure and compile Privora and the dependencies,
 for example, when specifying the path of the dependency:
 
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
@@ -35,13 +35,13 @@ make
 make install # optional
 ```
 
-This will build firo-qt as well if the dependencies are met.
+This will build privora-qt as well if the dependencies are met.
 
 Memory Requirements
 --------------------
 
 C++ compilers are memory-hungry. It is recommended to have at least 1.5 GB of
-memory available when compiling Bitcoin Core. On systems with less, gcc can be
+memory available when compiling Privora Core. On systems with less, gcc can be
 tuned to conserve memory with additional CXXFLAGS:
 
 
@@ -57,7 +57,7 @@ Build requirements:
 
 BerkeleyDB is required for the wallet.
 
-See the section "Disable-wallet mode" to build Bitcoin Core without wallet.
+See the section "Disable-wallet mode" to build Privora Core without wallet.
 
 Optional (see --with-miniupnpc and --enable-upnp-default):
 
@@ -70,7 +70,7 @@ ZMQ dependencies (provides ZMQ API):
 Dependencies for the GUI: Ubuntu & Debian
 -----------------------------------------
 
-If you want to build Firo-Qt, make sure that the required packages for Qt development
+If you want to build Privora-Qt, make sure that the required packages for Qt development
 are installed.
 To build without GUI pass `--without-gui`.
 
@@ -78,7 +78,7 @@ To build with Qt 5  you need the following:
 
     sudo apt-get install qttools5-dev qttools5-dev-tools libxcb-xkb-dev bison
 
-Once these are installed, they will be found by configure and a firo-qt executable will be
+Once these are installed, they will be found by configure and a privora-qt executable will be
 built by default.
 
 Dependency Build Instructions: Fedora
@@ -103,7 +103,7 @@ libqrencode (optional) can be installed with:
 
 Notes
 -----
-The release is built with GCC and then "strip firod" to strip the debug
+The release is built with GCC and then "strip privorad" to strip the debug
 symbols, which reduces the executable size by about 90%.
 
 
@@ -130,7 +130,7 @@ If you need to build Boost yourself:
 
 Security
 --------
-To help make your Firo installation more secure by making certain attacks impossible to
+To help make your Privora installation more secure by making certain attacks impossible to
 exploit even if a vulnerability is found, binaries are hardened by default.
 This can be disabled with:
 
@@ -154,7 +154,7 @@ Hardening enables the following features:
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-        scanelf -e ./firo
+        scanelf -e ./privora
 
     The output should contain:
 
@@ -163,13 +163,13 @@ Hardening enables the following features:
 
 * Non-executable Stack
     If the stack is executable then trivial stack based buffer overflow exploits are possible if
-    vulnerable buffers are found. By default, Firo should be built with a non-executable stack
+    vulnerable buffers are found. By default, Privora should be built with a non-executable stack
     but if one of the libraries it uses asks for an executable stack or someone makes a mistake
     and uses a compiler extension which requires an executable stack, it will silently build an
     executable without the non-executable stack protection.
 
     To verify that the stack is non-executable after compiling use:
-    `scanelf -e ./bitcoin`
+    `scanelf -e ./privora`
 
     the output should contain:
 	STK/REL/PTL
@@ -179,7 +179,7 @@ Hardening enables the following features:
 
 Disable-wallet mode
 --------------------
-When the intention is to run only a P2P node without a wallet, bitcoin may be compiled in
+When the intention is to run only a P2P node without a wallet, privora may be compiled in
 disable-wallet mode with:
 
     ./configure --disable-wallet
@@ -201,8 +201,8 @@ Setup and Build Example: Arch Linux
 This example lists the steps necessary to setup and build a command line only, non-wallet distribution of the latest changes on Arch Linux:
 
     pacman -S git base-devel python cmake
-    git clone https://github.com/bitcoin/bitcoin.git
-    cd bitcoin/
+    git clone https://github.com/privora/privora.git
+    cd privora/
     ./autogen.sh
     ./configure --disable-wallet --without-gui --without-miniupnpc
     make check
@@ -210,8 +210,8 @@ This example lists the steps necessary to setup and build a command line only, n
 Note:
 Enabling wallet support requires either compiling against a Berkeley DB newer than 4.8 (package `db`) using `--with-incompatible-bdb`,
 or building and depending on a local version of Berkeley DB 4.8. The readily available Arch Linux packages are currently built using
-`--with-incompatible-bdb` according to the [PKGBUILD](https://projects.archlinux.org/svntogit/community.git/tree/bitcoin/trunk/PKGBUILD).
-As mentioned above, when maintaining portability of the wallet between the standard Bitcoin Core distributions and independently built
+`--with-incompatible-bdb` according to the [PKGBUILD](https://projects.archlinux.org/svntogit/community.git/tree/privora/trunk/PKGBUILD).
+As mentioned above, when maintaining portability of the wallet between the standard Privora Core distributions and independently built
 node software is desired, Berkeley DB 4.8 must be used.
 
 
@@ -259,7 +259,7 @@ For the wallet (optional):
 This will give a warning "configure: WARNING: Found Berkeley DB other
 than 4.8; wallets opened by this build will not be portable!", but as FreeBSD never
 had a binary release, this may not matter. If backwards compatibility
-with 4.8-built Bitcoin Core is needed follow the steps under "Berkeley DB" above.
+with 4.8-built Privora Core is needed follow the steps under "Berkeley DB" above.
 
 Then build using:
 

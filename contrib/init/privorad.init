@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  privorad The privora core server.
+#
+#
+# chkconfig: 345 80 20
+# description: privorad
+# processname: privorad
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/privorad, see below
+if [ -f /etc/sysconfig/privorad ]; then
+        . /etc/sysconfig/privorad
+fi
+
+RETVAL=0
+
+prog=privorad
+# you can override the lockfile via PRIVORAD_LOCKFILE in /etc/sysconfig/privorad
+lockfile=${PRIVORAD_LOCKFILE-/var/lock/subsys/privorad}
+
+# privorad defaults to /usr/bin/privorad, override with PRIVORAD_BIN
+privorad=${PRIVORAD_BIN-/usr/bin/privorad}
+
+# privorad opts default to -disablewallet, override with PRIVORAD_OPTS
+privorad_opts=${PRIVORAD_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $privorad $privorad_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

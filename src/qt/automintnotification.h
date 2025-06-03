@@ -1,5 +1,5 @@
-#ifndef FIRO_QT_AUTOMINTNOTIFICATION_H
-#define FIRO_QT_AUTOMINTNOTIFICATION_H
+#ifndef PRIVORA_QT_AUTOMINTNOTIFICATION_H
+#define PRIVORA_QT_AUTOMINTNOTIFICATION_H
 
 #include "sparkmodel.h"
 #include "walletmodel.h"
@@ -37,4 +37,4 @@ private:
     SparkModel *sparkModel;
 };
 
-#endif // FIRO_QT_AUTOMINTNOTIFICATION_H
+#endif // PRIVORA_QT_AUTOMINTNOTIFICATION_H

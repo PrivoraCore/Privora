@@ -1,17 +1,17 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "chainparams.h"
 #include "consensus/merkle.h"
 #include "consensus/consensus.h"
-#include "firo_params.h"
+#include "privora_params.h"
 
 #include "tinyformat.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "bitcoin_bignum/bignum.h"
+#include "privora_bignum/bignum.h"
 #include "blacklists.h"
 
 #include <assert.h>
@@ -70,7 +70,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
                    std::vector<unsigned char> extraNonce) {
-    //btzc: firo timestamp
+    //btzc: privora timestamp
     const char *pszTimestamp = "Times 2014/10/31 Maine Judge Says Nurse Must Follow Ebola Quarantine for Now";
     const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward,
@@ -216,7 +216,7 @@ public:
         consensus.stage4CommunityFundShare = 10;
         consensus.stage4DevelopmentFundShare = 15;
         consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 FIRO (because of two halvings due to different block times)
+        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nStartBlacklist = 293990;
         consensus.nStartDuplicationCheck = 293526;
@@ -317,7 +317,7 @@ public:
 
         consensus.nDisableZerocoinStartBlock = 157000;
 
-        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in privora
 
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
@@ -328,7 +328,7 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
        `  * a large 32-bit integer with any alignment.
          */
-        //btzc: update firo pchMessage
+        //btzc: update privora pchMessage
         pchMessageStart[0] = 0xe3;
         pchMessageStart[1] = 0xd9;
         pchMessageStart[2] = 0xfe;
@@ -336,7 +336,7 @@ public:
         nDefaultPort = 8168;
         nPruneAfterHeight = 100000;
         /**
-         * btzc: firo init genesis block
+         * btzc: privora init genesis block
          * nBits = 0x1e0ffff0
          * nTime = 1414776286
          * nNonce = 142392
@@ -354,15 +354,15 @@ public:
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x4381deb85b1b2c9843c222944b616d997516dcbd6a964e1eaf0def0830695233"));
         assert(genesis.hashMerkleRoot == uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
-        vSeeds.push_back(CDNSSeedData("amsterdam.firo.org", "amsterdam.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("australia.firo.org", "australia.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("chicago.firo.org", "chicago.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("london.firo.org", "london.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("frankfurt.firo.org", "frankfurt.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("newjersey.firo.org", "newjersey.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("sanfrancisco.firo.org", "sanfrancisco.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("tokyo.firo.org", "tokyo.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("singapore.firo.org", "singapore.firo.org", false));
+        vSeeds.push_back(CDNSSeedData("amsterdam.privora.org", "amsterdam.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("australia.privora.org", "australia.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("chicago.privora.org", "chicago.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("london.privora.org", "london.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("frankfurt.privora.org", "frankfurt.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("newjersey.privora.org", "newjersey.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("sanfrancisco.privora.org", "sanfrancisco.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("tokyo.privora.org", "tokyo.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("singapore.privora.org", "singapore.privora.org", false));
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 82);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
@@ -548,7 +548,7 @@ public:
         consensus.stage4CommunityFundShare = 10;
         consensus.stage4DevelopmentFundShare = 15;
         consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 FIRO (because of two halvings due to different block times)
+        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nStartBlacklist = 0;
         consensus.nStartDuplicationCheck = 0;
@@ -681,10 +681,10 @@ public:
                 uint256S("0xf70dba2d976778b985de7b5503ede884988d78fbb998d6969e4f676b40b9a741"));
         vFixedSeeds.clear();
         vSeeds.clear();
-        // firo test seeds
+        // privora test seeds
 
-        vSeeds.push_back(CDNSSeedData("EVO1", "evo1.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("EVO2", "evo2.firo.org", false));
+        vSeeds.push_back(CDNSSeedData("EVO1", "evo1.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("EVO2", "evo2.privora.org", false));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
@@ -834,7 +834,7 @@ public:
         consensus.stage4CommunityFundShare = 10;
         consensus.stage4DevelopmentFundShare = 15;
         consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 FIRO (because of two halvings due to different block times)
+        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nStartBlacklist = 0;
         consensus.nStartDuplicationCheck = 0;
@@ -954,10 +954,10 @@ public:
                 uint256S("0xb84e4b6a3743eb4f24ed7e4b88355d7d5fc0aba0cbe8f04e96556ad35c52c873"));
         vFixedSeeds.clear();
         vSeeds.clear();
-        // firo test seeds
+        // privora test seeds
 
-        vSeeds.push_back(CDNSSeedData("DEVNET1", "devnet1.firo.org", false));
-        vSeeds.push_back(CDNSSeedData("DEVNET2", "devnet2.firo.org", false));
+        vSeeds.push_back(CDNSSeedData("DEVNET1", "devnet1.privora.org", false));
+        vSeeds.push_back(CDNSSeedData("DEVNET2", "devnet2.privora.org", false));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 66);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 179);
@@ -1084,7 +1084,7 @@ public:
         consensus.stage4CommunityFundShare = 15;
         consensus.stage4DevelopmentFundShare = 25;
         consensus.stage4MasternodeShare = 50;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 FIRO (because of two halvings due to different block times)
+        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
@@ -1118,7 +1118,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00");
         // Znode code
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
-        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in privora
 
         consensus.nCheckBugFixedAtBlock = 120;
         consensus.nZnodePaymentsBugFixedAtBlock = 1;

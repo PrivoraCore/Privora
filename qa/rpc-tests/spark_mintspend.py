@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 from time import *
 
-class SparkMintSpendTest(BitcoinTestFramework):
+class SparkMintSpendTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4
@@ -54,9 +54,9 @@ class SparkMintSpendTest(BitcoinTestFramework):
         self.sync_all()
 
         res = False
-        firoAddress = self.nodes[0].getnewaddress()
+        privoraAddress = self.nodes[0].getnewaddress()
         try:
-            res = self.nodes[0].spendspark({firoAddress: {"amount": 1, "subtractFee": False}}, {})
+            res = self.nodes[0].spendspark({privoraAddress: {"amount": 1, "subtractFee": False}}, {})
         except JSONRPCException as ex:
             assert ex.error['message'] == 'Spark spend creation failed.'
 
@@ -81,7 +81,7 @@ class SparkMintSpendTest(BitcoinTestFramework):
 
         self.sync_all()
 
-        spend_trans.append(self.nodes[0].spendspark({firoAddress: {"amount": 1, "subtractFee": False}}, {}))
+        spend_trans.append(self.nodes[0].spendspark({privoraAddress: {"amount": 1, "subtractFee": False}}, {}))
 
         info = self.nodes[0].gettransaction(spend_trans[-1])
         confrms = info['confirmations']

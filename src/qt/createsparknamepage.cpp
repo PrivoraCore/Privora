@@ -1,5 +1,5 @@
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/privora-config.h"
 #endif
 
 #include "createsparknamepage.h"
@@ -126,7 +126,7 @@ bool CreateSparkNamePage::CreateSparkNameTransaction(const std::string &name, co
 
         QString formatted;
         QString questionString = tr("Are you sure you want to register spark name?");
-        questionString.append(tr("  You are sending Firo from a Spark address to development fund transparent address."));
+        questionString.append(tr("  You are sending Privora from a Spark address to development fund transparent address."));
 
         SendConfirmationDialog confirmationDialog(tr("Confirm send coins for registering spark name"),
             questionString, SEND_CONFIRM_DELAY, this);

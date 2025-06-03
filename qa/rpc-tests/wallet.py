@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import decimal
 import re
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
-class WalletTest (BitcoinTestFramework):
+class WalletTest (PrivoraTestFramework):
 
     def check_fee_amount(self, curr_balance, balance_with_fee, fee_per_byte, tx_size):
         """Return curr_balance after asserting the fee was in range"""
@@ -60,7 +60,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(len(self.nodes[1].listunspent()), 1)
         assert_equal(len(self.nodes[2].listunspent()), 0)
 
-        # Send 21 BTC from 0 to 2 using sendtoaddress call.
+        # Send 21 VORA from 0 to 2 using sendtoaddress call.
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 11)
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 10)
 
@@ -117,7 +117,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), 74)
         assert_equal(self.nodes[2].getbalance("from1"), 74-21)
 
-        # Send 10 BTC normal
+        # Send 10 VORA normal
         address = self.nodes[0].getnewaddress("test")
         fee_per_byte = Decimal('0.001') / 1000
         self.nodes[2].settxfee(fee_per_byte * 1000)
@@ -127,7 +127,7 @@ class WalletTest (BitcoinTestFramework):
         node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), Decimal('64'), fee_per_byte, count_bytes(self.nodes[2].getrawtransaction(txid)))
         assert_equal(self.nodes[0].getbalance(), Decimal('10'))
 
-        # Send 10 BTC with subtract fee from amount
+        # Send 10 VORA with subtract fee from amount
         txid = self.nodes[2].sendtoaddress(address, 10, "", "", True)
         self.nodes[2].generate(1)
         self.sync_all()
@@ -135,7 +135,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), node_2_bal)
         node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), Decimal('20'), fee_per_byte, count_bytes(self.nodes[2].getrawtransaction(txid)))
 
-        # Sendmany 10 BTC
+        # Sendmany 10 VORA
         txid = self.nodes[2].sendmany('from1', {address: 10}, 0, "", [])
         self.nodes[2].generate(1)
         self.sync_all()
@@ -143,7 +143,7 @@ class WalletTest (BitcoinTestFramework):
         node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('10'), fee_per_byte, count_bytes(self.nodes[2].getrawtransaction(txid)))
         assert_equal(self.nodes[0].getbalance(), node_0_bal)
 
-        # Sendmany 10 BTC with subtract fee from amount
+        # Sendmany 10 VORA with subtract fee from amount
         txid = self.nodes[2].sendmany('from1', {address: 10}, 0, "", [address])
         self.nodes[2].generate(1)
         self.sync_all()
@@ -273,15 +273,15 @@ class WalletTest (BitcoinTestFramework):
         otp = self.get_otp(temp_address)
         assert_raises_jsonrpc(-4, f'Private key for address {temp_address} is not known', self.nodes[0].dumpprivkey, temp_address, otp)
 
-        # This will raise an exception for attempting to get the private key of an Invalid Firo address
+        # This will raise an exception for attempting to get the private key of an Invalid Privora address
         otp = self.get_otp("invalid")
-        assert_raises_jsonrpc(-5, "Invalid Firo address", self.nodes[0].dumpprivkey, "invalid", otp)
+        assert_raises_jsonrpc(-5, "Invalid Privora address", self.nodes[0].dumpprivkey, "invalid", otp)
 
-        # # This will raise an exception for attempting to set a label for an Invalid Firo address
-        # assert_raises_jsonrpc(-5, "Invalid Firo address", self.nodes[0].setlabel, "invalid address", "label")
+        # # This will raise an exception for attempting to set a label for an Invalid Privora address
+        # assert_raises_jsonrpc(-5, "Invalid Privora address", self.nodes[0].setlabel, "invalid address", "label")
 
         # This will raise an exception for importing an invalid address
-        assert_raises_jsonrpc(-5, "Invalid Firo address or script", self.nodes[0].importaddress, "invalid")
+        assert_raises_jsonrpc(-5, "Invalid Privora address or script", self.nodes[0].importaddress, "invalid")
 
         # This will raise an exception for attempting to import a pubkey that isn't in hex
         assert_raises_jsonrpc(-5, "Pubkey must be a hex string", self.nodes[0].importpubkey, "not hex")
@@ -352,7 +352,7 @@ class WalletTest (BitcoinTestFramework):
             '-reindex',
             '-zapwallettxes=1',
             '-zapwallettxes=2',
-            # disabled until issue is fixed: https://github.com/bitcoin/bitcoin/issues/7463
+            # disabled until issue is fixed: https://github.com/privora/privora/issues/7463
             # '-salvagewallet',
         ]
         chainlimit = 6

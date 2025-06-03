@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2015 The Bitcoin Core developers
+// Copyright (c) 2012-2015 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,9 +23,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-static const CBitcoinAddress randomAddr1("aBydwLXzmGc7j4mr4CVf461NvBjBFk71U1");
-static const CBitcoinAddress randomAddr2("aLTSv7QbTZbkgorYEhbNx2gH4hGYNLsoGv");
-static const CBitcoinAddress randomAddr3("a6r15E8Q9gqgWZSLLxZRQs4CWNkaaP5Y5b");
+static const CPrivoraAddress randomAddr1("aBydwLXzmGc7j4mr4CVf461NvBjBFk71U1");
+static const CPrivoraAddress randomAddr2("aLTSv7QbTZbkgorYEhbNx2gH4hGYNLsoGv");
+static const CPrivoraAddress randomAddr3("a6r15E8Q9gqgWZSLLxZRQs4CWNkaaP5Y5b");
 
 static std::list<std::pair<uint256, CBlockIndex>> blocks;
 
@@ -509,8 +509,8 @@ BOOST_AUTO_TEST_CASE(create_spend_with_coins_more_than_1)
 
     BOOST_CHECK(tx.tx->vin.size() == 2);
 
-    // 2 outputs to recipients 5 + 10 firo
-    // 10 mints as changes, 1 * 4 + 0.5 * 1 + 0.1 * 4 + 0.05 firo
+    // 2 outputs to recipients 5 + 10 privora
+    // 10 mints as changes, 1 * 4 + 0.5 * 1 + 0.1 * 4 + 0.05 privora
     BOOST_CHECK(tx.tx->vout.size() == 12);
     BOOST_CHECK(fee > 0);
 

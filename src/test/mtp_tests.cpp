@@ -1,5 +1,5 @@
 #include "crypto/MerkleTreeProof/mtp.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "random.h"
 #include <iostream>
 #include <boost/test/unit_test.hpp>

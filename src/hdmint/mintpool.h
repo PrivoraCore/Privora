@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Firo Core Developers
+// Copyright (c) 2019 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FIRO_MINTPOOL_H
-#define FIRO_MINTPOOL_H
+#ifndef PRIVORA_MINTPOOL_H
+#define PRIVORA_MINTPOOL_H
 
 #include <map>
 #include <list>
@@ -32,4 +32,4 @@ public:
     bool Get(int32_t nCount, uint160 hashSeedMaster, std::pair<uint256, MintPoolEntry>& result);
 };
 
-#endif // FIRO_MINTPOOL_H
+#endif // PRIVORA_MINTPOOL_H

@@ -47,7 +47,7 @@ void NotifyMnemonic::notify()
     SecureString mnemonic;
     pwalletMain->GetMnemonicContainer().GetMnemonic(mnemonic);
     NotifyMnemonic notify;
-    notify.setWindowIcon(QIcon(":icons/firo"));
+    notify.setWindowIcon(QIcon(":icons/privora"));
     notify.show();
     notify.ui->walletBirthDate->setText("Wallet creation date:  " + getCurrentDate());
     notify.ui->mnemonic->setText(mnemonic.c_str());

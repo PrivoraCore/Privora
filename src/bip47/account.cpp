@@ -34,7 +34,7 @@ MyAddrContT const & CAccountBase::getMyNextAddresses() const
     return generateMyNextAddresses();
 }
 
-bool CAccountBase::addressUsed(CBitcoinAddress const & address)
+bool CAccountBase::addressUsed(CPrivoraAddress const & address)
 {
     return markAddressUsed(address);
 }
@@ -89,12 +89,12 @@ CPaymentCode const & CAccountSender::getTheirPcode() const
     return theirPcode;
 }
 
-CBitcoinAddress CAccountSender::generateTheirNextSecretAddress()
+CPrivoraAddress CAccountSender::generateTheirNextSecretAddress()
 {
     return getPaymentChannel().generateTheirNextSecretAddress();
 }
 
-CBitcoinAddress CAccountSender::getTheirNextSecretAddress() const
+CPrivoraAddress CAccountSender::getTheirNextSecretAddress() const
 {
     return getPaymentChannel().getTheirNextSecretAddress();
 }
@@ -125,7 +125,7 @@ MyAddrContT const & CAccountSender::generateMyNextAddresses() const
     return nextAddresses;
 }
 
-bool CAccountSender::markAddressUsed(CBitcoinAddress const & address)
+bool CAccountSender::markAddressUsed(CPrivoraAddress const & address)
 {
     return getPaymentChannel().markAddressUsed(address);
 }
@@ -145,7 +145,7 @@ CAccountReceiver::CAccountReceiver(CExtKey const & walletKey, uint32_t accountNu
 : CAccountBase(walletKey, accountNum), label(label)
 {}
 
-CBitcoinAddress const & CAccountReceiver::getMyNotificationAddress() const
+CPrivoraAddress const & CAccountReceiver::getMyNotificationAddress() const
 {
     if (!myNotificationAddress) {
         myNotificationAddress.emplace(getMyPcode().getNotificationAddress());
@@ -216,7 +216,7 @@ MyAddrContT const & CAccountReceiver::generateMyNextAddresses() const
     return nextAddresses;
 }
 
-bool CAccountReceiver::markAddressUsed(CBitcoinAddress const & address)
+bool CAccountReceiver::markAddressUsed(CPrivoraAddress const & address)
 {
     for (PChannelContT::iterator iter = pchannels.begin(); iter != pchannels.end(); ++iter) {
         if (iter->markAddressUsed(address)) {

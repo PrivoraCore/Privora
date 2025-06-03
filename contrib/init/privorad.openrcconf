@@ -1,0 +1,33 @@
+# /etc/conf.d/privorad: config file for /etc/init.d/privorad
+
+# Config file location
+#PRIVORAD_CONFIGFILE="/etc/privora/privora.conf"
+
+# What directory to write pidfile to?  (created and owned by $PRIVORAD_USER)
+#PRIVORAD_PIDDIR="/var/run/privorad"
+
+# What filename to give the pidfile
+#PRIVORAD_PIDFILE="${PRIVORAD_PIDDIR}/privorad.pid"
+
+# Where to write privorad data (be mindful that the blockchain is large)
+#PRIVORAD_DATADIR="/var/lib/privorad"
+
+# User and group to own privorad process
+#PRIVORAD_USER="privora"
+#PRIVORAD_GROUP="privora"
+
+# Path to privorad executable
+#PRIVORAD_BIN="/usr/bin/privorad"
+
+# Nice value to run privorad under
+#PRIVORAD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#PRIVORAD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for privorad to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+PRIVORAD_SIGTERM_TIMEOUT=60

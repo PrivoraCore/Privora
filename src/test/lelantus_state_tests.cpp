@@ -2,7 +2,7 @@
 #include "../validation.h"
 
 #include "fixtures.h"
-#include "test_bitcoin.h"
+#include "test_privora.h"
 
 #include <boost/test/unit_test.hpp>
 

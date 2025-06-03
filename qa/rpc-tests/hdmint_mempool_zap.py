@@ -2,7 +2,7 @@
 import time
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 
@@ -26,7 +26,7 @@ from test_framework.util import *
 # 15. spend
 # 16. generate block
 # 17. check listunspentmints it should decreased
-class HDMintMempoolZapTest(BitcoinTestFramework):
+class HDMintMempoolZapTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 1
@@ -60,7 +60,7 @@ class HDMintMempoolZapTest(BitcoinTestFramework):
         self.nodes[0].mint(1)
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         self.nodes[0] = start_node(0,self.options.tmpdir, configuration)
         time.sleep(1) # rescan time
@@ -73,7 +73,7 @@ class HDMintMempoolZapTest(BitcoinTestFramework):
         self.nodes[0].spendmany('', val)
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         self.nodes[0] = start_node(0, self.options.tmpdir, configuration)
         time.sleep(1) # rescan time

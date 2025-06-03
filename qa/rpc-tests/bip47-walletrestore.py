@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-# Copyright (c) 2017-2021 The Firo Core developers
+# Copyright (c) 2017-2021 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """dip47 sending receiving RPCs QA test.
 """
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
-class Bip47WalletRestore(BitcoinTestFramework):
+class Bip47WalletRestore(PrivoraTestFramework):
     
     def __init__(self):
         super().__init__()

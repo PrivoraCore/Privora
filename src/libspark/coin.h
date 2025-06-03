@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_COIN_H
-#define FIRO_SPARK_COIN_H
+#ifndef PRIVORA_SPARK_COIN_H
+#define PRIVORA_SPARK_COIN_H
 #include "bpplus.h"
 #include "keys.h"
 #include <math.h>

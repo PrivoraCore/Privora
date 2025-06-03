@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/privora-config.h"
 #endif
 
 #include "util.h"
@@ -109,8 +109,8 @@ bool fMasternodeMode = false;
 bool fLiteMode = false;
 int nWalletBackups = 10;
 
-const char * const BITCOIN_CONF_FILENAME = "firo.conf";
-const char * const BITCOIN_PID_FILENAME = "firod.pid";
+const char * const PRIVORA_CONF_FILENAME = "privora.conf";
+const char * const PRIVORA_PID_FILENAME = "privorad.pid";
 
 CCriticalSection cs_args;
 std::map<std::string, std::string> mapArgs;
@@ -119,7 +119,7 @@ const std::map<std::string, std::vector<std::string> >& mapMultiArgs = _mapMulti
 bool fDebug = false;
 bool fPrintToConsole = false;
 bool fPrintToDebugLog = true;
-bool fNoDebug = false; //A temporary fix for https://github.com/firoorg/firo/issues/1011
+bool fNoDebug = false; //A temporary fix for https://github.com/privoraorg/privora/issues/1011
 
 bool fLogTimestamps = DEFAULT_LOGTIMESTAMPS;
 bool fLogTimeMicros = DEFAULT_LOGTIMEMICROS;
@@ -304,7 +304,7 @@ static std::string LogTimestampStr(const std::string &str, std::atomic_bool *fSt
 
 int LogPrintStr(const std::string &str)
 {
-    //A temporary fix for https://github.com/firoorg/firo/issues/1011
+    //A temporary fix for https://github.com/privoraorg/privora/issues/1011
     if (fNoDebug && str.compare(0, 6, "ERROR:", 0, 6) != 0)
         return 0;
 
@@ -500,10 +500,10 @@ void PrintExceptionContinue(const std::exception_ptr pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDirForCoinName(const std::string &coinName)
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\firo
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\firo
-    // Mac: ~/Library/Application Support/firo
-    // Unix: ~/.firo
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\privora
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\privora
+    // Mac: ~/Library/Application Support/privora
+    // Unix: ~/.privora
 #ifdef WIN32
     // Windows
     return GetSpecialFolderPath(CSIDL_APPDATA) / coinName;
@@ -528,15 +528,15 @@ boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
 
-    fs::path firoDefaultDir = GetDefaultDataDirForCoinName("firo");
-    if (!fs::is_directory(firoDefaultDir)) {
-        // try "zcoin" in case we're upgrading from pre-firo version
+    fs::path privoraDefaultDir = GetDefaultDataDirForCoinName("privora");
+    if (!fs::is_directory(privoraDefaultDir)) {
+        // try "zcoin" in case we're upgrading from pre-privora version
         fs::path zcoinDefaultDir = GetDefaultDataDirForCoinName("zcoin");
         if (fs::is_directory(zcoinDefaultDir))
             return zcoinDefaultDir;
     }
 
-    return firoDefaultDir;
+    return privoraDefaultDir;
 }
 
 static boost::filesystem::path pathCached;
@@ -618,7 +618,7 @@ boost::filesystem::path GetConfigFile(const std::string& confPath)
         // upgrade heuristics: if dataDir ends with either "zcoin" or ".zcoin" and confPath is set
         // to default value we use "zcoin.conf" as config file name
 
-        if (confPath == BITCOIN_CONF_FILENAME && (dataDir.filename() == "zcoin" || dataDir.filename() == ".zcoin"))
+        if (confPath == PRIVORA_CONF_FILENAME && (dataDir.filename() == "zcoin" || dataDir.filename() == ".zcoin"))
             pathConfigFile = dataDir / "zcoin.conf";
         else
             pathConfigFile = dataDir / pathConfigFile;
@@ -631,7 +631,7 @@ void ReadConfigFile(const std::string& confPath)
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile(confPath));
     if (!streamConfig.good())
-        return; // No firo.conf file is OK
+        return; // No privora.conf file is OK
 
     {
         LOCK(cs_args);
@@ -640,7 +640,7 @@ void ReadConfigFile(const std::string& confPath)
 
         for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
         {
-            // Don't overwrite existing settings so command line settings override bitcoin.conf
+            // Don't overwrite existing settings so command line settings override privora.conf
             std::string strKey = std::string("-") + it->string_key;
             std::string strValue = it->value[0];
             InterpretNegativeSetting(strKey, strValue);
@@ -653,32 +653,32 @@ void ReadConfigFile(const std::string& confPath)
     ClearDatadirCache();
 }
 
-bool RenameDirectoriesFromZcoinToFiro()
+bool RenameDirectoriesFromZcoinToPrivora()
 {
     namespace fs = boost::filesystem;
 
     fs::path zcoinPath = GetDefaultDataDirForCoinName("zcoin");
-    fs::path firoPath = GetDefaultDataDirForCoinName("firo");
+    fs::path privoraPath = GetDefaultDataDirForCoinName("privora");
 
-    // rename is possible only if zcoin directory exists and firo doesn't
-    if (fs::exists(firoPath) || !fs::is_directory(zcoinPath))
+    // rename is possible only if zcoin directory exists and privora doesn't
+    if (fs::exists(privoraPath) || !fs::is_directory(zcoinPath))
         return false;
 
     fs::path zcoinConfFileName = zcoinPath / "zcoin.conf";
-    fs::path firoConfFileName = zcoinPath / "firo.conf";
-    if (fs::exists(firoConfFileName))
+    fs::path privoraConfFileName = zcoinPath / "privora.conf";
+    if (fs::exists(privoraConfFileName))
         return false;
 
     try {
         if (fs::is_regular_file(zcoinConfFileName))
-            fs::rename(zcoinConfFileName, firoConfFileName);
+            fs::rename(zcoinConfFileName, privoraConfFileName);
 
         try {
-            fs::rename(zcoinPath, firoPath);
+            fs::rename(zcoinPath, privoraPath);
         }
         catch (const fs::filesystem_error &) {
             // rename config file back
-            fs::rename(firoConfFileName, zcoinConfFileName);
+            fs::rename(privoraConfFileName, zcoinConfFileName);
             throw;
         }
     }
@@ -693,7 +693,7 @@ bool RenameDirectoriesFromZcoinToFiro()
 #ifndef WIN32
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", BITCOIN_PID_FILENAME));
+    boost::filesystem::path pathPidFile(GetArg("-pid", PRIVORA_PID_FILENAME));
     if (!pathPidFile.is_absolute()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }
@@ -1022,13 +1022,13 @@ std::string CopyrightHolders(const std::string& strPrefix)
     const auto copyright_devs = strprintf(_(COPYRIGHT_HOLDERS), _(COPYRIGHT_HOLDERS_SUBSTITUTION));
     std::string strCopyrightHolders = strPrefix + copyright_devs;
 
-    // Make sure Firo Core copyright is not removed by accident
-    if (copyright_devs.find(_("Firo Core")) == std::string::npos) {
-        strCopyrightHolders += '\n' + strPrefix + "The Firo Core developers";
+    // Make sure Privora Core copyright is not removed by accident
+    if (copyright_devs.find(_("Privora Core")) == std::string::npos) {
+        strCopyrightHolders += '\n' + strPrefix + "The Privora Core developers";
     }
-    // Make sure Bitcoin Core copyright is not removed by accident
-    if (copyright_devs.find("Bitcoin Core") == std::string::npos) {
-        strCopyrightHolders += '\n' + strPrefix + "The Bitcoin Core developers";
+    // Make sure Privora Core copyright is not removed by accident
+    if (copyright_devs.find("Privora Core") == std::string::npos) {
+        strCopyrightHolders += '\n' + strPrefix + "The Privora Core developers";
     }
     
     return strCopyrightHolders;

@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_test)
         CPubKey newKey;
         BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
 
-        const CBitcoinAddress randomAddr(newKey.GetID());
+        const CPrivoraAddress randomAddr(newKey.GetID());
 
         CAmount nValue;
         DenominationToInteger(denom, nValue);

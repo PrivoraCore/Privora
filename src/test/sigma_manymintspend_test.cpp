@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_many)
         CPubKey newKey;
         BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
 
-        const CBitcoinAddress randomAddr(newKey.GetID());
+        const CPrivoraAddress randomAddr(newKey.GetID());
 
         std::vector<CRecipient> recipients = {
                 {GetScriptForDestination(randomAddr.Get()), nAmount, true},
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_many)
 
         // send to third party address.
         thirdPartyAddress = "TXYb6pEWBDcxQvTxbFQ9sEV1c3rWUPGW3v";
-        const CBitcoinAddress address(thirdPartyAddress);
+        const CPrivoraAddress address(thirdPartyAddress);
 
         recipients = {
                 {GetScriptForDestination(address.Get()), nAmount, true},
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_many)
         CPubKey newKey;
         BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
 
-        const CBitcoinAddress randomAddr(newKey.GetID());
+        const CPrivoraAddress randomAddr(newKey.GetID());
 
         sigma::CoinDenomination denom;
         BOOST_CHECK_MESSAGE(StringToDenomination(denominations[i], denom), "Unable to convert denomination string to value.");
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_usedinput)
     // Generate address
     CPubKey newKey;
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
-    const CBitcoinAddress randomAddr(newKey.GetID());
+    const CPrivoraAddress randomAddr(newKey.GetID());
 
     int previousHeight;
     CBlock b;

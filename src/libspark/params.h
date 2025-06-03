@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBSPARK_PARAMS_H
-#define FIRO_LIBSPARK_PARAMS_H
+#ifndef PRIVORA_LIBSPARK_PARAMS_H
+#define PRIVORA_LIBSPARK_PARAMS_H
 
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>

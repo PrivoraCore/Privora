@@ -1,4 +1,4 @@
-# Copyright (c) 2016 The Bitcoin Core developers
+# Copyright (c) 2016 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -17,14 +17,14 @@ osx=true
 SIGNER=
 VERSION=
 commit=false
-url=${url:-https://github.com/firoorg/firo}
-gsigsUrl=https://github.com/bitcoin-core/gitian.sigs
-detachUrl=https://github.com/bitcoin-core/bitcoin-detached-sigs.git
+url=${url:-https://github.com/privoraorg/privora}
+gsigsUrl=https://github.com/privora-core/gitian.sigs
+detachUrl=https://github.com/privora-core/privora-detached-sigs.git
 proc=2
 mem=2000
 lxc=true
 osslTarUrl=http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
-osslPatchUrl=https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
+osslPatchUrl=https://privoracore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
 scriptName=$(basename -- "$0")
 signProg="gpg --detach-sign"
 commitFiles=true
@@ -33,7 +33,7 @@ commitFiles=true
 read -d '' usage <<- EOF
 Usage: $scriptName [-c|u|v|b|s|B|o|h|j|m|] signer version
 
-Run this script from the directory containing the bitcoin, gitian-builder, gitian.sigs, and bitcoin-detached-sigs.
+Run this script from the directory containing the privora, gitian-builder, gitian.sigs, and privora-detached-sigs.
 
 Arguments:
 signer          GPG signer to sign each build assert file
@@ -41,9 +41,9 @@ version		Version number, commit, or branch to build. If building a commit or bra
 
 Options:
 -c|--commit	Indicate that the version argument is for a commit or branch
--u|--url	Specify the URL of the firoorg repository. Default is https://github.com/firoorg/firo.git
--g|--gsigsUrl	Specify the URL of the gitian.sigs repository. Default is https://github.com/bitcoin-core/gitian.sigs
--d|--detachUrl	Specify the URL of the bitcoin-detached-sigs repository. Default is https://github.com/bitcoin-core/bitcoin-detached-sigs
+-u|--url	Specify the URL of the privoraorg repository. Default is https://github.com/privoraorg/privora.git
+-g|--gsigsUrl	Specify the URL of the gitian.sigs repository. Default is https://github.com/privora-core/gitian.sigs
+-d|--detachUrl	Specify the URL of the privora-detached-sigs repository. Default is https://github.com/privora-core/privora-detached-sigs
 -v|--verify 	Verify the Gitian build
 -b|--build	Do a Gitian build
 -s|--sign	Make signed binaries for Windows and Mac OSX
@@ -269,7 +269,7 @@ then
 
     if [[ $detachUrl =~ $urlRegex ]]
     then
-    	git clone $detachUrl bitcoin-detached-sigs
+    	git clone $detachUrl privora-detached-sigs
     fi
 
     git clone https://github.com/devrandom/gitian-builder.git
@@ -285,7 +285,7 @@ then
 fi
 
 # Set up build
-pushd ./firo
+pushd ./privora
 git fetch
 git checkout ${COMMIT}
 popd
@@ -294,7 +294,7 @@ popd
 if [[ $build = true ]]
 then
 	# Make output folder
-	mkdir -p ./firo-binaries/${VERSION}
+	mkdir -p ./privora-binaries/${VERSION}
 
 	# Build Dependencies
 	echo ""
@@ -304,7 +304,7 @@ then
 	mkdir -p inputs
 	wget -N -P inputs $osslPatchUrl
 	wget -N -P inputs $osslTarUrl
-	make -C ../firo/depends download SOURCES_PATH=`pwd`/cache/common
+	make -C ../privora/depends download SOURCES_PATH=`pwd`/cache/common
 
 	# Linux
 	if [[ $linux = true ]]
@@ -312,9 +312,9 @@ then
 	    echo ""
 	    echo "Compiling ${VERSION} Linux"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit firo=${COMMIT} --url firo=${url} ../firo/contrib/gitian-descriptors/gitian-linux.yml
-	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-linux.yml
-	    mv build/out/firo-*.tar.gz build/out/src/firo-*.tar.gz ../firo-binaries/${VERSION}
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit privora=${COMMIT} --url privora=${url} ../privora/contrib/gitian-descriptors/gitian-linux.yml
+	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-linux.yml
+	    mv build/out/privora-*.tar.gz build/out/src/privora-*.tar.gz ../privora-binaries/${VERSION}
 	fi
 	# Windows
 	if [[ $windows = true ]]
@@ -322,10 +322,10 @@ then
 	    echo ""
 	    echo "Compiling ${VERSION} Windows"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit firo=${COMMIT} --url firo=${url} ../firo/contrib/gitian-descriptors/gitian-win.yml
-	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-win.yml
-	    mv build/out/firo-*-win-unsigned.tar.gz inputs/firo-win-unsigned.tar.gz
-	    mv build/out/firo-*.zip build/out/firo-*.exe ../firo-binaries/${VERSION}
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit privora=${COMMIT} --url privora=${url} ../privora/contrib/gitian-descriptors/gitian-win.yml
+	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-win.yml
+	    mv build/out/privora-*-win-unsigned.tar.gz inputs/privora-win-unsigned.tar.gz
+	    mv build/out/privora-*.zip build/out/privora-*.exe ../privora-binaries/${VERSION}
 	fi
 	# Mac OSX
 	if [[ $osx = true ]]
@@ -333,10 +333,10 @@ then
 	    echo ""
 	    echo "Compiling ${VERSION} Mac OSX"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit firo=${COMMIT} --url firo=${url} ../firo/contrib/gitian-descriptors/gitian-osx.yml
-	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-osx.yml
-	    mv build/out/firo-*-osx-unsigned.tar.gz inputs/firo-osx-unsigned.tar.gz
-	    mv build/out/firo-*.tar.gz build/out/firo-*.dmg ../firo-binaries/${VERSION}
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit privora=${COMMIT} --url privora=${url} ../privora/contrib/gitian-descriptors/gitian-osx.yml
+	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-osx.yml
+	    mv build/out/privora-*-osx-unsigned.tar.gz inputs/privora-osx-unsigned.tar.gz
+	    mv build/out/privora-*.tar.gz build/out/privora-*.dmg ../privora-binaries/${VERSION}
 	fi
 	popd
 
@@ -363,27 +363,27 @@ then
 	echo ""
 	echo "Verifying v${VERSION} Linux"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../firo/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../privora/contrib/gitian-descriptors/gitian-linux.yml
 	# Windows
 	echo ""
 	echo "Verifying v${VERSION} Windows"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../firo/contrib/gitian-descriptors/gitian-win.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../privora/contrib/gitian-descriptors/gitian-win.yml
 	# Mac OSX
 	echo ""
 	echo "Verifying v${VERSION} Mac OSX"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../firo/contrib/gitian-descriptors/gitian-osx.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../privora/contrib/gitian-descriptors/gitian-osx.yml
 	# Signed Windows
 	echo ""
 	echo "Verifying v${VERSION} Signed Windows"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
 	# Signed Mac OSX
 	echo ""
 	echo "Verifying v${VERSION} Signed Mac OSX"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
 	popd
 fi
 
@@ -398,10 +398,10 @@ then
 	    echo ""
 	    echo "Signing ${VERSION} Windows"
 	    echo ""
-	    ./bin/gbuild -i --commit signature=${COMMIT} --url signature=${detachUrl} ../firo/contrib/gitian-descriptors/gitian-win-signer.yml
-	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-win-signer.yml
-	    mv build/out/firo-*win64-setup.exe ../firo-binaries/${VERSION}
-	    mv build/out/firo-*win32-setup.exe ../firo-binaries/${VERSION}
+	    ./bin/gbuild -i --commit signature=${COMMIT} --url signature=${detachUrl} ../privora/contrib/gitian-descriptors/gitian-win-signer.yml
+	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-win-signer.yml
+	    mv build/out/privora-*win64-setup.exe ../privora-binaries/${VERSION}
+	    mv build/out/privora-*win32-setup.exe ../privora-binaries/${VERSION}
 	fi
 	# Sign Mac OSX
 	if [[ $osx = true ]]
@@ -409,9 +409,9 @@ then
 	    echo ""
 	    echo "Signing ${VERSION} Mac OSX"
 	    echo ""
-	    ./bin/gbuild -i --commit signature=${COMMIT} --url signature=${detachUrl} ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
-	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
-	    mv build/out/firo-osx-signed.dmg ../firo-binaries/${VERSION}/firo-${VERSION}-osx.dmg
+	    ./bin/gbuild -i --commit signature=${COMMIT} --url signature=${detachUrl} ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    ./bin/gsign -p "${signProg}" --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    mv build/out/privora-osx-signed.dmg ../privora-binaries/${VERSION}/privora-${VERSION}-osx.dmg
 	fi
 	popd
 

@@ -6,14 +6,14 @@
 *.tar.gz
 
 *.exe
-src/firo
-src/firod
-src/firo-cli
-src/firo-tx
-src/test/test_bitcoin_fuzzy
-src/test/test_bitcoin
-src/test/test_bitcoin_fuzzy
-src/qt/test/test_bitcoin-qt
+src/privora
+src/privorad
+src/privora-cli
+src/privora-tx
+src/test/test_privora_fuzzy
+src/test/test_privora
+src/test/test_privora_fuzzy
+src/qt/test/test_privora-qt
 
 # autoreconf
 Makefile.in
@@ -36,8 +36,8 @@ config.log
 config.status
 configure
 libtool
-src/config/bitcoin-config.h
-src/config/bitcoin-config.h.in
+src/config/privora-config.h
+src/config/privora-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -84,12 +84,12 @@ src/tor/src/or
 *.qm
 /Makefile
 /src/Makefile
-firo-qt
-Firo-Qt.app
+privora-qt
+Privora-Qt.app
 
 # Unit-tests
 Makefile.test
-firo-qt_test
+privora-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -102,7 +102,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_bitcoin.coverage/
+test_privora.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -113,7 +113,7 @@ win32-build
 test/config.ini
 test/cache/*
 src/test/buildenv.py
-src/test/test_bitcoin
+src/test/test_privora
 qa/pull-tester/tests_config.py
 qa/cache/*
 
@@ -122,18 +122,18 @@ qa/cache/*
 doc/doxygen/
 doc/man/Makefile
 
-libfiroconsensus.pc
+libprivoraconsensus.pc
 contrib/devtools/split-debug.sh
 
-libbitcoinconsensus.pc
-qa/pull-tester/run-bitcoind-for-test.sh
+libprivoraconsensus.pc
+qa/pull-tester/run-privorad-for-test.sh
 qa/pull-tester/tests_config.py
 
 # Qt Creator project files
-firo.config
-firo.creator
-firo.creator.user
-firo.files
-firo.includes
+privora.config
+privora.creator
+privora.creator.user
+privora.files
+privora.includes
 
 /guix-build-*

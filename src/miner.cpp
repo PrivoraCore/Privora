@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -57,7 +57,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// BitcoinMiner
+// PrivoraMiner
 //
 
 //
@@ -304,7 +304,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     pblock->nHeight        = nHeight;
     pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(*pblock->vtx[0]);
 
-    // Firo - MTP
+    // Privora - MTP
     if (fMTP)
         pblock->mtpHashData = std::make_shared<CMTPHashData>();
 
@@ -840,8 +840,8 @@ void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fM
             bool fStage3 = nHeight < params.nSubsidyHalvingSecond;
             bool fStage4 = nHeight >= params.stage4StartBlock;
             CAmount devPayoutValue = 0, communityPayoutValue = 0;
-            CScript devPayoutScript = GetScriptForDestination(CBitcoinAddress(params.stage3DevelopmentFundAddress).Get());
-            CScript communityPayoutScript = GetScriptForDestination(CBitcoinAddress(params.stage3CommunityFundAddress).Get());
+            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage3DevelopmentFundAddress).Get());
+            CScript communityPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage3CommunityFundAddress).Get());
 
             // There is no dev/community payout for testnet for some time
             if (fStage3 || fStage4) {
@@ -863,7 +863,7 @@ void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fM
         }
         else {
             // Stage 2
-            CScript devPayoutScript = GetScriptForDestination(CBitcoinAddress(params.stage2DevelopmentFundAddress).Get());
+            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage2DevelopmentFundAddress).Get());
             CAmount devPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, fMTP, false) * params.stage2DevelopmentFundShare) / 100;
 
             coinbaseTx.vout[0].nValue -= devPayoutValue;
@@ -883,23 +883,23 @@ void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fM
             coinbaseTx.vout[0].nValue -= 10 * coin;
 
             if (params.IsMain() && (GetAdjustedTime() > nStartRewardTime)) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
                 if (nHeight + 1 < 14000) {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
+                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
                 } else {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
+                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
                 }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
             } else if (params.IsMain() && (GetAdjustedTime() <= nStartRewardTime)) {
                 throw std::runtime_error("CreateNewBlock() : Create new block too early");
             } else if (!params.IsMain()) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
             }
 
             // And give it to the founders
@@ -913,23 +913,23 @@ void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fM
             coinbaseTx.vout[0].nValue -= 7 * coin;
 
             if (params.IsMain() && (GetAdjustedTime() > nStartRewardTime)) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
                 if (nHeight + 1 < 14000) {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
+                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
                 } else {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
+                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
                 }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
             } else if (params.IsMain() && (GetAdjustedTime() <= nStartRewardTime)) {
                 throw std::runtime_error("CreateNewBlock() : Create new block too early");
             } else if (!params.IsMain()) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
+                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
             }
 
             // And give it to the founders
@@ -1107,7 +1107,7 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
     {
         LOCK(cs_main);
         if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
-            return error("FiroMiner: generated block is stale");
+            return error("PrivoraMiner: generated block is stale");
     }
 
     // Inform about the new block
@@ -1115,14 +1115,14 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
 
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(new CBlock(*pblock)), true, NULL))
-        return error("FiroMiner: ProcessNewBlock, block not accepted");
+        return error("PrivoraMiner: ProcessNewBlock, block not accepted");
 
     return true;
 }
 
-void static FiroMiner(const CChainParams &chainparams) {
+void static PrivoraMiner(const CChainParams &chainparams) {
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("firo-miner");
+    RenameThread("privora-miner");
 
     unsigned int nExtraNonce = 0;
 
@@ -1134,7 +1134,7 @@ void static FiroMiner(const CChainParams &chainparams) {
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
         if (!coinbaseScript || coinbaseScript->reserveScript.empty()) {
-            LogPrintf("FiroMiner stop here coinbaseScript=%s, coinbaseScript->reserveScript.empty()=%s\n", coinbaseScript, coinbaseScript->reserveScript.empty());
+            LogPrintf("PrivoraMiner stop here coinbaseScript=%s, coinbaseScript->reserveScript.empty()=%s\n", coinbaseScript, coinbaseScript->reserveScript.empty());
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
         }
 
@@ -1173,13 +1173,13 @@ void static FiroMiner(const CChainParams &chainparams) {
             std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript, {});
             LogPrintf("AFTER: pblocktemplate\n");
             if (!pblocktemplate.get()) {
-                LogPrintf("Error in FiroMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("Error in PrivoraMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running FiroMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
+            LogPrintf("Running PrivoraMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                       ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             LogPrintf("BEFORE: search\n");
@@ -1242,7 +1242,7 @@ void static FiroMiner(const CChainParams &chainparams) {
                         LogPrintf("Found a solution. Hash: %s", powTarget.ToString());
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
 //                        CheckWork(pblock, *pwallet, reservekey);
-                        LogPrintf("FiroMiner:\n");
+                        LogPrintf("PrivoraMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", powTarget.ToString(), hashTarget.ToString());
                         ProcessBlockFound(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -1279,16 +1279,16 @@ void static FiroMiner(const CChainParams &chainparams) {
         }
     }
     catch (const boost::thread_interrupted &) {
-        LogPrintf("FiroMiner terminated\n");
+        LogPrintf("PrivoraMiner terminated\n");
         throw;
     }
     catch (const std::runtime_error &e) {
-        LogPrintf("FiroMiner runtime error: %s\n", e.what());
+        LogPrintf("PrivoraMiner runtime error: %s\n", e.what());
         return;
     }
 }
 
-void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainparams)
+void GeneratePrivoras(bool fGenerate, int nThreads, const CChainParams& chainparams)
 {
     static boost::thread_group* minerThreads = NULL;
 
@@ -1307,7 +1307,7 @@ void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainpar
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&FiroMiner, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&PrivoraMiner, boost::cref(chainparams)));
 }
 
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce)

@@ -1,9 +1,9 @@
-// Copyright (c) 2022 The Firo Core Developers
+// Copyright (c) 2022 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FIRO_SPARK_WALLET_H
-#define FIRO_SPARK_WALLET_H
+#ifndef PRIVORA_SPARK_WALLET_H
+#define PRIVORA_SPARK_WALLET_H
 
 #include "primitives.h"
 #include "../libspark/keys.h"
@@ -177,4 +177,4 @@ private:
 };
 
 
-#endif //FIRO_SPARK_WALLET_H
+#endif //PRIVORA_SPARK_WALLET_H

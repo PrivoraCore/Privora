@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 #TODO fix to proper rpc_msgs after special card will be fixed.
@@ -57,11 +57,11 @@ post_outputs_no_funds = [
     (None, None),
     (None, None),
     (None, None),
-    (-5, 'Invalid Firo address: '),
+    (-5, 'Invalid Privora address: '),
     (-3, 'Invalid amount'),
 ]
 
-class SigmaSpendValidationWithFundsExtraTest(BitcoinTestFramework):
+class SigmaSpendValidationWithFundsExtraTest(PrivoraTestFramework):
 
     def __init__(self):
         super().__init__()

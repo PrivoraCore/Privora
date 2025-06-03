@@ -955,7 +955,7 @@ bool CSparkWallet::CreateSparkMintTransactions(
                     if (nChange > 0) {
                         // Fill a vout to ourself
                         // TODO: pass in scriptChange instead of reservekey so
-                        // change transaction isn't always pay-to-bitcoin-address
+                        // change transaction isn't always pay-to-privora-address
                         CScript scriptChange;
 
                         // coin control: send change to custom address
@@ -964,7 +964,7 @@ bool CSparkWallet::CreateSparkMintTransactions(
 
                             // send change to one of the specified change addresses
                         else if (IsArgSet("-change") && mapMultiArgs.at("-change").size() > 0) {
-                            CBitcoinAddress address(
+                            CPrivoraAddress address(
                                     mapMultiArgs.at("change")[GetRandInt(mapMultiArgs.at("-change").size())]);
                             CKeyID keyID;
                             if (!address.GetKeyID(keyID)) {
@@ -1285,7 +1285,7 @@ CWalletTx CSparkWallet::CreateSparkSpendTransaction(
     }
 
     if (vOut > consensusParams.nMaxValueSparkSpendPerTransaction)
-        throw std::runtime_error(_("Spend to transparent address limit exceeded (10,000 Firo per transaction)."));
+        throw std::runtime_error(_("Spend to transparent address limit exceeded (10,000 Privora per transaction)."));
 
     std::vector<CWalletTx> result;
     std::vector<CMutableTransaction> txs;
@@ -1617,7 +1617,7 @@ CWalletTx CSparkWallet::CreateSparkNameTransaction(CSparkNameTxData &nameData, C
 
     CRecipient devPayout;
     devPayout.nAmount = sparkNameFee;
-    devPayout.scriptPubKey = GetScriptForDestination(CBitcoinAddress(Params().GetConsensus().stage3DevelopmentFundAddress).Get());
+    devPayout.scriptPubKey = GetScriptForDestination(CPrivoraAddress(Params().GetConsensus().stage3DevelopmentFundAddress).Get());
     devPayout.fSubtractFeeFromAmount = false;
 
     CWalletTx wtxSparkSpend = CreateSparkSpendTransaction({devPayout}, {}, txFee, coinConrol,

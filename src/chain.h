@@ -1,23 +1,23 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHAIN_H
-#define BITCOIN_CHAIN_H
+#ifndef PRIVORA_CHAIN_H
+#define PRIVORA_CHAIN_H
 
 #include "arith_uint256.h"
 #include "primitives/block.h"
 #include "pow.h"
 #include "tinyformat.h"
 #include "uint256.h"
-#include "bitcoin_bignum/bignum.h"
+#include "privora_bignum/bignum.h"
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
 #include "sigma/coin.h"
 #include "libspark/coin.h"
 #include "evo/spork.h"
-#include "firo_params.h"
+#include "privora_params.h"
 #include "util.h"
 #include "chainparams.h"
 #include "coin_containers.h"
@@ -212,11 +212,11 @@ public:
     unsigned int nBits;
     unsigned int nNonce;
 
-    // Firo - ProgPow
+    // Privora - ProgPow
     uint64_t nNonce64;
     uint256 mix_hash;
 
-    // Firo - MTP
+    // Privora - MTP
     int32_t nVersionMTP = 0x1000;
     uint256 mtpHashValue;
     // Reserved fields
@@ -296,11 +296,11 @@ public:
         nBits          = 0;
         nNonce         = 0;
 
-        // Firo - ProgPow
+        // Privora - ProgPow
         nNonce64       = 0;
         mix_hash       = uint256();
 
-        // Firo - MTP
+        // Privora - MTP
         nVersionMTP = 0;
         mtpHashValue = reserved[0] = reserved[1] = uint256();
 
@@ -381,7 +381,7 @@ public:
             block.mix_hash   = mix_hash;
         } else {
             block.nNonce     = nNonce;
-            // Firo - MTP
+            // Privora - MTP
             if(block.IsMTP()){
                 block.nVersionMTP = nVersionMTP;
                 block.mtpHashValue = mtpHashValue;
@@ -697,4 +697,4 @@ public:
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
 };
 
-#endif // BITCOIN_CHAIN_H
+#endif // PRIVORA_CHAIN_H

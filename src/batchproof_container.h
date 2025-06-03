@@ -1,5 +1,5 @@
-#ifndef FIRO_BATCHPROOF_CONTAINER_H
-#define FIRO_BATCHPROOF_CONTAINER_H
+#ifndef PRIVORA_BATCHPROOF_CONTAINER_H
+#define PRIVORA_BATCHPROOF_CONTAINER_H
 
 #include <memory>
 #include "chain.h"
@@ -100,4 +100,4 @@ private:
     std::vector<spark::SpendTransaction> sparkTransactions;
 };
 
-#endif //FIRO_BATCHPROOF_CONTAINER_H
+#endif //PRIVORA_BATCHPROOF_CONTAINER_H

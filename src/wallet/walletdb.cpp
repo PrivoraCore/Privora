@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -581,9 +581,9 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             std::string strAddress;
             ssKey >> strAddress;
-            CBitcoinAddress addressParsed(strAddress);
+            CPrivoraAddress addressParsed(strAddress);
             if(addressParsed.IsValid()){
-                ssValue >> pwallet->mapAddressBook[CBitcoinAddress(strAddress).Get()].name;
+                ssValue >> pwallet->mapAddressBook[CPrivoraAddress(strAddress).Get()].name;
             } else if (bip47::CPaymentCode::validate(strAddress)) {
                 ssValue >> pwallet->mapRAPAddressBook[strAddress].name;
             } else {
@@ -594,9 +594,9 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             std::string strAddress;
             ssKey >> strAddress;
-            CBitcoinAddress addressParsed(strAddress);
+            CPrivoraAddress addressParsed(strAddress);
             if(addressParsed.IsValid()){
-                ssValue >> pwallet->mapAddressBook[CBitcoinAddress(strAddress).Get()].purpose;
+                ssValue >> pwallet->mapAddressBook[CPrivoraAddress(strAddress).Get()].purpose;
             } else if (bip47::CPaymentCode::validate(strAddress)) {
                 ssValue >> pwallet->mapRAPAddressBook[strAddress].purpose;
             } else {
@@ -1153,7 +1153,7 @@ DBErrors CWalletDB::ZapWalletTx(CWallet* pwallet, std::vector<CWalletTx>& vWtx)
 void ThreadFlushWalletDB()
 {
     // Make this thread recognisable as the wallet flushing thread
-    RenameThread("firo-wallet");
+    RenameThread("privora-wallet");
 
     static bool fOneThread;
     if (fOneThread)

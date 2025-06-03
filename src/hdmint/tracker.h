@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Firo Core Developers
+// Copyright (c) 2019 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FIRO_HDMINTTRACKER_H
-#define FIRO_HDMINTTRACKER_H
+#ifndef PRIVORA_HDMINTTRACKER_H
+#define PRIVORA_HDMINTTRACKER_H
 
 #include "primitives/mint_spend.h"
 #include "hdmint/mintpool.h"
@@ -69,4 +69,4 @@ public:
     void Clear();
 };
 
-#endif //FIRO_HDMINTTRACKER_H
+#endif //PRIVORA_HDMINTTRACKER_H

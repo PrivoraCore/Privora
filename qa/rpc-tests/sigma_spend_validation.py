@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 # TODO fix to proper rpc_msgs after special card will be fixed.
@@ -34,7 +34,7 @@ post_outputs_with_funds = [
 ]
 
 
-class SigmaSpendValidationWithFundsTest(BitcoinTestFramework):
+class SigmaSpendValidationWithFundsTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4

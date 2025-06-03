@@ -139,7 +139,7 @@ std::string GetRequiredPaymentsString(int nBlockHeight, const CDeterministicMNCP
         CTxDestination dest;
         if (!ExtractDestination(payee->pdmnState->scriptPayout, dest))
             assert(false);
-        strPayee = CBitcoinAddress(dest).ToString();
+        strPayee = CPrivoraAddress(dest).ToString();
     }
     /*
     if (CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
@@ -201,7 +201,7 @@ bool CMasternodePayments::GetMasternodeTxOuts(int nBlockHeight, int nTime, CAmou
     for (const auto& txout : voutMasternodePaymentsRet) {
         CTxDestination address1;
         ExtractDestination(txout.scriptPubKey, address1);
-        CBitcoinAddress address2(address1);
+        CPrivoraAddress address2(address1);
 
         LogPrintf("CMasternodePayments::%s -- Znode payment %lld to %s\n", __func__, txout.nValue, address2.ToString());
     }
@@ -285,7 +285,7 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
             CTxDestination dest;
             if (!ExtractDestination(txout.scriptPubKey, dest))
                 assert(false);
-            LogPrintf("CMasternodePayments::%s -- ERROR failed to find expected payee %s in block at height %s\n", __func__, CBitcoinAddress(dest).ToString(), nBlockHeight);
+            LogPrintf("CMasternodePayments::%s -- ERROR failed to find expected payee %s in block at height %s\n", __func__, CPrivoraAddress(dest).ToString(), nBlockHeight);
             return false;
         }
     }

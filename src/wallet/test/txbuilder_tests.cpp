@@ -9,8 +9,8 @@
 #include <functional>
 #include <vector>
 
-static const CBitcoinAddress randomAddr1("aHEog3QYDGa8wH4Go9igKLDFkpaMsi3btq");
-static const CBitcoinAddress randomAddr2("aLTSv7QbTZbkgorYEhbNx2gH4hGYNLsoGv");
+static const CPrivoraAddress randomAddr1("aHEog3QYDGa8wH4Go9igKLDFkpaMsi3btq");
+static const CPrivoraAddress randomAddr2("aLTSv7QbTZbkgorYEhbNx2gH4hGYNLsoGv");
 
 class TestInputSigner : public InputSigner
 {

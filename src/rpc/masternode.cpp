@@ -47,13 +47,13 @@ void masternode_list_help()
             "  json           - Print info in JSON format (can be additionally filtered, partial match)\n"
             "  lastpaidblock  - Print the last block height a node was paid on the network\n"
             "  lastpaidtime   - Print the last time a node was paid on the network\n"
-            "  owneraddress   - Print the znode owner Firo address\n"
-            "  payee          - Print the znode payout Firo address (can be additionally filtered,\n"
+            "  owneraddress   - Print the znode owner Privora address\n"
+            "  payee          - Print the znode payout Privora address (can be additionally filtered,\n"
             "                   partial match)\n"
             "  pubKeyOperator - Print the znode operator public key\n"
             "  status         - Print znode status: ENABLED / POSE_BANNED\n"
             "                   (can be additionally filtered, partial match)\n"
-            "  votingaddress  - Print the znode voting Firo address\n"
+            "  votingaddress  - Print the znode voting Privora address\n"
         );
 }
 
@@ -159,9 +159,9 @@ UniValue GetNextMasternodeForPayment(int heightShift)
     CScript payeeScript = payee->pdmnState->scriptPayout;
 
     CTxDestination payeeDest;
-    CBitcoinAddress payeeAddr;
+    CPrivoraAddress payeeAddr;
     if (ExtractDestination(payeeScript, payeeDest)) {
-        payeeAddr = CBitcoinAddress(payeeDest);
+        payeeAddr = CPrivoraAddress(payeeDest);
     }
 
     UniValue obj(UniValue::VOBJ);
@@ -433,7 +433,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
         if (GetUTXOCoin(dmn->collateralOutpoint, coin)) {
             CTxDestination collateralDest;
             if (ExtractDestination(coin.out.scriptPubKey, collateralDest)) {
-                collateralAddressStr = CBitcoinAddress(collateralDest).ToString();
+                collateralAddressStr = CPrivoraAddress(collateralDest).ToString();
             }
         }
 
@@ -441,7 +441,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
         CTxDestination payeeDest;
         std::string payeeStr = "UNKNOWN";
         if (ExtractDestination(payeeScript, payeeDest)) {
-            payeeStr = CBitcoinAddress(payeeDest).ToString();
+            payeeStr = CPrivoraAddress(payeeDest).ToString();
         }
 
         if (strMode == "addr") {
@@ -479,8 +479,8 @@ UniValue masternodelist(const JSONRPCRequest& request)
                            dmnToStatus(dmn) << " " <<
                            dmnToLastPaidTime(dmn) << " " <<
                            dmn->pdmnState->nLastPaidHeight << " " <<
-                           CBitcoinAddress(dmn->pdmnState->keyIDOwner).ToString() << " " <<
-                           CBitcoinAddress(dmn->pdmnState->keyIDVoting).ToString() << " " <<
+                           CPrivoraAddress(dmn->pdmnState->keyIDOwner).ToString() << " " <<
+                           CPrivoraAddress(dmn->pdmnState->keyIDVoting).ToString() << " " <<
                            collateralAddressStr << " " <<
                            dmn->pdmnState->pubKeyOperator.Get().ToString();
             std::string strInfo = streamInfo.str();
@@ -493,8 +493,8 @@ UniValue masternodelist(const JSONRPCRequest& request)
             objMN.push_back(Pair("status", dmnToStatus(dmn)));
             objMN.push_back(Pair("lastpaidtime", dmnToLastPaidTime(dmn)));
             objMN.push_back(Pair("lastpaidblock", dmn->pdmnState->nLastPaidHeight));
-            objMN.push_back(Pair("owneraddress", CBitcoinAddress(dmn->pdmnState->keyIDOwner).ToString()));
-            objMN.push_back(Pair("votingaddress", CBitcoinAddress(dmn->pdmnState->keyIDVoting).ToString()));
+            objMN.push_back(Pair("owneraddress", CPrivoraAddress(dmn->pdmnState->keyIDOwner).ToString()));
+            objMN.push_back(Pair("votingaddress", CPrivoraAddress(dmn->pdmnState->keyIDVoting).ToString()));
             objMN.push_back(Pair("collateraladdress", collateralAddressStr));
             objMN.push_back(Pair("pubkeyoperator", dmn->pdmnState->pubKeyOperator.Get().ToString()));
             obj.push_back(Pair(strOutpoint, objMN));
@@ -510,7 +510,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
             obj.push_back(Pair(strOutpoint, payeeStr));
         } else if (strMode == "owneraddress") {
             if (strFilter !="" && strOutpoint.find(strFilter) == std::string::npos) return;
-            obj.push_back(Pair(strOutpoint, CBitcoinAddress(dmn->pdmnState->keyIDOwner).ToString()));
+            obj.push_back(Pair(strOutpoint, CPrivoraAddress(dmn->pdmnState->keyIDOwner).ToString()));
         } else if (strMode == "pubkeyoperator") {
             if (strFilter !="" && strOutpoint.find(strFilter) == std::string::npos) return;
             obj.push_back(Pair(strOutpoint, dmn->pdmnState->pubKeyOperator.Get().ToString()));
@@ -521,7 +521,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
             obj.push_back(Pair(strOutpoint, strStatus));
         } else if (strMode == "votingaddress") {
             if (strFilter !="" && strOutpoint.find(strFilter) == std::string::npos) return;
-            obj.push_back(Pair(strOutpoint, CBitcoinAddress(dmn->pdmnState->keyIDVoting).ToString()));
+            obj.push_back(Pair(strOutpoint, CPrivoraAddress(dmn->pdmnState->keyIDVoting).ToString()));
         }
     });
 
@@ -531,10 +531,10 @@ UniValue masternodelist(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafe argNames
   //  --------------------- ------------------------  -----------------------  ------ ----------
-    { "firo",               "znode",                 &masternode,             true,  {} },
-    { "firo",               "znodelist",             &masternodelist,         true,  {} },
-    { "firo",               "evoznode",              &masternode,             true,  {} },
-    { "firo",               "evoznodelist",          &masternodelist,         true,  {} },
+    { "privora",               "znode",                 &masternode,             true,  {} },
+    { "privora",               "znodelist",             &masternodelist,         true,  {} },
+    { "privora",               "evoznode",              &masternode,             true,  {} },
+    { "privora",               "evoznodelist",          &masternodelist,         true,  {} },
 };
 
 void RegisterMasternodeRPCCommands(CRPCTable &t)

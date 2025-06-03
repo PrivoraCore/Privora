@@ -39,7 +39,7 @@ void CDKGSessionManager::StartMessageHandlerPool()
     }
 
     messageHandlerPool.resize(2);
-    RenameThreadPool(messageHandlerPool, "firo-q-msg");
+    RenameThreadPool(messageHandlerPool, "privora-q-msg");
 }
 
 void CDKGSessionManager::StopMessageHandlerPool()

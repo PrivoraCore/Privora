@@ -2,7 +2,7 @@
 
 #include "../lelantus_primitives.h"
 #include "../challenge_generator_impl.h"
-#include "../../test/test_bitcoin.h"
+#include "../../test/test_privora.h"
 #include "../../utilstrencodings.h"
 
 #include <boost/test/unit_test.hpp>

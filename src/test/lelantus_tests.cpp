@@ -6,7 +6,7 @@
 #include "../wallet/wallet.h"
 #include "../net.h"
 
-#include "test_bitcoin.h"
+#include "test_privora.h"
 #include "fixtures.h"
 #include <iostream>
 #include <boost/test/unit_test.hpp>

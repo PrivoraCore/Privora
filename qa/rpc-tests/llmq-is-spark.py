@@ -8,7 +8,7 @@ from test_framework.test_framework import EvoZnodeTestFramework
 from test_framework.util import sync_blocks, set_node_times, \
     isolate_node, reconnect_isolated_node, set_mocktime, get_mocktime
 from test_framework.util import assert_equal, assert_raises_jsonrpc, \
-    bitcoind_processes, start_nodes, start_node, connect_nodes_bi
+    privorad_processes, start_nodes, start_node, connect_nodes_bi
 
 from decimal import Decimal
 

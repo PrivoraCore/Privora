@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_TRANSCRIPT_H
-#define FIRO_SPARK_TRANSCRIPT_H
+#ifndef PRIVORA_SPARK_TRANSCRIPT_H
+#define PRIVORA_SPARK_TRANSCRIPT_H
 #include <openssl/evp.h>
 #include "util.h"
 

@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
-#ifndef FIRO_PROGPOW_H
-#define FIRO_PROGPOW_H
+#ifndef PRIVORA_PROGPOW_H
+#define PRIVORA_PROGPOW_H
 
 #include <crypto/progpow/include/ethash/ethash.h>
 #include <crypto/progpow/include/ethash/progpow.hpp>
@@ -45,4 +45,4 @@ uint256 progpow_hash_full(const CProgPowHeader& header, uint256& mix_hash);
 /* Performs a light progpow hash (DAG loops excluded) provided header has mix_hash */
 uint256 progpow_hash_light(const CProgPowHeader& header);
 
-#endif // FIRO_PROGPOW_H
+#endif // PRIVORA_PROGPOW_H

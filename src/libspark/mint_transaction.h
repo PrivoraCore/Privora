@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_MINT_TRANSACTION_H
-#define FIRO_SPARK_MINT_TRANSACTION_H
+#ifndef PRIVORA_SPARK_MINT_TRANSACTION_H
+#define PRIVORA_SPARK_MINT_TRANSACTION_H
 #include "keys.h"
 #include "coin.h"
 #include "schnorr.h"

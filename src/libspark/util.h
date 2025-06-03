@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_UTIL_H
-#define FIRO_SPARK_UTIL_H
+#ifndef PRIVORA_SPARK_UTIL_H
+#define PRIVORA_SPARK_UTIL_H
 #include "../secp256k1/include/Scalar.h"
 #include "../secp256k1/include/GroupElement.h"
 #include "../crypto/aes.h"

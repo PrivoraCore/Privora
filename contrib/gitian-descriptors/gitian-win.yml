@@ -1,5 +1,5 @@
 ---
-name: "firo-win-0.14.0"
+name: "privora-win-0.14.0"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -25,8 +25,8 @@ packages:
 - "python3-pip"
 - "cmake"
 remotes:
-- "url": "https://github.com/firoorg/firo"
-  "dir": "firo"
+- "url": "https://github.com/privoraorg/privora"
+  "dir": "privora"
 files: []
 script: |
   set -e -o pipefail
@@ -96,7 +96,7 @@ script: |
   create_per-host_compiler_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd firo
+  cd privora
   BASEPREFIX="${PWD}/depends"
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -135,7 +135,7 @@ script: |
     make ${MAKEOPTS}
     make ${MAKEOPTS} -C src check-security
     make ${MAKEOPTS} -C src check-symbols
-    make deploy BITCOIN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+    make deploy PRIVORA_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
     make install DESTDIR=${INSTALLPATH}
     cd installed
     mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/

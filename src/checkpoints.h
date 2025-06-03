@@ -1,9 +1,9 @@
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHECKPOINTS_H
-#define BITCOIN_CHECKPOINTS_H
+#ifndef PRIVORA_CHECKPOINTS_H
+#define PRIVORA_CHECKPOINTS_H
 
 #include "uint256.h"
 
@@ -30,4 +30,4 @@ double GuessVerificationProgress(const CheckTxData& data, CBlockIndex* pindex, b
 
 } //namespace Checkpoints
 
-#endif // BITCOIN_CHECKPOINTS_H
+#endif // PRIVORA_CHECKPOINTS_H

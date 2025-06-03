@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'firoorg/firo-builder-depends:latest'
+            image 'privoraorg/privora-builder-depends:latest'
             alwaysPull true
         }
     }
@@ -23,7 +23,7 @@ pipeline {
                 sh './configure --prefix=`pwd`/depends/x86_64-linux-gnu'
                 sh 'make dist'
                 sh 'mkdir -p dist'
-                sh 'tar -C dist --strip-components=1 -xzf firo-*.tar.gz'
+                sh 'tar -C dist --strip-components=1 -xzf privora-*.tar.gz'
                 dir('dist') {
                     sh './configure --prefix=`pwd`/../depends/x86_64-linux-gnu --enable-tests --enable-crash-hooks'
                     sh 'make -j`nproc`'

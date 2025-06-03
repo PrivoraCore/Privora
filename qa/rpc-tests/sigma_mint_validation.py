@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 validation_inputs_no_funds = [
@@ -55,7 +55,7 @@ post_outputs_no_funds = [
 ]
 
 
-class SigmaMintValidationWithFundsTest(BitcoinTestFramework):
+class SigmaMintValidationWithFundsTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4

@@ -1,10 +1,10 @@
-// Copyright (c) 2020 The Firo Core developers
+// Copyright (c) 2020 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <boost/test/unit_test.hpp>
 
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "test/fixtures.h"
 
 #include "bip47_test_data.h"
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(account_receiver)
     COutPoint outpoint;
     dso >> outpoint;
 
-    CBitcoinSecret vchSecret;
+    CPrivoraSecret vchSecret;
     vchSecret.SetString("Kx983SRhAZpAhj7Aac1wUXMJ6XZeyJKqCxJJ49dxEbYCT4a1ozRD");
     CKey outpointSecret = vchSecret.GetKey();
 

@@ -6,7 +6,7 @@
 #include "../net.h"
 #include "../sparkname.h"
 
-#include "test_bitcoin.h"
+#include "test_privora.h"
 #include "fixtures.h"
 #include <iostream>
 #include <boost/test/unit_test.hpp>

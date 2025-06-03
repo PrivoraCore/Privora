@@ -1,5 +1,5 @@
-#ifndef FIRO_SIGMA_SIGMA_PRIMITIVES_H
-#define FIRO_SIGMA_SIGMA_PRIMITIVES_H
+#ifndef PRIVORA_SIGMA_SIGMA_PRIMITIVES_H
+#define PRIVORA_SIGMA_SIGMA_PRIMITIVES_H
 
 #include "../secp256k1/include/MultiExponent.h"
 #include "../secp256k1/include/GroupElement.h"
@@ -53,4 +53,4 @@ public:
 
 #include "sigma_primitives.hpp"
 
-#endif // FIRO_SIGMA_SIGMA_PRIMITIVES_H
+#endif // PRIVORA_SIGMA_SIGMA_PRIMITIVES_H

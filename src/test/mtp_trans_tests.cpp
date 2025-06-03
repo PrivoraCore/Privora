@@ -6,7 +6,7 @@
 #include "sync.h"
 #include "utilstrencodings.h"
 #include "utilmoneystr.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include <stdint.h>
 #include <vector>
@@ -47,8 +47,8 @@ struct MtpTransTestingSetup : public TestingSetup {
         CPubKey newKey;
         BOOST_CHECK(pwalletMain->GetKeyFromPool(newKey));
 
-        string strAddress = CBitcoinAddress(newKey.GetID()).ToString();
-        pwalletMain->SetAddressBook(CBitcoinAddress(strAddress).Get(), "",
+        string strAddress = CPrivoraAddress(newKey.GetID()).ToString();
+        pwalletMain->SetAddressBook(CPrivoraAddress(strAddress).Get(), "",
                                ( "receive"));
 
         scriptPubKeyMtp = CScript() <<  ToByteVector(newKey/*coinbaseKey.GetPubKey()*/) << OP_CHECKSIG;

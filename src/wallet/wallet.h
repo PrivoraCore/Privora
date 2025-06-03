@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_WALLET_H
-#define BITCOIN_WALLET_WALLET_H
+#ifndef PRIVORA_WALLET_WALLET_H
+#define PRIVORA_WALLET_WALLET_H
 
 #include "amount.h"
 #include "../sigma/coin.h"
@@ -25,7 +25,7 @@
 #include "wallet/mnemoniccontainer.h"
 #include "../spark/sparkwallet.h"
 #include "../base58.h"
-#include "firo_params.h"
+#include "privora_params.h"
 #include "univalue.h"
 
 #include "hdmint/tracker.h"
@@ -101,7 +101,7 @@ extern const char * DEFAULT_WALLET_DAT;
 const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 const uint32_t BIP44_INDEX = 0x2C;
 const uint32_t BIP44_TEST_INDEX = 0x1;   // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
-const uint32_t BIP44_FIRO_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
+const uint32_t BIP44_PRIVORA_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
 const uint32_t BIP44_MINT_INDEX = 0x2;
 
 const uint32_t BIP44_MINT_VALUE_INDEX = 0x5;
@@ -137,7 +137,7 @@ enum WalletFeature
 
 struct CompactTallyItem
 {
-    CBitcoinAddress address;
+    CPrivoraAddress address;
     CAmount nAmount;
     std::vector<CTxIn> vecTxIn;
     CompactTallyItem()
@@ -323,7 +323,7 @@ public:
     unsigned int nTimeSmart;
     /**
      * From me flag is set to 1 for transactions that were created by the wallet
-     * on this bitcoin node, and set to 0 for transactions that were created
+     * on this privora node, and set to 0 for transactions that were created
      * externally and came in through the network or sendrawtransaction RPC.
      */
     char fFromMe;
@@ -857,7 +857,7 @@ public:
     bool HasMasternode();
 
     // znode
-    /// Get 1000 FIRO output and keys which can be used for the Znode
+    /// Get 1000 PRIVORA output and keys which can be used for the Znode
     bool GetZnodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
     /// Extract txin information and keys from output
     bool GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet);
@@ -982,11 +982,11 @@ public:
     bool DecryptMintAmount(const std::vector<unsigned char>& encryptedValue, const secp_primitives::GroupElement& pubcoin, uint64_t& amount) const;
 
 
-    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 firo, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
+    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 privora, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
      * \param[in] required Required amount to spend.
      * \param[out] coinsToSpend_out Coins which user needs to spend.
      * \param[out] coinsToMint_out Coins which will be re-minted by the user to get the change back.
-     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 firo) amount using coins we have.
+     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 privora) amount using coins we have.
      */
     bool GetCoinsToSpend(
         CAmount required,
@@ -1391,10 +1391,10 @@ public:
     void SetNotificationTxId(bip47::CPaymentCode const & theirPcode, uint256 const & txid);
 
     /* Returns next unused address for their payment code. Throws if no payment channel was setup */
-    CBitcoinAddress GetTheirNextAddress(bip47::CPaymentCode const & theirPcode) const;
+    CPrivoraAddress GetTheirNextAddress(bip47::CPaymentCode const & theirPcode) const;
 
     /* Returns and stores a next unused address for their payment code. Throws if no payment channel was setup */
-    CBitcoinAddress GenerateTheirNextAddress(bip47::CPaymentCode const & theirPcode);
+    CPrivoraAddress GenerateTheirNextAddress(bip47::CPaymentCode const & theirPcode);
 
     /*Loads previously stored bip47 accounts */
     void LoadBip47Wallet();
@@ -1402,10 +1402,10 @@ public:
     std::shared_ptr<bip47::CWallet const>  GetBip47Wallet() const;
 
     boost::optional<bip47::CPaymentCodeDescription> FindPcode(bip47::CPaymentCode const & pcode) const;
-    boost::optional<bip47::CPaymentCodeDescription> FindPcode(CBitcoinAddress const & address) const;
+    boost::optional<bip47::CPaymentCodeDescription> FindPcode(CPrivoraAddress const & address) const;
 
     /*Marks address as used for a receiving bip47 account. Returns the account if found*/
-    bip47::CAccountReceiver const * AddressUsed(CBitcoinAddress const & address);
+    bip47::CAccountReceiver const * AddressUsed(CPrivoraAddress const & address);
 
     /*Checks if this is a BIP47 transaction and handles it. May send an unlock request if wallet is locked.*/
     void HandleBip47Transaction(CWalletTx const & wtx);
@@ -1517,4 +1517,4 @@ bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins
 
 CWalletTx PrepareAndSendNotificationTx(CWallet* pwallet, bip47::CPaymentCode const & theirPcode);
 
-#endif // BITCOIN_WALLET_WALLET_H
+#endif // PRIVORA_WALLET_WALLET_H

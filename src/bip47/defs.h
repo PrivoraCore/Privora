@@ -19,14 +19,14 @@ namespace bip47
 
     inline std::string PcodeLabel() {return "pcode_label=";}
 
-    typedef std::vector<std::pair<CBitcoinAddress, CKey>> MyAddrContT;
-    typedef std::vector<CBitcoinAddress> TheirAddrContT;
+    typedef std::vector<std::pair<CPrivoraAddress, CKey>> MyAddrContT;
+    typedef std::vector<CPrivoraAddress> TheirAddrContT;
     typedef std::vector<unsigned char> Bytes;
 
     struct FindByAddress {
-        FindByAddress(CBitcoinAddress const & address): address(address) {}
+        FindByAddress(CPrivoraAddress const & address): address(address) {}
         bool operator()(MyAddrContT::value_type const & pair) const {return pair.first == address;}
-        CBitcoinAddress const & address;
+        CPrivoraAddress const & address;
     };
 
 }

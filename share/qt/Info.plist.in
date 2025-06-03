@@ -11,7 +11,7 @@
   </array>
 
   <key>CFBundleIconFile</key>
-  <string>bitcoin.icns</string>
+  <string>privora.icns</string>
 
   <key>CFBundlePackageType</key>
   <string>APPL</string>
@@ -29,16 +29,16 @@
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>Firo-Qt</string>
+  <string>Privora-Qt</string>
   
   <key>CFBundleName</key>
-  <string>Firo-Qt</string>
+  <string>Privora-Qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.firo.Firo-Qt</string>
+  <string>io.privora.Privora-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,10 +46,10 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>org.bitcoin.BitcoinPayment</string>
+      <string>org.privora.PrivoraPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>firo</string>
+        <string>privora</string>
       </array>
     </dict>
   </array>

@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_KEYS_H
-#define FIRO_SPARK_KEYS_H
+#ifndef PRIVORA_SPARK_KEYS_H
+#define PRIVORA_SPARK_KEYS_H
 #include "bech32.h"
 #include "f4grumble.h"
 #include "params.h"

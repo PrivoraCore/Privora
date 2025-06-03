@@ -1,12 +1,12 @@
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPCREGISTER_H
-#define BITCOIN_RPCREGISTER_H
+#ifndef PRIVORA_RPCREGISTER_H
+#define PRIVORA_RPCREGISTER_H
 
 #if defined(HAVE_CONFIG_H)
-#include "../config/bitcoin-config.h"
+#include "../config/privora-config.h"
 #endif
 
 #include "util.h"

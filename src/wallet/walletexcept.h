@@ -1,5 +1,5 @@
-#ifndef FIRO_WALLET_WALLETEXCEPT_H
-#define FIRO_WALLET_WALLETEXCEPT_H
+#ifndef PRIVORA_WALLET_WALLETEXCEPT_H
+#define PRIVORA_WALLET_WALLETEXCEPT_H
 
 #include <stdexcept>
 
@@ -24,4 +24,4 @@ public:
     explicit InsufficientFunds(const std::string& what);
 };
 
-#endif // FIRO_WALLET_WALLETEXCEPT_H
+#endif // PRIVORA_WALLET_WALLETEXCEPT_H

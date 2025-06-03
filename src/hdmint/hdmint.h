@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Firo Core Developers
+// Copyright (c) 2019 The Privora Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FIRO_HDMINT_H
-#define FIRO_HDMINT_H
+#ifndef PRIVORA_HDMINT_H
+#define PRIVORA_HDMINT_H
 
 #include "primitives/mint_spend.h"
 #include "sigma.h"
@@ -71,5 +71,5 @@ public:
     };
 };
 
-#endif //FIRO_HDMINT_H
+#endif //PRIVORA_HDMINT_H
 

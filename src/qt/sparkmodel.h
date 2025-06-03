@@ -1,5 +1,5 @@
-#ifndef FIRO_QT_SPARKMODEL_H
-#define FIRO_QT_SPARKMODEL_H
+#ifndef PRIVORA_QT_SPARKMODEL_H
+#define PRIVORA_QT_SPARKMODEL_H
 
 #include "automintdialog.h"
 #include "automintmodel.h"
@@ -55,4 +55,4 @@ private:
     CWallet *wallet;
 };
 
-#endif // FIRO_QT_SPARKMODEL_H
+#endif // PRIVORA_QT_SPARKMODEL_H

@@ -3,7 +3,7 @@
 #include "../wallet/wallet.h"
 
 #include "automintmodel.h"
-#include "bitcoinunits.h"
+#include "privoraunits.h"
 #include "guiconstants.h"
 #include "sparkmodel.h"
 #include "optionsmodel.h"
@@ -362,7 +362,7 @@ void AutoMintSparkModel::processAutoMintSparkAck(AutoMintSparkAck ack, CAmount m
     {
     case AutoMintSparkAck::Success:
         msgParams.first = tr("Successfully anonymized %1")
-            .arg(BitcoinUnits::formatWithUnit(optionsModel->getDisplayUnit(), minted));
+            .arg(PrivoraUnits::formatWithUnit(optionsModel->getDisplayUnit(), minted));
         msgParams.second = CClientUIInterface::MSG_INFORMATION;
         break;
     case AutoMintSparkAck::WaitUserToActive:

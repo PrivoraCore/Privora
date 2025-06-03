@@ -1,14 +1,14 @@
-# Firo Core
-*Note: some of the documents in this repository might still refer to Bitcoin*
+# Privora Core
+*Note: some of the documents in this repository might still refer to Privora*
 
 ## Setup
 
-[Firo Core] (https://firo.org/get-firo/download/) is the original Firo client and it builds the backbone of the network. However, it downloads and stores the entire history of Firo transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Privora Core] (https://privora.org/get-privora/download/) is the original Privora client and it builds the backbone of the network. However, it downloads and stores the entire history of Privora transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 
 ## Building
 
-The following are developer notes on how to build Firo on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+The following are developer notes on how to build Privora on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
 - [OS X Build Notes](build-osx.md)
 - [Unix Build Notes](build-unix.md)
@@ -18,12 +18,12 @@ The following are developer notes on how to build Firo on your native platform. 
 
 Development
 ---------------------
-The Firo repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+The Privora repo's [root README](/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Release Notes](release-notes.md)
 - [Release Process](release-process.md)
-- [Source Code Documentation (External Link)](https://dev.visucore.com/bitcoin/doxygen/)
+- [Source Code Documentation (External Link)](https://dev.visucore.com/privora/doxygen/)
 - [Translation Process](translation_process.md)
 - [Translation Strings Policy](translation_strings_policy.md)
 - [Travis CI](travis-ci.md)
@@ -34,9 +34,9 @@ The Firo repo's [root README](/README.md) contains relevant information on the d
 - [Benchmarking](benchmarking.md)
 
 ### Resources
-* Discuss on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Development & Technical Discussion board](https://bitcointalk.org/index.php?board=6.0).
-* Discuss project-specific development on #bitcoin-core-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=bitcoin-core-dev).
-* Discuss general Bitcoin development on #bitcoin-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=bitcoin-dev).
+* Discuss on the [PrivoraTalk](https://privoratalk.org/) forums, in the [Development & Technical Discussion board](https://privoratalk.org/index.php?board=6.0).
+* Discuss project-specific development on #privora-core-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=privora-core-dev).
+* Discuss general Privora development on #privora-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=privora-dev).
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)

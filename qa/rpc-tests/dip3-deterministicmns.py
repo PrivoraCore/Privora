@@ -9,11 +9,11 @@
 
 from test_framework.blocktools import create_block, create_coinbase, get_masternode_payment, get_founders_rewards
 from test_framework.mininode import CTransaction, ToHex, FromHex, CTxOut, COIN, CCbTx
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 from test_framework.mn_utils import *
 
-class DIP3Test(BitcoinTestFramework):
+class DIP3Test(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_initial_mn = 11 # Should be >= 11 to make sure quorums are not always the same MNs
@@ -49,7 +49,7 @@ class DIP3Test(BitcoinTestFramework):
         self.log.info("funding controller node")
         while self.nodes[0].getbalance() < (self.num_initial_mn + 3) * 1000:
             self.nodes[0].generate(1) # generate enough for collaterals
-        self.log.info("controller node has {} FIRO".format(self.nodes[0].getbalance()))
+        self.log.info("controller node has {} PRIVORA".format(self.nodes[0].getbalance()))
 
         # Make sure we're below block 135 (which activates dip3)
         self.log.info("testing rejection of ProTx before dip3 activation")

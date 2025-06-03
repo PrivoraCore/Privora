@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SERIALIZE_H
-#define BITCOIN_SERIALIZE_H
+#ifndef PRIVORA_SERIALIZE_H
+#define PRIVORA_SERIALIZE_H
 
 #include "compat/endian.h"
 
@@ -252,7 +252,7 @@ template <typename T> size_t GetSerializeSize(const T& t, int nType, int nVersio
 template <typename S, typename T> size_t GetSerializeSize(const S& s, const T& t);
 
 /**
- * Please note that Firo drops support for big-endian architectures and thus these functions are simple read/writes
+ * Please note that Privora drops support for big-endian architectures and thus these functions are simple read/writes
  * It significantly improves MTP structures serialization performance
  */
 
@@ -1295,4 +1295,4 @@ size_t GetSerializeSize(const S& s, const T& t)
     return (CSizeComputer(s.GetType(), s.GetVersion()) << t).size();
 }
 
-#endif // BITCOIN_SERIALIZE_H
+#endif // PRIVORA_SERIALIZE_H

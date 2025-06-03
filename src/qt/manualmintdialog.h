@@ -1,5 +1,5 @@
-#ifndef FIRO_QT_MANUALMINTDIALOG_H
-#define FIRO_QT_MANUALMINTDIALOG_H
+#ifndef PRIVORA_QT_MANUALMINTDIALOG_H
+#define PRIVORA_QT_MANUALMINTDIALOG_H
 
 #include <QDialog>
 
@@ -22,4 +22,4 @@ private:
     const PlatformStyle *platformStyle;
 };
 
-#endif // FIRO_QT_MANUALMINTDIALOG_H
+#endif // PRIVORA_QT_MANUALMINTDIALOG_H

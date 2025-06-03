@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include "script/interpreter.h"
 #include "script/standard.h"
@@ -19,7 +19,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-static const CBitcoinAddress payoutAddress  ("TTJW6FsYqLbSiF3ZUwMXRghgQuXK7XTodR");
+static const CPrivoraAddress payoutAddress  ("TTJW6FsYqLbSiF3ZUwMXRghgQuXK7XTodR");
 //static const std::string payoutKey          ("cV3qrPWzDcnhzRMV4MqtTH4LhNPqPo26ZntGvfJhc8nqCi8Ae5xR");
 
 typedef std::map<COutPoint, std::pair<int, CAmount>> SimpleUTXOMap;

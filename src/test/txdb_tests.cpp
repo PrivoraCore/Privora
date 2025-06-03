@@ -1,7 +1,7 @@
 #include "txdb.h"
 #include "uint256.h"
 #include "random.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "base58.h"
 
 #include <boost/assert.hpp>
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(dbindexhelper_coinbase)
     //MTP Testnet: height: 7980, txid: 02fdd0c09e5e84c4fb2207f9a5b9bbdb181c71436660865ee0ce36e37fff3492
     CTransaction tx = TxFromStr("01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff05022c1f0104ffffffff062059925300000000232102a9ba61c5b6d3b6bbff24f8f972745bb9922448251ded2fddc5fdbc21d15b0ae0ac80f0fa02000000001976a914296134d2415bf1f2b518b3f673816d7e603b160088ac80f0fa02000000001976a914e1e1dc06a889c1b6d3eb00eef7a96f6a7cfb884888ac80f0fa02000000001976a914ab03ecfddee6330497be894d16c29ae341c123aa88ac80d1f008000000001976a9144281a58a1d5b2d3285e00cb45a8492debbdad4c588ac80f0fa02000000001976a9141fd264c0bb53bd9fef18e2248ddf1383d6e811ae88ac00000000");
 
-    std::vector<CBitcoinAddress> const addresses {"TLNchzdLPyfdXp1eH4VSrUMx6wMjitzLbF", "TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo", "TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5"
+    std::vector<CPrivoraAddress> const addresses {"TLNchzdLPyfdXp1eH4VSrUMx6wMjitzLbF", "TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo", "TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5"
         , "TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT", "TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve", "TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS"};
     std::vector<CAmount> const amounts {14021, 500, 500, 500, 1500, 500};
     size_t const outNum = 6;
@@ -119,11 +119,11 @@ BOOST_AUTO_TEST_CASE(dbindexhelper_payToPubKey)
     size_t const inNum = 2;
     std::vector<size_t> const prevout_idx {6, 1};
     std::vector<std::string> const prevout_txids {"f366746784903c3827285dbc1012feda128ec0391cd8ca05d382191be6ca4aa3", "bfc1b1bd6435a2b16ad71a29c184bb5c44f3dfa2227b870bdf3e2bdf551a06f2"};
-    std::vector<CBitcoinAddress> const in_addrs {"TJExcfNmX7mAcFiaoDV6NvYAVZKS6hujwa", "TBebhWryrf6csNh4RhP4vbJWPgpQGjS1Pw"};
+    std::vector<CPrivoraAddress> const in_addrs {"TJExcfNmX7mAcFiaoDV6NvYAVZKS6hujwa", "TBebhWryrf6csNh4RhP4vbJWPgpQGjS1Pw"};
     std::vector<CAmount> const in_amounts {-in0prevtx.vout[6].nValue, -in1prevtx.vout[1].nValue};
 
     size_t const outNum = 2;
-    std::vector<CBitcoinAddress> const out_addrs {"TTMFBHDELHAgevutxsNDGLeq15N8G29mjY", "TZ7FheEQQjfougHqtBqoNknMmzrMESyKJZ"};
+    std::vector<CPrivoraAddress> const out_addrs {"TTMFBHDELHAgevutxsNDGLeq15N8G29mjY", "TZ7FheEQQjfougHqtBqoNknMmzrMESyKJZ"};
     std::vector<CAmount> const out_amounts {10000, 443};
 
     {
@@ -188,11 +188,11 @@ BOOST_AUTO_TEST_CASE(dbindexhelper_zeromint)
     size_t const inNum = 1;
     std::vector<size_t> const prevout_idx {0};
     std::vector<std::string> const prevout_txids {"a15122ff0a2d2962b28b43e16ef6b581f9f50e64760ecc08bb5a44909f79db32"};
-    std::vector<CBitcoinAddress> const in_addrs {"TUMBV6mfYExRrFPf4iFHnH9uXZCAR2QGCL"};
+    std::vector<CPrivoraAddress> const in_addrs {"TUMBV6mfYExRrFPf4iFHnH9uXZCAR2QGCL"};
     std::vector<CAmount> const in_amounts {-in0prevtx.vout[0].nValue};
 
     size_t const outNum = 2;
-    std::vector<CBitcoinAddress> const out_addrs {"", "TW3WrHvUYvUncZiYrGZ1kKrkGG9XxSGv8g"};
+    std::vector<CPrivoraAddress> const out_addrs {"", "TW3WrHvUYvUncZiYrGZ1kKrkGG9XxSGv8g"};
     std::vector<CAmount> const out_amounts {1000, 12990};
 
     {
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(dbindexhelper_zerospend)
 
     size_t const inNum = 1;
     size_t const outNum = 1;
-    std::vector<CBitcoinAddress> const out_addrs {"TM4nBWRcHuBuoZ2wQqrEqkgjQMFq19e3yw"};
+    std::vector<CPrivoraAddress> const out_addrs {"TM4nBWRcHuBuoZ2wQqrEqkgjQMFq19e3yw"};
     std::vector<CAmount> const out_amounts {1000};
 
     {

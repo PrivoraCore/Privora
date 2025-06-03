@@ -5,13 +5,13 @@
 
 # build output
 **/*.exe
-src/firo
-src/firod
-src/firo-cli
-src/firo-tx
-src/test/test_bitcoin
-src/test/test_bitcoin_fuzzy
-src/qt/test/test_bitcoin-qt
+src/privora
+src/privorad
+src/privora-cli
+src/privora-tx
+src/test/test_privora
+src/test/test_privora_fuzzy
+src/qt/test/test_privora-qt
 
 # autoreconf
 **/*.tar.gz
@@ -36,8 +36,8 @@ src/qt/test/test_bitcoin-qt
 **/missing
 **/compile
 **/test-driver
-src/config/bitcoin-config.h
-src/config/bitcoin-config.h.in
+src/config/privora-config.h
+src/config/privora-config.h.in
 share/setup.nsi
 share/qt/Info.plist
 
@@ -82,12 +82,12 @@ src/tor.timestamp*
 # Compilation and Qt preprocessor part
 **/*.qm
 **/Makefile
-**/firo-qt*
-**/Firo-Qt.app
+**/privora-qt*
+**/Privora-Qt.app
 
 # Unit-tests
 **/Makefile.test
-**/firo-qt_test
+**/privora-qt_test
 
 # Resources cpp
 **/qrc_*.cpp
@@ -100,7 +100,7 @@ build
 **/*.gcno
 **/*.gcda
 *.info
-test_bitcoin.coverage
+test_privora.coverage
 total.coverage
 coverage_percent.txt
 
@@ -116,7 +116,7 @@ src/test/buildenv.py
 
 doc/doxygen
 
-libfiroconsensus.pc
+libprivoraconsensus.pc
 contrib/devtools/split-debug.sh
 
 !depends

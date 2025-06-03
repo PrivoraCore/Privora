@@ -1,5 +1,5 @@
-#ifndef FIRO_SIGMA_R1_PROOF_H
-#define FIRO_SIGMA_R1_PROOF_H
+#ifndef PRIVORA_SIGMA_R1_PROOF_H
+#define PRIVORA_SIGMA_R1_PROOF_H
 
 #include <vector>
 #include <secp256k1/include/Scalar.h>
@@ -75,4 +75,4 @@ public:
 
 } // namespace sigma
 
-#endif // FIRO_SIGMA_R1_PROOF_H
+#endif // PRIVORA_SIGMA_R1_PROOF_H

@@ -4,7 +4,7 @@
 #include "../validation.h"
 #include "../secp256k1/include/Scalar.h"
 #include "../sigma.h"
-#include "./test_bitcoin.h"
+#include "./test_privora.h"
 #include "../wallet/wallet.h"
 
 #include "test/fixtures.h"

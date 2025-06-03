@@ -1,5 +1,5 @@
-#ifndef FIRO_LELANTUS_CHALLENGE_GENERATOR_H
-#define FIRO_LELANTUS_CHALLENGE_GENERATOR_H
+#ifndef PRIVORA_LELANTUS_CHALLENGE_GENERATOR_H
+#define PRIVORA_LELANTUS_CHALLENGE_GENERATOR_H
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
 namespace lelantus {
@@ -18,4 +18,4 @@ public:
 
 }// namespace lelantus
 
-#endif //FIRO_LELANTUS_CHALLENGE_GENERATOR_H
+#endif //PRIVORA_LELANTUS_CHALLENGE_GENERATOR_H

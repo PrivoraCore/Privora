@@ -6,7 +6,7 @@
 #include "sync.h"
 #include "utilstrencodings.h"
 #include "utilmoneystr.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include <stdint.h>
 #include <vector>
@@ -101,8 +101,8 @@ void ZerocoinTestingSetupBase::CreateAndProcessEmptyBlocks(size_t block_numbers,
     {
         BOOST_CHECK(pwalletMain->GetKeyFromPool(pubkey));
 
-        std::string strAddress = CBitcoinAddress(pubkey.GetID()).ToString();
-        pwalletMain->SetAddressBook(CBitcoinAddress(strAddress).Get(), "",
+        std::string strAddress = CPrivoraAddress(pubkey.GetID()).ToString();
+        pwalletMain->SetAddressBook(CPrivoraAddress(strAddress).Get(), "",
                                ( "receive"));
 
         //Mine 200 blocks so that we have funds for creating mints and we are over these limits:
@@ -130,8 +130,8 @@ void ZerocoinTestingSetupBase::CreateAndProcessEmptyBlocks(size_t block_numbers,
         CPubKey newKey;
         BOOST_CHECK(pwalletMain->GetKeyFromPool(newKey));
 
-        std::string strAddress = CBitcoinAddress(newKey.GetID()).ToString();
-        pwalletMain->SetAddressBook(CBitcoinAddress(strAddress).Get(), "",
+        std::string strAddress = CPrivoraAddress(newKey.GetID()).ToString();
+        pwalletMain->SetAddressBook(CPrivoraAddress(strAddress).Get(), "",
                                ( "receive"));
 
         scriptPubKey = CScript() <<  ToByteVector(newKey/*coinbaseKey.GetPubKey()*/) << OP_CHECKSIG;
@@ -153,8 +153,8 @@ MtpMalformedTestingSetup::MtpMalformedTestingSetup()
     CPubKey newKey;
     BOOST_CHECK(pwalletMain->GetKeyFromPool(newKey));
 
-    std::string strAddress = CBitcoinAddress(newKey.GetID()).ToString();
-    pwalletMain->SetAddressBook(CBitcoinAddress(strAddress).Get(), "",
+    std::string strAddress = CPrivoraAddress(newKey.GetID()).ToString();
+    pwalletMain->SetAddressBook(CPrivoraAddress(strAddress).Get(), "",
                             ( "receive"));
 
     scriptPubKey = CScript() <<  ToByteVector(newKey/*coinbaseKey.GetPubKey()*/) << OP_CHECKSIG;

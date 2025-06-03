@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_F4GRUMBLE_H
-#define FIRO_SPARK_F4GRUMBLE_H
+#ifndef PRIVORA_SPARK_F4GRUMBLE_H
+#define PRIVORA_SPARK_F4GRUMBLE_H
 #include <openssl/evp.h>
 #include "util.h"
 

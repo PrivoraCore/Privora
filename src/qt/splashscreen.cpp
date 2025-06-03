@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/privora-config.h"
 #endif
 
 #include "splashscreen.h"
@@ -41,9 +41,9 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
     // define text to place
     QString titleText       = QString(QApplication::applicationName()).replace(QString("-testnet"), QString(""), Qt::CaseSensitive); // cut of testnet, place it as single object further down
     //QString versionText     = QString("Version %1 ").arg(QString::fromStdString(FormatFullVersion()));
-    //QString copyrightText1   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
+    //QString copyrightText1   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Privora developers"));
     //QString copyrightText2   = QChar(0xA9)+QString(" 2011-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Litecoin developers"));
-    //QString copyrightText3   = QChar(0xA9)+QString(" 2014 ") + QString(tr("The Firo developers"));
+    //QString copyrightText3   = QChar(0xA9)+QString(" 2014 ") + QString(tr("The Privora developers"));
 
     QString font            = "Arial";
 
@@ -115,7 +115,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
 //    QRect rGradient(QPoint(0,0), splashSize);
 //    pixPaint.fillRect(rGradient, gradient);
 //
-//    // draw the Firo icon, expected size of PNG: 1024x1024
+//    // draw the Privora icon, expected size of PNG: 1024x1024
 //    QRect rectIcon(QPoint(-150,-122), QSize(430,430));
 //
 //    const QSize requiredSize(1024,1024);

@@ -1,5 +1,5 @@
-#ifndef FIRO_SIGMA_SIGMAPLUS_PROOF_H
-#define FIRO_SIGMA_SIGMAPLUS_PROOF_H
+#ifndef PRIVORA_SIGMA_SIGMAPLUS_PROOF_H
+#define PRIVORA_SIGMA_SIGMAPLUS_PROOF_H
 
 #include "params.h"
 #include "r1_proof.h"
@@ -70,4 +70,4 @@ public:
 
 } //namespace sigma
 
-#endif // FIRO_SIGMA_SIGMAPLUS_PROOF_H
+#endif // PRIVORA_SIGMA_SIGMAPLUS_PROOF_H

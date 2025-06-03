@@ -16,7 +16,7 @@ CPaymentCode const & CPaymentChannel::getTheirPcode() const
 }
 
 namespace {
-CBitcoinAddress generate(CKey const & privkey, CPubKey const & sharedSecretPubkey, CPubKey const & addressPubkey, CKey * privkeyOut = nullptr)
+CPrivoraAddress generate(CKey const & privkey, CPubKey const & sharedSecretPubkey, CPubKey const & addressPubkey, CKey * privkeyOut = nullptr)
 {
     static GroupElement const G(GroupElement().set_base_g());
     CSecretPoint sp(privkey, sharedSecretPubkey);
@@ -38,13 +38,13 @@ CBitcoinAddress generate(CKey const & privkey, CPubKey const & sharedSecretPubke
     secp_primitives::GroupElement Bprime = B + G *  secp_primitives::Scalar(spHash.data());
     CPubKey pubKeyN = utils::PubkeyFromGe(Bprime);
 
-    return CBitcoinAddress(pubKeyN.GetID());
+    return CPrivoraAddress(pubKeyN.GetID());
 }
 }
 
-CBitcoinAddress CPaymentChannel::generateTheirNextSecretAddress()
+CPrivoraAddress CPaymentChannel::generateTheirNextSecretAddress()
 {
-    CBitcoinAddress addr = getTheirNextSecretAddress();
+    CPrivoraAddress addr = getTheirNextSecretAddress();
     ++theirUsedAddressCount;
     return addr;
 }
@@ -52,7 +52,7 @@ CBitcoinAddress CPaymentChannel::generateTheirNextSecretAddress()
 TheirAddrContT CPaymentChannel::generateTheirSecretAddresses(uint32_t fromAddr, uint32_t uptoAddr) const
 {
     static GroupElement const G(GroupElement().set_base_g());
-    std::vector<CBitcoinAddress>  result;
+    std::vector<CPrivoraAddress>  result;
     for (uint32_t i = fromAddr; i < uptoAddr; ++i) {
         CPubKey const theirPubkey = theirPcode.getNthPubkey(i).pubkey;
         result.push_back(generate(utils::Derive(myChannelKey, {0}).key, theirPubkey, theirPubkey));
@@ -60,7 +60,7 @@ TheirAddrContT CPaymentChannel::generateTheirSecretAddresses(uint32_t fromAddr, 
     return result;
 }
 
-CBitcoinAddress CPaymentChannel::getTheirNextSecretAddress() const
+CPrivoraAddress CPaymentChannel::getTheirNextSecretAddress() const
 {
     TheirAddrContT addr = generateTheirSecretAddresses(theirUsedAddressCount, theirUsedAddressCount + 1);
     return addr.front();
@@ -152,7 +152,7 @@ MyAddrContT const & CPaymentChannel::generateMyNextAddresses() const
     return nextAddresses;
 }
 
-bool CPaymentChannel::markAddressUsed(CBitcoinAddress const & address)
+bool CPaymentChannel::markAddressUsed(CPrivoraAddress const & address)
 {
     if (address == getMyPcode().getNotificationAddress())
         return true;

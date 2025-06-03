@@ -1,7 +1,7 @@
-#ifndef FIRO_LIBLELANTUS_TEST_FIXTURE_H
-#define FIRO_LIBLELANTUS_TEST_FIXTURE_H
+#ifndef PRIVORA_LIBLELANTUS_TEST_FIXTURE_H
+#define PRIVORA_LIBLELANTUS_TEST_FIXTURE_H
 
-#include "../../test/test_bitcoin.h"
+#include "../../test/test_privora.h"
 
 #include "../lelantus_primitives.h"
 
@@ -57,4 +57,4 @@ public:
 
 } // namespace lelantus
 
-#endif // FIRO_LIBLELANTUS_TEST_FIXTURE_H
+#endif // PRIVORA_LIBLELANTUS_TEST_FIXTURE_H

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 #include "overviewpage.h"
 #include "ui_overviewpage.h"
 
-#include "bitcoinunits.h"
+#include "privoraunits.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
@@ -39,7 +39,7 @@ class TxViewDelegate : public QAbstractItemDelegate
     Q_OBJECT
 public:
     TxViewDelegate(const PlatformStyle *_platformStyle, QObject *parent=nullptr):
-        QAbstractItemDelegate(parent), unit(BitcoinUnits::BTC),
+        QAbstractItemDelegate(parent), unit(PrivoraUnits::VORA),
         platformStyle(_platformStyle)
     {
 
@@ -97,7 +97,7 @@ public:
             foreground = option.palette.color(QPalette::Text);
         }
         painter->setPen(foreground);
-        QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
+        QString amountText = PrivoraUnits::formatWithUnit(unit, amount, true, PrivoraUnits::separatorAlways);
         if(!confirmed)
         {
             amountText = QString("[") + amountText + QString("]");
@@ -186,10 +186,10 @@ void OverviewPage::handleEnabledTorChanged(){
 
     if(ui->checkboxEnabledTor->isChecked()){
         settings.setValue("fTorSetup", true);
-        msgBox.setText(tr("Please restart the Firo wallet to route your connection through Tor to protect your IP address. <br>Syncing your wallet might be slower with Tor. <br>Note that -torsetup in firo.conf will always override any changes made here."));
+        msgBox.setText(tr("Please restart the Privora wallet to route your connection through Tor to protect your IP address. <br>Syncing your wallet might be slower with Tor. <br>Note that -torsetup in privora.conf will always override any changes made here."));
     }else{
         settings.setValue("fTorSetup", false);
-        msgBox.setText(tr("Please restart the Firo wallet to disable routing of your connection through Tor to protect your IP address. <br>Note that -torsetup in firo.conf will always override any changes made here."));
+        msgBox.setText(tr("Please restart the Privora wallet to disable routing of your connection through Tor to protect your IP address. <br>Note that -torsetup in privora.conf will always override any changes made here."));
     }
     msgBox.exec();
 }
@@ -235,17 +235,17 @@ void OverviewPage::setBalance(
     currentPrivateBalance = privateBalance;
     currentUnconfirmedPrivateBalance = unconfirmedPrivateBalance;
     currentAnonymizableBalance = anonymizableBalance;
-    ui->labelBalance->setText(BitcoinUnits::formatWithUnit(unit, balance, false, BitcoinUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance + currentPrivateBalance + currentUnconfirmedPrivateBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelWatchAvailable->setText(BitcoinUnits::formatWithUnit(unit, watchOnlyBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelWatchPending->setText(BitcoinUnits::formatWithUnit(unit, watchUnconfBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelWatchImmature->setText(BitcoinUnits::formatWithUnit(unit, watchImmatureBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelWatchTotal->setText(BitcoinUnits::formatWithUnit(unit, watchOnlyBalance + watchUnconfBalance + watchImmatureBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelPrivate->setText(BitcoinUnits::formatWithUnit(unit, privateBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelUnconfirmedPrivate->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedPrivateBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelAnonymizable->setText(BitcoinUnits::formatWithUnit(unit, anonymizableBalance, false, BitcoinUnits::separatorAlways));
+    ui->labelBalance->setText(PrivoraUnits::formatWithUnit(unit, balance, false, PrivoraUnits::separatorAlways));
+    ui->labelUnconfirmed->setText(PrivoraUnits::formatWithUnit(unit, unconfirmedBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelImmature->setText(PrivoraUnits::formatWithUnit(unit, immatureBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelTotal->setText(PrivoraUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance + currentPrivateBalance + currentUnconfirmedPrivateBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelWatchAvailable->setText(PrivoraUnits::formatWithUnit(unit, watchOnlyBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelWatchPending->setText(PrivoraUnits::formatWithUnit(unit, watchUnconfBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelWatchImmature->setText(PrivoraUnits::formatWithUnit(unit, watchImmatureBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelWatchTotal->setText(PrivoraUnits::formatWithUnit(unit, watchOnlyBalance + watchUnconfBalance + watchImmatureBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelPrivate->setText(PrivoraUnits::formatWithUnit(unit, privateBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelUnconfirmedPrivate->setText(PrivoraUnits::formatWithUnit(unit, unconfirmedPrivateBalance, false, PrivoraUnits::separatorAlways));
+    ui->labelAnonymizable->setText(PrivoraUnits::formatWithUnit(unit, anonymizableBalance, false, PrivoraUnits::separatorAlways));
 
     ui->anonymizeButton->setEnabled(spark::IsSparkAllowed() && anonymizableBalance > 0);
 
@@ -325,7 +325,7 @@ void OverviewPage::setWalletModel(WalletModel *model)
         connect(model, &WalletModel::notifyWatchonlyChanged, this, &OverviewPage::updateWatchOnlyLabels);
     }
 
-    // update the display unit, to not use the default ("BTC")
+    // update the display unit, to not use the default ("VORA")
     updateDisplayUnit();
 }
 
@@ -381,7 +381,7 @@ void OverviewPage::onRefreshClicked()
         ui->warningFrame->show();
         migrationWindowClosesIn = QString::fromStdString(std::to_string(daysUntilMigrationCloses));
         blocksRemaining = QString::fromStdString(std::to_string(heightDifference));
-        migrateAmount = "<b>" + BitcoinUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), privateBalance.first);
+        migrateAmount = "<b>" + PrivoraUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), privateBalance.first);
         migrateAmount.append("</b>");
         ui->textWarning1->setText(tr("We have detected Lelantus coins that have not been migrated to Spark. Migration window will close in %1 blocks (~ %2 days).").arg(blocksRemaining , migrationWindowClosesIn));
         ui->textWarning2->setText(tr("to migrate %1 ").arg(migrateAmount));
@@ -398,7 +398,7 @@ void OverviewPage::migrateClicked()
     size_t confirmed, unconfirmed;
     auto privateBalance = walletModel->getWallet()->GetPrivateBalance(confirmed, unconfirmed);
     auto lGracefulPeriod = ::Params().GetConsensus().nLelantusGracefulPeriod;
-    migrateAmount = "<b>" + BitcoinUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), privateBalance.first);
+    migrateAmount = "<b>" + PrivoraUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), privateBalance.first);
     migrateAmount.append("</b>");
     QString info = tr("Your wallet needs to be unlocked to migrate your funds to Spark.");
 
@@ -432,7 +432,7 @@ MigrateLelantusToSparkDialog::MigrateLelantusToSparkDialog(WalletModel *_model):
         ic->setStyleSheet("color:#92400E");
 
         QLabel *text = new QLabel();
-        text->setText(tr("Firo is migrating to Spark. Please migrate your funds."));
+        text->setText(tr("Privora is migrating to Spark. Please migrate your funds."));
         text->setAlignment(Qt::AlignLeft);
         text->setWordWrap(true);
         text->setStyleSheet("color:#92400E;text-align:center;word-wrap: break-word;");

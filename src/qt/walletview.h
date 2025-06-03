@@ -1,12 +1,12 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_WALLETVIEW_H
-#define BITCOIN_QT_WALLETVIEW_H
+#ifndef PRIVORA_QT_WALLETVIEW_H
+#define PRIVORA_QT_WALLETVIEW_H
 
 #if defined(HAVE_CONFIG_H)
-#include "../config/bitcoin-config.h"
+#include "../config/privora-config.h"
 #endif
 
 #include "automintdialog.h"
@@ -16,7 +16,7 @@
 
 #include <QStackedWidget>
 
-class BitcoinGUI;
+class PrivoraGUI;
 class ClientModel;
 class OverviewPage;
 class PlatformStyle;
@@ -47,13 +47,13 @@ public:
     explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
     ~WalletView();
 
-    void setBitcoinGUI(BitcoinGUI *gui);
+    void setPrivoraGUI(PrivoraGUI *gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
     void setClientModel(ClientModel *clientModel);
     /** Set the wallet model.
-        The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
+        The wallet model represents a privora wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
     void setWalletModel(WalletModel *walletModel);
@@ -79,9 +79,9 @@ private:
     AddressBookPage *usedSendingAddressesPage;
     AddressBookPage *usedReceivingAddressesPage;
     QWidget *sendCoinsPage;
-    SendCoinsDialog *sendFiroView;
-    TransactionView *firoTransactionList;
-    QWidget *firoTransactionsView;
+    SendCoinsDialog *sendPrivoraView;
+    TransactionView *privoraTransactionList;
+    QWidget *privoraTransactionsView;
     MasternodeList *masternodeListPage;
 
     QProgressDialog *progressDialog;
@@ -94,10 +94,10 @@ public Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-    /** Switch specifically to bitcoin tx history tab */
-    void gotoBitcoinHistoryTab();
-    /** Switch to bitcoin tx history tab and focus on specific transaction */
-    void focusBitcoinHistoryTab(const QModelIndex &idx);
+    /** Switch specifically to privora tx history tab */
+    void gotoPrivoraHistoryTab();
+    /** Switch to privora tx history tab and focus on specific transaction */
+    void focusPrivoraHistoryTab(const QModelIndex &idx);
     /** Switch to masternode page */
     void gotoMasternodePage();
     /** Switch to receive coins page */
@@ -174,4 +174,4 @@ Q_SIGNALS:
     void outOfSyncWarningClicked();
 };
 
-#endif // BITCOIN_QT_WALLETVIEW_H
+#endif // PRIVORA_QT_WALLETVIEW_H

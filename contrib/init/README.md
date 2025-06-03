@@ -1,11 +1,11 @@
 Sample configuration files for:
 
-SystemD: bitcoind.service
-Upstart: bitcoind.conf
-OpenRC:  bitcoind.openrc
-         bitcoind.openrcconf
-CentOS:  bitcoind.init
-OS X:    org.bitcoin.bitcoind.plist
+SystemD: privorad.service
+Upstart: privorad.conf
+OpenRC:  privorad.openrc
+         privorad.openrcconf
+CentOS:  privorad.init
+OS X:    org.privora.privorad.plist
 
 have been made available to assist packagers in creating node packages here.
 

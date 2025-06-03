@@ -1,10 +1,10 @@
 // Copyright (c) 2012 Pieter Wuille
-// Copyright (c) 2012-2016 The Bitcoin Core developers
+// Copyright (c) 2012-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ADDRMAN_H
-#define BITCOIN_ADDRMAN_H
+#ifndef PRIVORA_ADDRMAN_H
+#define PRIVORA_ADDRMAN_H
 
 #include "netaddress.h"
 #include "protocol.h"
@@ -611,4 +611,4 @@ public:
 
 };
 
-#endif // BITCOIN_ADDRMAN_H
+#endif // PRIVORA_ADDRMAN_H

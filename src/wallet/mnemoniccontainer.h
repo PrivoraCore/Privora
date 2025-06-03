@@ -1,5 +1,5 @@
-#ifndef FIRO_HDCHAIN_H
-#define FIRO_HDCHAIN_H
+#ifndef PRIVORA_HDCHAIN_H
+#define PRIVORA_HDCHAIN_H
 
 #include "support/allocators/secure.h"
 #include "uint256.h"
@@ -46,4 +46,4 @@ public:
     void Set12Words(bool Use12Words = false);
 };
 
-#endif //FIRO_HDCHAIN_H
+#endif //PRIVORA_HDCHAIN_H

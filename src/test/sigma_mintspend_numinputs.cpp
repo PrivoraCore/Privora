@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(sigma_mintspend_numinputs)
     CPubKey newKey;
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
 
-    const CBitcoinAddress randomAddr(newKey.GetID());
+    const CPrivoraAddress randomAddr(newKey.GetID());
 
     std::vector<std::string> denominations = {"0.05", "0.1", "0.5", "1", "10", "25", "100"};
 
@@ -152,8 +152,8 @@ BOOST_AUTO_TEST_CASE(spend_value_limit)
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey1), "Fail to get new address");
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey2), "Fail to get new address");
 
-    const CBitcoinAddress randomAddr1(newKey1.GetID());
-    const CBitcoinAddress randomAddr2(newKey2.GetID());
+    const CPrivoraAddress randomAddr1(newKey1.GetID());
+    const CPrivoraAddress randomAddr2(newKey2.GetID());
 
     std::string stringError;
     auto& consensus = Params().GetConsensus();

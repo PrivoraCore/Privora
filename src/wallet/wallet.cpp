@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -180,7 +180,7 @@ const CWalletTx *CWallet::GetWalletTx(const uint256 &hash) const {
 CPubKey CWallet::GetKeyFromKeypath(uint32_t nChange, uint32_t nChild, CKey& secret) {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
 
-    uint32_t nIndex = Params().GetConsensus().IsMain() ? BIP44_FIRO_INDEX : BIP44_TEST_INDEX;
+    uint32_t nIndex = Params().GetConsensus().IsMain() ? BIP44_PRIVORA_INDEX : BIP44_TEST_INDEX;
 
     // Fail if not using HD wallet (no keypaths)
     if (hdChain.masterKeyID.IsNull())
@@ -190,7 +190,7 @@ CPubKey CWallet::GetKeyFromKeypath(uint32_t nChange, uint32_t nChild, CKey& secr
     CKey key;                      //master key seed (256bit)
     CExtKey masterKey;             //hd master key
     CExtKey purposeKey;            //key at m/44'
-    CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or Firo Coin Type respectively, according to SLIP-0044)
+    CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or Privora Coin Type respectively, according to SLIP-0044)
     CExtKey accountKey;            //key at m/44'/<1/136>'/0'
     CExtKey externalChainChildKey; //key at m/44'/<1/136>'/0'/<c> (Standard: 0/1, Mints: 2)
     CExtKey childKey;              //key at m/44'/<1/136>'/0'/<c>/<n>
@@ -243,16 +243,16 @@ CPubKey CWallet::GenerateNewKey(uint32_t nChange, bool fWriteChain)
     CKeyMetadata metadata(nCreationTime);
     metadata.nChange = Component(nChange, false);
 
-    uint32_t nIndex = Params().GetConsensus().IsMain() ? BIP44_FIRO_INDEX : BIP44_TEST_INDEX;
+    uint32_t nIndex = Params().GetConsensus().IsMain() ? BIP44_PRIVORA_INDEX : BIP44_TEST_INDEX;
 
     // use HD key derivation if HD was enabled during wallet creation
-    // TODO: change code to foloow bitcoin structure more closely
+    // TODO: change code to foloow privora structure more closely
     if (IsHDEnabled()) {
         // use BIP44 keypath: m / purpose' / coin_type' / account' / change / address_index
         CKey key;                      //master key seed (256bit)
         CExtKey masterKey;             //hd master key
         CExtKey purposeKey;            //key at m/44'
-        CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or Firo Coin Type respectively, according to SLIP-0044)
+        CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or Privora Coin Type respectively, according to SLIP-0044)
         CExtKey accountKey;            //key at m/44'/<1/136>'/0'
         CExtKey externalChainChildKey; //key at m/44'/<1/136>'/0'/<c> (Standard: 0/1, Mints: 2)
         CExtKey childKey;              //key at m/44'/<1/136>'/0'/<c>/<n>
@@ -299,7 +299,7 @@ CPubKey CWallet::GenerateNewKey(uint32_t nChange, bool fWriteChain)
             if (!CWalletDB(strWalletFile).WriteHDChain(hdChain))
                 throw std::runtime_error(std::string(__func__) + ": Writing HD chain model failed");
         }
-    /* bitcoin 0.14:
+    /* privora 0.14:
     if (IsHDEnabled()) {
         DeriveNewChildKey(metadata, secret);
     */
@@ -449,7 +449,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
      * these. Do not add them to the wallet and warn. */
     if (redeemScript.size() > MAX_SCRIPT_ELEMENT_SIZE)
     {
-        std::string strAddr = CBitcoinAddress(CScriptID(redeemScript)).ToString();
+        std::string strAddr = CPrivoraAddress(CScriptID(redeemScript)).ToString();
         LogPrintf("%s: Warning: This wallet contains a redeemScript of size %i which exceeds maximum size %i thus can never be redeemed. Do not use address %s.\n",
             __func__, redeemScript.size(), MAX_SCRIPT_ELEMENT_SIZE, strAddr);
         return true;
@@ -2421,7 +2421,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex *pindexStart, bool f
     {
         LOCK2(cs_main, cs_wallet);
         // No need to read and scan block if block was created before our wallet birthday (as adjusted for block time variability).
-        // If you are recovering wallet with mnemonics, start rescan from the block when mnemonics were implemented in Firo.
+        // If you are recovering wallet with mnemonics, start rescan from the block when mnemonics were implemented in Privora.
         // If the user provides a date, start scanning from the block that corresponds to that date.
         // If no date is provided, start scanning from the mnemonic start block.
         std::string wcdate = GetArg("-wcdate", "");
@@ -3432,7 +3432,7 @@ bool CWallet::GetCoinsToSpend(
     // Sanity check to make sure this function is never called with a too large
     // amount to spend, resulting to a possible crash due to out of memory condition.
     if (!MoneyRange(required)) {
-        throw std::invalid_argument("Request to spend more than 21 MLN firos.\n");
+        throw std::invalid_argument("Request to spend more than 21 MLN privoras.\n");
     }
 
     if (!MoneyRange(amountToSpendLimit)) {
@@ -3949,7 +3949,7 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn &txinRet, CPubKey &pubK
 
     CTxDestination address1;
     ExtractDestination(pubScript, address1);
-    CBitcoinAddress address2(address1);
+    CPrivoraAddress address2(address1);
 
     CKeyID keyID;
     if (!address2.GetKeyID(keyID)) {
@@ -3966,7 +3966,7 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn &txinRet, CPubKey &pubK
     return true;
 }
 
-//[firo]
+//[privora]
 void CWallet::ListAvailableSigmaMintCoins(std::vector<COutput> &vCoins, bool fOnlyConfirmed) const {
     EnsureMintWalletAvailable();
 
@@ -4909,7 +4909,7 @@ bool CWallet::CreateMintTransaction(const std::vector <CRecipient> &vecSend, CWa
                 if (nChange > 0) {
                     // Fill a vout to ourself
                     // TODO: pass in scriptChange instead of reservekey so
-                    // change transaction isn't always pay-to-bitcoin-address
+                    // change transaction isn't always pay-to-privora-address
                     CScript scriptChange;
 
                     // coin control: send change to custom address
@@ -4918,7 +4918,7 @@ bool CWallet::CreateMintTransaction(const std::vector <CRecipient> &vecSend, CWa
 
                     // send change to one of the specified change addresses
                     else if (IsArgSet("-change") && mapMultiArgs.at("-change").size() > 0) {
-                        CBitcoinAddress address(mapMultiArgs.at("change")[GetRandInt(mapMultiArgs.at("-change").size())]);
+                        CPrivoraAddress address(mapMultiArgs.at("change")[GetRandInt(mapMultiArgs.at("-change").size())]);
                         CKeyID keyID;
                         if (!address.GetKeyID(keyID)) {
                             strFailReason = _("Bad change address");
@@ -5233,7 +5233,7 @@ bool CWallet::CreateLelantusMintTransactions(
                     if (nChange > 0) {
                         // Fill a vout to ourself
                         // TODO: pass in scriptChange instead of reservekey so
-                        // change transaction isn't always pay-to-bitcoin-address
+                        // change transaction isn't always pay-to-privora-address
                         CScript scriptChange;
 
                         // coin control: send change to custom address
@@ -5242,7 +5242,7 @@ bool CWallet::CreateLelantusMintTransactions(
 
                             // send change to one of the specified change addresses
                         else if (IsArgSet("-change") && mapMultiArgs.at("-change").size() > 0) {
-                            CBitcoinAddress address(
+                            CPrivoraAddress address(
                                     mapMultiArgs.at("change")[GetRandInt(mapMultiArgs.at("-change").size())]);
                             CKeyID keyID;
                             if (!address.GetKeyID(keyID)) {
@@ -6469,9 +6469,9 @@ bool CWallet::SetAddressBook(const CTxDestination& address, const std::string& s
                              strPurpose, (fUpdated ? CT_UPDATED : CT_NEW) );
     if (!fFileBacked)
         return false;
-    if (!strPurpose.empty() && !CWalletDB(strWalletFile).WritePurpose(CBitcoinAddress(address).ToString(), strPurpose))
+    if (!strPurpose.empty() && !CWalletDB(strWalletFile).WritePurpose(CPrivoraAddress(address).ToString(), strPurpose))
         return false;
-    return CWalletDB(strWalletFile).WriteName(CBitcoinAddress(address).ToString(), strName);
+    return CWalletDB(strWalletFile).WriteName(CPrivoraAddress(address).ToString(), strName);
 }
 
 bool CWallet::DelAddressBook(const CTxDestination& address)
@@ -6482,7 +6482,7 @@ bool CWallet::DelAddressBook(const CTxDestination& address)
         if(fFileBacked)
         {
             // Delete destdata tuples associated with address
-            std::string strAddress = CBitcoinAddress(address).ToString();
+            std::string strAddress = CPrivoraAddress(address).ToString();
             BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, mapAddressBook[address].destdata)
             {
                 CWalletDB(strWalletFile).EraseDestData(strAddress, item.first);
@@ -6495,8 +6495,8 @@ bool CWallet::DelAddressBook(const CTxDestination& address)
 
     if (!fFileBacked)
         return false;
-    CWalletDB(strWalletFile).ErasePurpose(CBitcoinAddress(address).ToString());
-    return CWalletDB(strWalletFile).EraseName(CBitcoinAddress(address).ToString());
+    CWalletDB(strWalletFile).ErasePurpose(CPrivoraAddress(address).ToString());
+    return CWalletDB(strWalletFile).EraseName(CPrivoraAddress(address).ToString());
 }
 
 const std::string& CWallet::GetAccountName(const CScript& scriptPubKey) const
@@ -7057,13 +7057,13 @@ bool CWallet::AddDestData(const CTxDestination &dest, const std::string &key, co
     mapAddressBook[dest].destdata.insert(std::make_pair(key, value));
     if (!fFileBacked)
         return true;
-    return CWalletDB(strWalletFile).WriteDestData(CBitcoinAddress(dest).ToString(), key, value);
+    return CWalletDB(strWalletFile).WriteDestData(CPrivoraAddress(dest).ToString(), key, value);
 }
 
 bool CWallet::AddDestData(const std::string &dest, const std::string &key, const std::string &value)
 {
     if(validateAddress(dest)) {
-        CTxDestination _dest = CBitcoinAddress(dest).Get();
+        CTxDestination _dest = CPrivoraAddress(dest).Get();
         if (boost::get<CNoDestination>(&_dest))
             return false;
         mapAddressBook[_dest].destdata.insert(std::make_pair(key, value));
@@ -7083,13 +7083,13 @@ bool CWallet::EraseDestData(const CTxDestination &dest, const std::string &key)
         return false;
     if (!fFileBacked)
         return true;
-    return CWalletDB(strWalletFile).EraseDestData(CBitcoinAddress(dest).ToString(), key);
+    return CWalletDB(strWalletFile).EraseDestData(CPrivoraAddress(dest).ToString(), key);
 }
 
 bool CWallet::EraseDestData(const std::string &dest, const std::string &key)
 {
     if(validateAddress(dest)) {
-        CTxDestination _dest = CBitcoinAddress(dest).Get();
+        CTxDestination _dest = CPrivoraAddress(dest).Get();
         if (!mapAddressBook[_dest].destdata.erase(key))
             return false;
     } else if (bip47::CPaymentCode::validate(dest)) {
@@ -7113,7 +7113,7 @@ bool CWallet::LoadDestData(const CTxDestination &dest, const std::string &key, c
 bool CWallet::LoadDestData(const std::string &dest, const std::string &key, const std::string &value)
 {
     if(validateAddress(dest)) {
-        CTxDestination _dest = CBitcoinAddress(dest).Get();
+        CTxDestination _dest = CPrivoraAddress(dest).Get();
         mapAddressBook[_dest].destdata.insert(std::make_pair(key, value));
     } else if(bip47::CPaymentCode::validate(dest)) {
         mapRAPAddressBook[dest].destdata.insert(std::make_pair(key, value));
@@ -7656,7 +7656,7 @@ CWalletTx CWallet::PrepareAndSendNotificationTx(bip47::CPaymentCode const & thei
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
-    CBitcoinAddress const notifAddr = pchannel.getTheirPcode().getNotificationAddress();
+    CPrivoraAddress const notifAddr = pchannel.getTheirPcode().getNotificationAddress();
 
     std::vector<CRecipient> recipients;
     std::vector<CAmount> newMints;
@@ -7752,7 +7752,7 @@ void CWallet::SetNotificationTxId(bip47::CPaymentCode const & theirPcode, uint25
 }
 
 namespace {
-CBitcoinAddress HandleTheirNextAddress(bip47::CWallet & wallet, std::string const & strWalletFile, bip47::CPaymentCode const & theirPcode, bool storeNextAddress)
+CPrivoraAddress HandleTheirNextAddress(bip47::CWallet & wallet, std::string const & strWalletFile, bip47::CPaymentCode const & theirPcode, bool storeNextAddress)
 {
     boost::optional<bip47::CAccountSender*> existingAcc;
     wallet.enumerateSenders(
@@ -7767,7 +7767,7 @@ CBitcoinAddress HandleTheirNextAddress(bip47::CWallet & wallet, std::string cons
     );
     if(!existingAcc)
         throw std::runtime_error("There is no account setup for payment code " + theirPcode.toString());
-    CBitcoinAddress result;
+    CPrivoraAddress result;
     if(storeNextAddress)
     {
         result = existingAcc.get()->generateTheirNextSecretAddress();
@@ -7780,7 +7780,7 @@ CBitcoinAddress HandleTheirNextAddress(bip47::CWallet & wallet, std::string cons
 }
 }
 
-CBitcoinAddress CWallet::GetTheirNextAddress(bip47::CPaymentCode const & theirPcode) const
+CPrivoraAddress CWallet::GetTheirNextAddress(bip47::CPaymentCode const & theirPcode) const
 {
     if (!bip47wallet)
         throw WalletError("BIP47 wallet was not created during the initialization");
@@ -7788,7 +7788,7 @@ CBitcoinAddress CWallet::GetTheirNextAddress(bip47::CPaymentCode const & theirPc
     return HandleTheirNextAddress(*bip47wallet, strWalletFile, theirPcode, false);
 }
 
-CBitcoinAddress CWallet::GenerateTheirNextAddress(bip47::CPaymentCode const & theirPcode)
+CPrivoraAddress CWallet::GenerateTheirNextAddress(bip47::CPaymentCode const & theirPcode)
 {
     if (!bip47wallet)
         throw WalletError("BIP47 wallet was not created during the initialization");
@@ -7843,7 +7843,7 @@ boost::optional<bip47::CPaymentCodeDescription> CWallet::FindPcode(bip47::CPayme
     return result;
 }
 
-boost::optional<bip47::CPaymentCodeDescription> CWallet::FindPcode(CBitcoinAddress const & address) const
+boost::optional<bip47::CPaymentCodeDescription> CWallet::FindPcode(CPrivoraAddress const & address) const
 {
     boost::optional<bip47::CPaymentCodeDescription> result;
     if (!bip47wallet)
@@ -7889,7 +7889,7 @@ boost::optional<bip47::CPaymentCodeDescription> CWallet::FindPcode(CBitcoinAddre
     return result;
 }
 
-bip47::CAccountReceiver const * CWallet::AddressUsed(CBitcoinAddress const & address)
+bip47::CAccountReceiver const * CWallet::AddressUsed(CPrivoraAddress const & address)
 {
     bip47::CAccountReceiver const * result = nullptr;
     if(!bip47wallet)
@@ -7945,7 +7945,7 @@ void CWallet::HandleBip47Transaction(CWalletTx const & wtx)
     bip47wallet->enumerateReceivers(
         [&key, &addresses, &accFound](bip47::CAccountReceiver & acc)->bool
         {
-            for (CBitcoinAddress addr : addresses) {
+            for (CPrivoraAddress addr : addresses) {
                 if(acc.getMyNotificationAddress() == addr) {
                     key = acc.getMyNextAddresses()[0].second;
                     accFound = &acc;
@@ -7956,7 +7956,7 @@ void CWallet::HandleBip47Transaction(CWalletTx const & wtx)
         }
     );
     if(!accFound) {
-        LogBip47("There was no account set up to receive payments on address: %s\n", CBitcoinAddress(addresses[0]).ToString());
+        LogBip47("There was no account set up to receive payments on address: %s\n", CPrivoraAddress(addresses[0]).ToString());
         goto notifTxExit;
     }
     if(!accFound->acceptMaskedPayload(masked, *wtx.tx)){
@@ -7977,7 +7977,7 @@ notifTxExit:
             txnouttype typeRet = TX_NONSTANDARD;
             int nRequired = 0;
             if (ExtractDestinations(out.scriptPubKey, typeRet, addresses, nRequired)) {
-                for (CBitcoinAddress addr : addresses) {
+                for (CPrivoraAddress addr : addresses) {
                     bip47::CAccountReceiver const * rec = AddressUsed(addr);
                     if (rec) {
                         HandleSecretAddresses(*this, *rec);
@@ -8237,7 +8237,7 @@ bool CMerkleTx::AcceptToMemoryPool(const CAmount &nAbsurdFee, CValidationState &
             false, /* fOverrideMempoolLimit */
             nAbsurdFee,
             true,
-            false /* markFiroSpendTransactionSerial */
+            false /* markPrivoraSpendTransactionSerial */
         );
         if (!res) {
             LogPrintf(
@@ -8356,7 +8356,7 @@ bool CWallet::DelAddressBook(const std::string& address)
                     CWalletDB(strWalletFile).EraseDestData(address, item.first);
                 }
             } else if (validateAddress(address)) {
-                BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, mapAddressBook[CBitcoinAddress(address).Get()].destdata)
+                BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, mapAddressBook[CPrivoraAddress(address).Get()].destdata)
                 {
                     CWalletDB(strWalletFile).EraseDestData(address, item.first);
                 }
@@ -8368,7 +8368,7 @@ bool CWallet::DelAddressBook(const std::string& address)
         } else if(bip47::CPaymentCode::validate(address)) {
             mapRAPAddressBook.erase(address);
         } else if (validateAddress(address)) {
-            mapAddressBook.erase(CBitcoinAddress(address).Get());
+            mapAddressBook.erase(CPrivoraAddress(address).Get());
         }
 
     }
@@ -8386,7 +8386,7 @@ bool CWallet::DelAddressBook(const std::string& address)
         }
         
     } else if(validateAddress(address)){
-        NotifyAddressBookChanged(this, CBitcoinAddress(address).Get(), "", ::IsMine(*this, CBitcoinAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
+        NotifyAddressBookChanged(this, CPrivoraAddress(address).Get(), "", ::IsMine(*this, CPrivoraAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
     }
 
     if (!fFileBacked)
@@ -8397,7 +8397,7 @@ bool CWallet::DelAddressBook(const std::string& address)
 
 bool CWallet::validateAddress(const std::string& address)
 {
-    CBitcoinAddress addressParsed(address);
+    CPrivoraAddress addressParsed(address);
     return addressParsed.IsValid();
 }
 

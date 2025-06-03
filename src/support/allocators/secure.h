@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
-#define BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
+#ifndef PRIVORA_SUPPORT_ALLOCATORS_SECURE_H
+#define PRIVORA_SUPPORT_ALLOCATORS_SECURE_H
 
 #include "support/lockedpool.h"
 #include "support/cleanse.h"
@@ -58,4 +58,4 @@ typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> >
 // This is exactly like std::vector, but with a custom allocator.
 typedef std::vector<unsigned char, secure_allocator<unsigned char>> SecureVector;
 
-#endif // BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
+#endif // PRIVORA_SUPPORT_ALLOCATORS_SECURE_H

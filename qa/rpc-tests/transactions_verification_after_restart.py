@@ -2,19 +2,19 @@
 import time
 from decimal import getcontext
 
-from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import bitcoind_processes, enable_mocktime, start_node, start_nodes
+from test_framework.test_framework import PrivoraTestFramework
+from test_framework.util import privorad_processes, enable_mocktime, start_node, start_nodes
 from test_framework.mn_utils import *
 
 # Zapwallettxes, rescan, reindex, reindex-chainstate are not affect existing transactions
 
 
 #1. Generate some blocks
-#2. Mint firos
-#3. 2 Spend firos in different time
-#4. Send firos
+#2. Mint privoras
+#3. 2 Spend privoras in different time
+#4. Send privoras
 #5. Gerate blocks
-#6. Remint some firos
+#6. Remint some privoras
 #7. Mint sigma coins
 #8. 2 Spend in different time
 #9. Send
@@ -29,7 +29,7 @@ from test_framework.mn_utils import *
 #18. Restart with reindex-chainstate
 #19. Check all transactions shown properly as before restart
 
-class TransactionsVerAfterRestartTest(BitcoinTestFramework):
+class TransactionsVerAfterRestartTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4
@@ -66,7 +66,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
         self.nodes[0].generate(10)
         self.sync_all()
 
-        #2. Send firos
+        #2. Send privoras
         self.nodes[0].sendtoaddress('TNZMs3dtwRddC5BuZ9zQUdvksPUjmJPRfL', 25)
 
         #3. Gerate blocks
@@ -95,7 +95,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
         transactions_before = sorted(self.nodes[0].listtransactions("*", 99999), key=lambda k: k['txid'], reverse=True)
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         #7. Restart with zapwallettxes=1
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-zapwallettxes=1"])
@@ -108,7 +108,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
             'List of transactions after restart with zapwallettxes=1 unexpectedly changed.'
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         #9. Restart with zapwallettxes=2
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-zapwallettxes=2"])
@@ -121,7 +121,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
             'List of transactions after restart with zapwallettxes=2 unexpectedly changed.'
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         #11. Restart with rescan
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-rescan"])
@@ -136,7 +136,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
         transactions_before_reindex = sorted(self.nodes[0].listtransactions("*", 99999), key=lambda k: k['txid'], reverse=True)
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         #13. Restart with reindex
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-reindex"])
@@ -154,7 +154,7 @@ class TransactionsVerAfterRestartTest(BitcoinTestFramework):
             'List of transactions after restart with reindex unexpectedly changed.'
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         #15. Restart with reindex-chainstate
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-reindex-chainstate"])

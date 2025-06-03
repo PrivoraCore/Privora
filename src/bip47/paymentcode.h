@@ -15,8 +15,8 @@ public:
     std::vector<unsigned char> getPayload() const;
     std::vector<unsigned char> getMaskedPayload(COutPoint const & outPoint);
 
-    CBitcoinAddress getNotificationAddress() const;
-    CBitcoinAddress getNthAddress(size_t idx) const;
+    CPrivoraAddress getNotificationAddress() const;
+    CPrivoraAddress getNthAddress(size_t idx) const;
 
     CExtPubKey getNthPubkey(size_t idx) const;
 
@@ -40,7 +40,7 @@ private:
     CPubKey pubKey;
     ChainCode  chainCode;
 
-    boost::optional<CBitcoinAddress> mutable myNotificationAddress;
+    boost::optional<CPrivoraAddress> mutable myNotificationAddress;
     mutable boost::optional<CExtPubKey> childPubKeyBase;
     mutable boost::optional<std::string> pcodeStr;
 
@@ -54,7 +54,7 @@ enum struct CPaymentCodeSide : char {
     Receiver
 };
 //0-accNum, 1-pcode, 2-label, 3-notificationAddress, 4-pcodeSide
-typedef std::tuple<size_t, CPaymentCode, std::string, CBitcoinAddress, CPaymentCodeSide> CPaymentCodeDescription;
+typedef std::tuple<size_t, CPaymentCode, std::string, CPrivoraAddress, CPaymentCodeSide> CPaymentCodeDescription;
 
 }
 

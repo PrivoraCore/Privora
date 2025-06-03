@@ -1,5 +1,5 @@
-#ifndef FIRO_QT_AUTOMINTMODEL_H
-#define FIRO_QT_AUTOMINTMODEL_H
+#ifndef PRIVORA_QT_AUTOMINTMODEL_H
+#define PRIVORA_QT_AUTOMINTMODEL_H
 
 #include "../amount.h"
 #include "../ui_interface.h"
@@ -111,4 +111,4 @@ private:
     IncomingFundNotifier *notifier;
 };
 
-#endif // FIRO_QT_AUTOMINTMODEL_H
+#endif // PRIVORA_QT_AUTOMINTMODEL_H

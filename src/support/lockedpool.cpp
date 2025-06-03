@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Bitcoin Core developers
+// Copyright (c) 2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,7 +6,7 @@
 #include "cleanse.h"
 
 #if defined(HAVE_CONFIG_H)
-#include "../config/bitcoin-config.h"
+#include "../config/privora-config.h"
 #endif
 
 #ifdef WIN32

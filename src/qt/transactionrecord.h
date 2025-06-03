@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TRANSACTIONRECORD_H
-#define BITCOIN_QT_TRANSACTIONRECORD_H
+#ifndef PRIVORA_QT_TRANSACTIONRECORD_H
+#define PRIVORA_QT_TRANSACTIONRECORD_H
 
 #include "amount.h"
 #include "uint256.h"
@@ -160,4 +160,4 @@ public:
     bool statusUpdateNeeded(int numISLocks, int chainLockHeight);
 };
 
-#endif // BITCOIN_QT_TRANSACTIONRECORD_H
+#endif // PRIVORA_QT_TRANSACTIONRECORD_H

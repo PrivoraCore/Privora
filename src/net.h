@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NET_H
-#define BITCOIN_NET_H
+#ifndef PRIVORA_NET_H
+#define PRIVORA_NET_H
 
 #include "addrdb.h"
 #include "addrman.h"
@@ -39,7 +39,7 @@
 #include <boost/foreach.hpp>
 #include <boost/signals2/signal.hpp>
 
-// "Optimistic send" was introduced in the beginning of the Bitcoin project. I assume this was done because it was
+// "Optimistic send" was introduced in the beginning of the Privora project. I assume this was done because it was
 // thought that "send" would be very cheap when the send buffer is empty. This is not true, as shown by profiling.
 // When a lot of load is seen on the network, the "send" call done in the message handler thread can easily use up 20%
 // of time, effectively blocking things that could be done in parallel. We have introduced a way to wake up the select()
@@ -1050,4 +1050,4 @@ public:
 /** Return a timestamp in the future (in microseconds) for exponentially distributed events. */
 int64_t PoissonNextSend(int64_t nNow, int average_interval_seconds);
 
-#endif // BITCOIN_NET_H
+#endif // PRIVORA_NET_H

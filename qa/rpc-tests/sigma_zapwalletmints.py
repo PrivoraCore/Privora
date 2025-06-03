@@ -2,21 +2,21 @@
 import time
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 
 #`zapwalletmints` conf setting test case
 
 # Description: `zapwalletmints` configuration setting was added. What this does is clears the WalletDB of HD mints
-#  (needed in case of deep re-org - https://en.bitcoin.it/wiki/Chain_Reorganization)
+#  (needed in case of deep re-org - https://en.privora.it/wiki/Chain_Reorganization)
 # 1. start wallet
 # 2. mine blocks
 # 3. mint some coins
 # 4. spend a coin
 # 5. restart with `zapwalletmints`
 # 6. verify same mints present in listunspentsigmamints
-class SigmaZapWalletMintsTest(BitcoinTestFramework):
+class SigmaZapWalletMintsTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4

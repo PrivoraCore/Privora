@@ -173,4 +173,4 @@ public:
     void Reset();
 };
 
-#endif // FIRO_SPARKNAME_H
+#endif // PRIVORA_SPARKNAME_H

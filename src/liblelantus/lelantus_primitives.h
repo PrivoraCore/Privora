@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBLELANTUS_LELANTUSPRIMITIVES_H
-#define FIRO_LIBLELANTUS_LELANTUSPRIMITIVES_H
+#ifndef PRIVORA_LIBLELANTUS_LELANTUSPRIMITIVES_H
+#define PRIVORA_LIBLELANTUS_LELANTUSPRIMITIVES_H
 
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
@@ -10,7 +10,7 @@
 #include "innerproduct_proof.h"
 #include "range_proof.h"
 #include "challenge_generator.h"
-#include "../firo_params.h"
+#include "../privora_params.h"
 
 #include "serialize.h"
 
@@ -120,4 +120,4 @@ public:
 
 }// namespace lelantus
 
-#endif //FIRO_LIBLELANTUS_LELANTUSPRIMITIVES_H
+#endif //PRIVORA_LIBLELANTUS_LELANTUSPRIMITIVES_H

@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBSPARK_CHAUM_H
-#define FIRO_LIBSPARK_CHAUM_H
+#ifndef PRIVORA_LIBSPARK_CHAUM_H
+#define PRIVORA_LIBSPARK_CHAUM_H
 
 #include "chaum_proof.h"
 #include <secp256k1/include/MultiExponent.h>

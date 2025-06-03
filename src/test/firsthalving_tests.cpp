@@ -1,4 +1,4 @@
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include "script/interpreter.h"
 #include "script/standard.h"
@@ -159,7 +159,7 @@ BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
 
     CScript devPayoutScript = GenerateRandomAddress();
     CTxDestination devPayoutDest{CScriptID(devPayoutScript)};
-    consensusParams.stage2DevelopmentFundAddress = CBitcoinAddress(devPayoutDest).ToString();
+    consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(devPayoutDest).ToString();
 
     auto utxos = BuildSimpleUtxoMap(coinbaseTxns);
 
@@ -212,7 +212,7 @@ BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
 
         bool paymentToDevFound = false;
         for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CBitcoinAddress(consensusParams.stage2DevelopmentFundAddress).Get())) {
+            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get())) {
                 BOOST_ASSERT(txout.nValue == 375*COIN/100); // 25*0.15
                 paymentToDevFound = true;
             }
@@ -239,11 +239,11 @@ BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
 
         bool paymentToDevFound = false, paymentToCommunityFound = false;
         for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CBitcoinAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
+            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
                 BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
                 paymentToDevFound = true;
             }
-            if (txout.scriptPubKey == GetScriptForDestination(CBitcoinAddress(consensusParams.stage3CommunityFundAddress).Get())) {
+            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
                 BOOST_ASSERT(txout.nValue == 125*COIN/100); // 25/2*0.10
                 paymentToCommunityFound = true;
             }
@@ -266,7 +266,7 @@ BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
 
         // there should be no more payment to devs fund
         for (const CTxOut &txout: block.vtx[0]->vout) {
-            BOOST_ASSERT(txout.scriptPubKey != GetScriptForDestination(CBitcoinAddress(consensusParams.stage2DevelopmentFundAddress).Get()));
+            BOOST_ASSERT(txout.scriptPubKey != GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get()));
         }
 
         // miner's reward should be 1.25 (10%)
@@ -274,11 +274,11 @@ BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
 
         bool paymentToDevFound = false, paymentToCommunityFound = false;
         for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CBitcoinAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
+            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
                 BOOST_ASSERT(txout.nValue == 3125*COIN/1000); // 25/2*0.25
                 paymentToDevFound = true;
             }
-            if (txout.scriptPubKey == GetScriptForDestination(CBitcoinAddress(consensusParams.stage3CommunityFundAddress).Get())) {
+            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
                 BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
                 paymentToCommunityFound = true;
             }
@@ -315,7 +315,7 @@ BOOST_FIXTURE_TEST_CASE(devpayoutverification, TestChainDIP3BeforeActivationSetu
     // try to send dev payout to different destination
     CKey key;
     key.MakeNewKey(false);
-    consensusParams.stage2DevelopmentFundAddress = CBitcoinAddress(CTxDestination(key.GetPubKey().GetID())).ToString();
+    consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(CTxDestination(key.GetPubKey().GetID())).ToString();
 
     {
         CBlock block = CreateBlock({}, coinbaseKey);

@@ -1,5 +1,5 @@
-#ifndef FIRO_QT_AUTOMINT_H
-#define FIRO_QT_AUTOMINT_H
+#ifndef PRIVORA_QT_AUTOMINT_H
+#define PRIVORA_QT_AUTOMINT_H
 
 #include "walletmodel.h"
 
@@ -51,4 +51,4 @@ private:
     void ensureSparkModel();
 };
 
-#endif // FIRO_QT_AUTOMINT_H
+#endif // PRIVORA_QT_AUTOMINT_H

@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,8 +11,8 @@
  * - E-mail usually won't line-break if there's no punctuation to break at.
  * - Double-clicking selects the whole string as one word if it's all alphanumeric.
  */
-#ifndef BITCOIN_BASE58_H
-#define BITCOIN_BASE58_H
+#ifndef PRIVORA_BASE58_H
+#define PRIVORA_BASE58_H
 
 #include "chainparams.h"
 #include "key.h"
@@ -97,13 +97,13 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Bitcoin addresses.
+/** base58-encoded Privora addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
-class CBitcoinAddress : public CBase58Data {
+class CPrivoraAddress : public CBase58Data {
 public:
     bool Set(const CKeyID &id);
     bool Set(const CExchangeKeyID &id);
@@ -113,16 +113,16 @@ public:
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
 
-    CBitcoinAddress() {}
-    CBitcoinAddress(const CTxDestination &dest) { Set(dest); }
-    CBitcoinAddress(const std::string& strAddress) {
+    CPrivoraAddress() {}
+    CPrivoraAddress(const CTxDestination &dest) { Set(dest); }
+    CPrivoraAddress(const std::string& strAddress) {
         SetString(strAddress);
         if (vchData.size() != 20) {
             // give the address second chance and try exchange address format with 3 byte prefix
             SetString(strAddress.c_str(), 3);
         }
     }
-    CBitcoinAddress(const char* pszAddress) { SetString(pszAddress); }
+    CPrivoraAddress(const char* pszAddress) { SetString(pszAddress); }
 
     CTxDestination Get() const;
     bool GetIndexKey(uint160& hashBytes, AddressType & type) const;
@@ -134,7 +134,7 @@ public:
 /**
  * A base58-encoded secret key
  */
-class CBitcoinSecret : public CBase58Data
+class CPrivoraSecret : public CBase58Data
 {
 public:
     void SetKey(const CKey& vchSecret);
@@ -143,11 +143,11 @@ public:
     bool SetString(const char* pszSecret);
     bool SetString(const std::string& strSecret);
 
-    CBitcoinSecret(const CKey& vchSecret) { SetKey(vchSecret); }
-    CBitcoinSecret() {}
+    CPrivoraSecret(const CKey& vchSecret) { SetKey(vchSecret); }
+    CPrivoraSecret() {}
 };
 
-template<typename K, int Size, CChainParams::Base58Type Type> class CBitcoinExtKeyBase : public CBase58Data
+template<typename K, int Size, CChainParams::Base58Type Type> class CPrivoraExtKeyBase : public CBase58Data
 {
 public:
     void SetKey(const K &key) {
@@ -165,18 +165,18 @@ public:
         return ret;
     }
 
-    CBitcoinExtKeyBase(const K &key) {
+    CPrivoraExtKeyBase(const K &key) {
         SetKey(key);
     }
 
-    CBitcoinExtKeyBase(const std::string& strBase58c) {
+    CPrivoraExtKeyBase(const std::string& strBase58c) {
         SetString(strBase58c.c_str(), Params().Base58Prefix(Type).size());
     }
 
-    CBitcoinExtKeyBase() {}
+    CPrivoraExtKeyBase() {}
 };
 
-typedef CBitcoinExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CBitcoinExtKey;
-typedef CBitcoinExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CBitcoinExtPubKey;
+typedef CPrivoraExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CPrivoraExtKey;
+typedef CPrivoraExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CPrivoraExtPubKey;
 
-#endif // BITCOIN_BASE58_H
+#endif // PRIVORA_BASE58_H

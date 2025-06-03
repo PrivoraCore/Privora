@@ -8,7 +8,7 @@ from test_framework.test_framework import EvoZnodeTestFramework
 from test_framework.util import sync_blocks, set_node_times, \
     isolate_node, reconnect_isolated_node, set_mocktime, get_mocktime
 from test_framework.util import assert_equal, assert_raises_jsonrpc, \
-    bitcoind_processes, start_nodes, start_node, connect_nodes_bi
+    privorad_processes, start_nodes, start_node, connect_nodes_bi
 
 from decimal import Decimal
 
@@ -53,7 +53,7 @@ class LLMQ_IS_Lelantus(EvoZnodeTestFramework):
         assert(self.wait_for_instantlock(jsplitTxid, self.nodes[0]))
 
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
         self.nodes[0] = start_node(0, self.options.tmpdir, ["-zapwallettxes=1"])
         for i in range(1, self.num_nodes):
             if i < len(self.nodes) and self.nodes[i] is not None:

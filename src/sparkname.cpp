@@ -166,7 +166,7 @@ bool CSparkNameManager::CheckSparkNameTx(const CTransaction &tx, int nHeight, CV
         return state.DoS(100, error("CheckSparkNameTx: can't be valid for more than 10 years"));
 
     CAmount nameFee = consensusParams.nSparkNamesFee[sparkNameData.name.size()] * COIN * nYears;
-    CScript devPayoutScript = GetScriptForDestination(CBitcoinAddress(consensusParams.stage3DevelopmentFundAddress).Get());
+    CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get());
     bool payoutFound = false;
     for (const CTxOut &txout: tx.vout)
         if (txout.scriptPubKey == devPayoutScript && txout.nValue >= nameFee) {

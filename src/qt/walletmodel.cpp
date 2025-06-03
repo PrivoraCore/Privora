@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -256,13 +256,13 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
-    CBitcoinAddress addressParsed(address.toStdString());
+    CPrivoraAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
 bool WalletModel::validateExchangeAddress(const QString &address)
 {
-    CBitcoinAddress addressParsed(address.toStdString());
+    CPrivoraAddress addressParsed(address.toStdString());
     return addressParsed.IsValid() && addressParsed.Get().type() == typeid(CExchangeKeyID);
 }
 
@@ -287,7 +287,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         if (rcp.fSubtractFeeFromAmount)
             fSubtractFeeFromAmount = true;
             
-        {   // User-entered bitcoin address / amount:
+        {   // User-entered privora address / amount:
             if(!validateAddress(rcp.address))
             {
                 return InvalidAddress;
@@ -299,7 +299,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             setAddress.insert(rcp.address);
             ++nAddresses;
 
-            CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+            CScript scriptPubKey = GetScriptForDestination(CPrivoraAddress(rcp.address.toStdString()).Get());
             CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
             vecSend.push_back(recipient);
 
@@ -365,7 +365,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
 
         for (const SendCoinsRecipient &rcp : transaction.getRecipients())
         {
-            if (!rcp.message.isEmpty()) // Message from normal firo:URI (firo:123...?message=example)
+            if (!rcp.message.isEmpty()) // Message from normal privora:URI (privora:123...?message=example)
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         }
 
@@ -385,7 +385,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
     {
         {
             std::string strAddress = rcp.address.toStdString();
-            CTxDestination dest = CBitcoinAddress(strAddress).Get();
+            CTxDestination dest = CPrivoraAddress(strAddress).Get();
             std::string strLabel = rcp.label.toStdString();
             {
                 LOCK(wallet->cs_wallet);
@@ -521,7 +521,7 @@ static void NotifyAddressBookChanged(WalletModel *walletmodel, CWallet *wallet,
         const CTxDestination &address, const std::string &label, bool isMine,
         const std::string &purpose, ChangeType status)
 {
-    QString strAddress = QString::fromStdString(CBitcoinAddress(address).ToString());
+    QString strAddress = QString::fromStdString(CPrivoraAddress(address).ToString());
     QString strLabel = QString::fromStdString(label);
     QString strPurpose = QString::fromStdString(purpose);
 
@@ -827,7 +827,7 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins, 
             continue;
         }
 
-        mapCoins[QString::fromStdString(CBitcoinAddress(address).ToString())].push_back(out);
+        mapCoins[QString::fromStdString(CPrivoraAddress(address).ToString())].push_back(out);
     }
 }
 
@@ -1031,7 +1031,7 @@ void WalletModel::handleBip47Keys(int receiverAccountNum, void * pBlockIndex_)
                     tr("RAP addresses require you to unlock your wallet every time a payment to it is received."),
                     3
             );
-            msgDialog.setInformativeText(tr("If you do not enter your password now, you will need to rescan your wallet to receive your FIRO.<br/><br/>Re-enter your password?"));
+            msgDialog.setInformativeText(tr("If you do not enter your password now, you will need to rescan your wallet to receive your PRIVORA.<br/><br/>Re-enter your password?"));
             if(msgDialog.exec() == QMessageBox::Cancel)
                 return;
             ctx = requestUnlock(unlockText);
@@ -1131,7 +1131,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareMintSparkTransaction(std::vecto
         if (rcp.fSubtractFeeFromAmount)
             fSubtractFeeFromAmount = true;
 
-        { // User-entered Firo address / amount:
+        { // User-entered Privora address / amount:
             if (!validateSparkAddress(rcp.address)) {
                 return InvalidAddress;
             }
@@ -1226,7 +1226,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareSpendSparkTransaction(WalletMod
         if (rcp.fSubtractFeeFromAmount)
             fSubtractFeeFromAmount = true;
 
-        { // User-entered Firo address / amount:
+        { // User-entered Privora address / amount:
             if (rcp.amount <= 0) {
                 return InvalidAmount;
             }
@@ -1234,7 +1234,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareSpendSparkTransaction(WalletMod
             ++nAddresses;
 
             if (validateAddress(rcp.address)) {
-                CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+                CScript scriptPubKey = GetScriptForDestination(CPrivoraAddress(rcp.address.toStdString()).Get());
                 CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
                 vecSend.push_back(recipient);
             } else if (validateSparkAddress(rcp.address)) {
@@ -1426,7 +1426,7 @@ WalletModel::SendCoinsReturn WalletModel::mintSparkCoins(std::vector<WalletModel
             Q_FOREACH(const SendCoinsRecipient &rcp, transactions[i].getRecipients())
             {
                 // CWalletTx* newTx = transactions[i].getTransaction();
-                if (!rcp.message.isEmpty()) // Message from normal firo:URI (firo:123...?message=example)
+                if (!rcp.message.isEmpty()) // Message from normal privora:URI (privora:123...?message=example)
                     wtxAndFee[i].first.vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
 
                 CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
@@ -1471,7 +1471,7 @@ WalletModel::SendCoinsReturn WalletModel::spendSparkCoins(WalletModelTransaction
         CWalletTx* newTx = transaction.getTransaction();
         Q_FOREACH(const SendCoinsRecipient &rcp, transaction.getRecipients())
         {
-            if (!rcp.message.isEmpty()) // Message from normal firo:URI (firo:123...?message=example)
+            if (!rcp.message.isEmpty()) // Message from normal privora:URI (privora:123...?message=example)
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         
             if (!wallet->CommitTransaction(*newTx, reserveKey, g_connman.get(), state))
@@ -1481,7 +1481,7 @@ WalletModel::SendCoinsReturn WalletModel::spendSparkCoins(WalletModelTransaction
             transaction_array.append(&(ssTx[0]), ssTx.size());
         
             std::string strAddress = rcp.address.toStdString();
-            CTxDestination dest = CBitcoinAddress(strAddress).Get();
+            CTxDestination dest = CPrivoraAddress(strAddress).Get();
             std::string strLabel = rcp.label.toStdString();
             {
                 LOCK(wallet->cs_wallet);

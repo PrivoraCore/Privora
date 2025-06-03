@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Privora
+Comment=Connect to Privora
+Exec=privora-qt %u
+Terminal=false
+Type=Application
+Icon=/app/share/icons/hicolor/scalable/apps/org.privora.privora-qt.svg
+Categories=Office;Finance;

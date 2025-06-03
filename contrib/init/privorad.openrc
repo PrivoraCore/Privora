@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/privora/.privora" ]; then
+	PRIVORAD_DEFAULT_DATADIR="/var/lib/privora/.privora"
+else
+	PRIVORAD_DEFAULT_DATADIR="/var/lib/privorad"
+fi
+
+PRIVORAD_CONFIGFILE=${PRIVORAD_CONFIGFILE:-/etc/privora/privora.conf}
+PRIVORAD_PIDDIR=${PRIVORAD_PIDDIR:-/var/run/privorad}
+PRIVORAD_PIDFILE=${PRIVORAD_PIDFILE:-${PRIVORAD_PIDDIR}/privorad.pid}
+PRIVORAD_DATADIR=${PRIVORAD_DATADIR:-${PRIVORAD_DEFAULT_DATADIR}}
+PRIVORAD_USER=${PRIVORAD_USER:-${PRIVORA_USER:-privora}}
+PRIVORAD_GROUP=${PRIVORAD_GROUP:-privora}
+PRIVORAD_BIN=${PRIVORAD_BIN:-/usr/bin/privorad}
+PRIVORAD_NICE=${PRIVORAD_NICE:-${NICELEVEL:-0}}
+PRIVORAD_OPTS="${PRIVORAD_OPTS:-${PRIVORA_OPTS}}"
+
+name="Privora Core Daemon"
+description="Privora cryptocurrency P2P network daemon"
+
+command="/usr/bin/privorad"
+command_args="-pid=\"${PRIVORAD_PIDFILE}\" \
+		-conf=\"${PRIVORAD_CONFIGFILE}\" \
+		-datadir=\"${PRIVORAD_DATADIR}\" \
+		-daemon \
+		${PRIVORAD_OPTS}"
+
+required_files="${PRIVORAD_CONFIGFILE}"
+start_stop_daemon_args="-u ${PRIVORAD_USER} \
+			-N ${PRIVORAD_NICE} -w 2000"
+pidfile="${PRIVORAD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${PRIVORAD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${PRIVORAD_USER}:${PRIVORAD_GROUP}" \
+	"${PRIVORAD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${PRIVORAD_USER}:${PRIVORAD_GROUP}" \
+	"${PRIVORAD_PIDDIR}"
+
+	checkpath -f \
+	-o ${PRIVORAD_USER}:${PRIVORAD_GROUP} \
+	-m 0660 \
+	${PRIVORAD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${PRIVORAD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run privorad."
+		eerror "The setting must appear in ${PRIVORAD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Privora Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

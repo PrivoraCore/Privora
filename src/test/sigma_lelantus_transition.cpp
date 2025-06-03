@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(sigma_lelantus_transition_test)
     // Generate address
     CPubKey newKey;
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey), "Fail to get new address");
-    const CBitcoinAddress randomAddr(newKey.GetID());
+    const CPrivoraAddress randomAddr(newKey.GetID());
     std::vector<CRecipient> recipients = {
         {GetScriptForDestination(randomAddr.Get()), 200 * COIN, true},
     };

@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1032,7 +1032,7 @@ static bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
     stats.nTotalAmount += 44666700000000; // The estimated amount of coins forged during the Zerocoin attacks
     stats.nTotalAmount += 23750000000000; // The estimated amount of coins forged during the Lelantus attacks.
     stats.nTotalAmount -= 17326986000000; // Total locked in code after CVE-2018-17144 attacks.
-    stats.nTotalAmount -= 16810168037691; // Total burnt Coins sent to unrecoverable address https://explorer.firo.org/tx/0b53178c1b22bae4c04ef943ee6d6d30f2483327fe9beb54952951592e8ce368
+    stats.nTotalAmount -= 16810168037691; // Total burnt Coins sent to unrecoverable address https://explorer.privora.org/tx/0b53178c1b22bae4c04ef943ee6d6d30f2483327fe9beb54952951592e8ce368
 
     stats.hashSerialized = ss.GetHash();
     stats.nDiskSize = view->EstimateSize();
@@ -1148,8 +1148,8 @@ UniValue gettxout(const JSONRPCRequest& request)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of Firo addresses\n"
-            "        \"firoaddress\"     (string) Firo address\n"
+            "     \"addresses\" : [          (array of string) array of Privora addresses\n"
+            "        \"privoraaddress\"     (string) Privora address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"

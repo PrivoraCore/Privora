@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import assert_equal, assert_raises_message, JSONRPCException
 
-class SparkMintTest(BitcoinTestFramework):
+class SparkMintTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 1

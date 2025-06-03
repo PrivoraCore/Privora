@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -47,7 +47,7 @@ from .util import (
 from .authproxy import JSONRPCException
 
 
-class BitcoinTestFramework(object):
+class PrivoraTestFramework(object):
 
     def __init__(self):
         self.num_nodes = 4
@@ -137,11 +137,11 @@ class BitcoinTestFramework(object):
 
         parser = optparse.OptionParser(usage="%prog [options]")
         parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                          help="Leave bitcoinds and test.* datadir on exit or error")
+                          help="Leave privorads and test.* datadir on exit or error")
         parser.add_option("--noshutdown", dest="noshutdown", default=False, action="store_true",
-                          help="Don't stop bitcoinds after the test execution")
+                          help="Don't stop privorads after the test execution")
         parser.add_option("--srcdir", dest="srcdir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../../src"),
-                          help="Source directory containing bitcoind/bitcoin-cli (default: %default)")
+                          help="Source directory containing privorad/privora-cli (default: %default)")
         parser.add_option("--cachedir", dest="cachedir", default="",
                           help="Directory for caching pregenerated datadirs")
         parser.add_option("--tmpdir", dest="tmpdir", default=tempfile.mkdtemp(prefix="test"),
@@ -243,7 +243,7 @@ class BitcoinTestFramework(object):
         # User can provide log level as a number or string (eg DEBUG). loglevel was caught as a string, so try to convert it to an int
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
-        # Format logs the same as bitcoind's debug.log with microprecision (so log files can be concatenated and sorted)
+        # Format logs the same as privorad's debug.log with microprecision (so log files can be concatenated and sorted)
         formatter = logging.Formatter(fmt = '%(asctime)s.%(msecs)03d000 %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
@@ -252,18 +252,18 @@ class BitcoinTestFramework(object):
         self.log.addHandler(ch)
 
         if self.options.trace_rpc:
-            rpc_logger = logging.getLogger("BitcoinRPC")
+            rpc_logger = logging.getLogger("PrivoraRPC")
             rpc_logger.setLevel(logging.DEBUG)
             rpc_handler = logging.StreamHandler(sys.stdout)
             rpc_handler.setLevel(logging.DEBUG)
             rpc_logger.addHandler(rpc_handler)
-# Test framework for doing p2p comparison testing, which sets up some bitcoind
+# Test framework for doing p2p comparison testing, which sets up some privorad
 # binaries:
 # 1 binary: test binary
 # 2 binaries: 1 test binary, 1 ref binary
 # n>2 binaries: 1 test binary, n-1 ref binaries
 
-class ComparisonTestFramework(BitcoinTestFramework):
+class ComparisonTestFramework(PrivoraTestFramework):
 
     def __init__(self):
         super().__init__()
@@ -272,11 +272,11 @@ class ComparisonTestFramework(BitcoinTestFramework):
 
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("FIROD", "firod"),
-                          help="bitcoind binary to test")
+                          default=os.getenv("PRIVORAD", "privorad"),
+                          help="privorad binary to test")
         parser.add_option("--refbinary", dest="refbinary",
-                          default=os.getenv("FIROD", "firod"),
-                          help="bitcoind binary to use for reference nodes (if any)")
+                          default=os.getenv("PRIVORAD", "privorad"),
+                          help="privorad binary to use for reference nodes (if any)")
 
     def setup_network(self):
         self.nodes = start_nodes(
@@ -307,7 +307,7 @@ class ZnodeCollateral(object):
                 self.n = vout["n"]
         return self
 
-class ZnodeTestFramework(BitcoinTestFramework):
+class ZnodeTestFramework(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.znode_priv_keys = dict()
@@ -430,7 +430,7 @@ class ZnodeInfo:
         self.collateral_txid = collateral_txid
         self.collateral_vout = collateral_vout
 
-class EvoZnodeTestFramework(BitcoinTestFramework):
+class EvoZnodeTestFramework(PrivoraTestFramework):
     def __init__(self, num_nodes, masterodes_count, extra_args=None):
         super().__init__()
         self.mn_count = masterodes_count

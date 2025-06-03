@@ -1,5 +1,5 @@
-#ifndef FIRO_RECOVER_H
-#define FIRO_RECOVER_H
+#ifndef PRIVORA_RECOVER_H
+#define PRIVORA_RECOVER_H
 
 #include <QDialog>
 #include <QThread>
@@ -34,4 +34,4 @@ private:
     QThread *thread;
 };
 
-#endif //FIRO_RECOVER_H
+#endif //PRIVORA_RECOVER_H

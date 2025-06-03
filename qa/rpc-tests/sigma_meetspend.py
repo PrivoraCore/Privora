@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 from collections import Counter
 
-class SigmaMeetSpendTest(BitcoinTestFramework):
+class SigmaMeetSpendTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4
@@ -77,20 +77,20 @@ class SigmaMeetSpendTest(BitcoinTestFramework):
         activate_sigma_spend(denoms4, spend_size4, spend4, remint4, self)
 
 
-def activate_sigma_spend(denoms, spendsize, exp_spends, exp_remints, firod):
+def activate_sigma_spend(denoms, spendsize, exp_spends, exp_remints, privorad):
     for denom in denoms:
         count, size = denom
         for i in range(count):
-            firod.nodes[0].mint(size)
-    firod.nodes[0].generate(6)
+            privorad.nodes[0].mint(size)
+    privorad.nodes[0].generate(6)
 
-    myaddr = firod.nodes[0].listreceivedbyaddress(0, True)[0]['address']
+    myaddr = privorad.nodes[0].listreceivedbyaddress(0, True)[0]['address']
     args = {myaddr: spendsize}
-    txid = firod.nodes[0].spendmany("", args)
-    firod.nodes[0].generate(2)
+    txid = privorad.nodes[0].spendmany("", args)
+    privorad.nodes[0].generate(2)
 
     # Should be checked spends
-    spends = firod.nodes[0].listsigmaspends(0)
+    spends = privorad.nodes[0].listsigmaspends(0)
     cur_spend = [sp for sp in spends if sp['txid'] == txid]
     assert len(cur_spend) == 1, 'Txid not found in list of spends'
     cur_remints = [denom['denomination'] for denom in cur_spend[0]['remints']]

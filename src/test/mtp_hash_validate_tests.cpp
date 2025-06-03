@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include "test_bitcoin.h"
+#include "test_privora.h"
 
 BOOST_FIXTURE_TEST_SUITE(mtp_hash_validate_tests, TestingSetup)
 

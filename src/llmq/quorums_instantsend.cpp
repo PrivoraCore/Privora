@@ -1029,7 +1029,7 @@ void CInstantSendManager::SyncTransaction(const CTransaction& tx_, const CBlockI
     bool isDisconnect = pindex && posInBlock == CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK;
 
     // Are we called from validation.cpp/MemPoolConflictRemovalTracker?
-    // TODO refactor this when we backport the BlockConnected signal from Bitcoin, as it gives better info about
+    // TODO refactor this when we backport the BlockConnected signal from Privora, as it gives better info about
     // conflicted TXs
     bool isConflictRemoved = isDisconnect && !inMempool;
 

@@ -1,5 +1,5 @@
 ---
-name: "firo-linux-0.14.0"
+name: "privora-linux-0.14.0"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -42,8 +42,8 @@ packages:
 # - "binutils-riscv64-linux-gnu"
 # - "g++-8-riscv64-linux-gnu"
 remotes:
-- "url": "https://github.com/firoorg/firo"
-  "dir": "firo"
+- "url": "https://github.com/privoraorg/privora"
+  "dir": "privora"
 files: []
 script: |
   set -e -o pipefail
@@ -108,7 +108,7 @@ script: |
   create_per-host_faketime_wrappers "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd firo
+  cd privora
   BASEPREFIX="${PWD}/depends"
   # Build dependencies for each host
   for i in $HOSTS; do

@@ -3,7 +3,7 @@ import time
 import os
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 from test_framework.test_helper import get_dumpwallet_otp
 
@@ -20,7 +20,7 @@ from test_framework.test_helper import get_dumpwallet_otp
 #verify actual list unspendsigma
 #verify actual list spend sigma
 
-class WalletDumpSigmaTest(BitcoinTestFramework):
+class WalletDumpSigmaTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4

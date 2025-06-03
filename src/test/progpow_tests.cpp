@@ -8,7 +8,7 @@
 #include "utilmoneystr.h"
 #include "validation.h"
 #include "validationinterface.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "script/standard.h"
 #include <consensus/merkle.h>
 
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(corruption)
 
     // try to modify mix_hash
     modifiedBlock = block;
-    modifiedBlock.mix_hash = uint256S("e2c490c5bf0c3810cb8216997653d937b2822c1da37868b7e5f3c1a380c8a80a"); // SHA256("Firo")
+    modifiedBlock.mix_hash = uint256S("e2c490c5bf0c3810cb8216997653d937b2822c1da37868b7e5f3c1a380c8a80a"); // SHA256("Privora")
     BOOST_ASSERT(VerifyBlockCheckStatus(modifiedBlock, "invalid-mixhash"));
 
     // verify that unmodified block passes all the checks

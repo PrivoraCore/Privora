@@ -1,4 +1,4 @@
-// Copyright (c) 2020 The Firo Core developers
+// Copyright (c) 2020 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,7 +6,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "test/fixtures.h"
 
 #include "key.h"
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(sending_addresses)
         CPaymentChannel paymentChannel(paymentCode_bob, privkey_alice, CPaymentChannel::Side::sender);
 
         std::vector<std::string>::const_iterator iter = sendingaddresses.begin();
-        for (CBitcoinAddress const & addr: paymentChannel.generateTheirSecretAddresses(0, 10)) {
+        for (CPrivoraAddress const & addr: paymentChannel.generateTheirSecretAddresses(0, 10)) {
             BOOST_CHECK_EQUAL(addr.ToString(), *iter++);
         }
     }
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(sending_addresses)
         CPaymentChannel paymentChannel(paymentCode_alice, privkey_bob, CPaymentChannel::Side::sender);
 
         std::vector<std::string>::const_iterator iter = sendingaddresses.begin();
-        for (CBitcoinAddress const & addr: paymentChannel.generateTheirSecretAddresses(0, 5)) {
+        for (CPrivoraAddress const & addr: paymentChannel.generateTheirSecretAddresses(0, 5)) {
             BOOST_CHECK_EQUAL(addr.ToString(), *iter++);
         }
     }
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE(masked_paymentcode)
         COutPoint outpoint;
         ds >> outpoint;
 
-        CBitcoinSecret vchSecret;
+        CPrivoraSecret vchSecret;
         vchSecret.SetString("Kx983SRhAZpAhj7Aac1wUXMJ6XZeyJKqCxJJ49dxEbYCT4a1ozRD");
         CKey outpointSecret = vchSecret.GetKey();
 
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(account_for_sending)
         COutPoint outpoint;
         ds >> outpoint;
 
-        CBitcoinSecret vchSecret;
+        CPrivoraSecret vchSecret;
         vchSecret.SetString("Kx983SRhAZpAhj7Aac1wUXMJ6XZeyJKqCxJJ49dxEbYCT4a1ozRD");
         CKey outpoinSecret = vchSecret.GetKey();
 
@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(account_for_sending)
 
         MyAddrContT addresses = account.getMyNextAddresses();
         BOOST_CHECK_EQUAL(addresses.size(), 1);
-        CBitcoinAddress notifAddr = addresses[0].first;
+        CPrivoraAddress notifAddr = addresses[0].first;
         BOOST_CHECK_EQUAL(addresses[0].first.ToString(), notificationaddress);
         BOOST_CHECK(account.addressUsed(addresses[0].first));
 
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE(account_for_receiving)
         COutPoint outpoint;
         ds >> outpoint;
 
-        CBitcoinSecret vchSecret;
+        CPrivoraSecret vchSecret;
         vchSecret.SetString("Kx983SRhAZpAhj7Aac1wUXMJ6XZeyJKqCxJJ49dxEbYCT4a1ozRD");
         CPubKey outpointPubkey = vchSecret.GetKey().GetPubKey();
 
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(account_for_receiving)
         BOOST_CHECK_EQUAL(addrs.size(), 1 + bip47::AddressLookaheadNumber);
         BOOST_CHECK_EQUAL(addrs[0].first.ToString(), notificationaddress);
 
-        CBitcoinAddress someAddr = addrs[2].first;
+        CPrivoraAddress someAddr = addrs[2].first;
         BOOST_CHECK(account.addressUsed(someAddr));
 
         addrs = account.getMyNextAddresses();
@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE(address_match)
     BOOST_CHECK(std::find_if(receiverAddrs.begin(), receiverAddrs.end(), FindByAddress(sender.generateTheirNextSecretAddress())) != receiverAddrs.end());
 
     for (MyAddrContT::value_type const & addrPair: receiverAddrs) {
-        BOOST_CHECK(addrPair.first == CBitcoinAddress(addrPair.second.GetPubKey().GetID()));
+        BOOST_CHECK(addrPair.first == CPrivoraAddress(addrPair.second.GetPubKey().GetID()));
     }
 }
 

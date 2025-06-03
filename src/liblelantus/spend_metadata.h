@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBLELANTUS_SPENDMETADATA_H_
-#define FIRO_LIBLELANTUS_SPENDMETADATA_H_
+#ifndef PRIVORA_LIBLELANTUS_SPENDMETADATA_H_
+#define PRIVORA_LIBLELANTUS_SPENDMETADATA_H_
 
 #include "../uint256.h"
 #include "../serialize.h"
@@ -29,4 +29,4 @@ public:
 
 } // namespace lelantus
 
-#endif // FIRO_LIBLELANTUS_SPENDMETADATA_H_
+#endif // PRIVORA_LIBLELANTUS_SPENDMETADATA_H_

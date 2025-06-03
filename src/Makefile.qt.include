@@ -1,98 +1,98 @@
-# Copyright (c) 2013-2016 The Bitcoin Core developers
+# Copyright (c) 2013-2016 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-bin_PROGRAMS += qt/firo-qt
-EXTRA_LIBRARIES += qt/libfiroqt.a
+bin_PROGRAMS += qt/privora-qt
+EXTRA_LIBRARIES += qt/libprivoraqt.a
 
-# bitcoin qt core #
+# privora qt core #
 QT_TS = \
-  qt/locale/bitcoin_af.ts \
-  qt/locale/bitcoin_af_ZA.ts \
-  qt/locale/bitcoin_ar.ts \
-  qt/locale/bitcoin_be_BY.ts \
-  qt/locale/bitcoin_bg_BG.ts \
-  qt/locale/bitcoin_bg.ts \
-  qt/locale/bitcoin_ca_ES.ts \
-  qt/locale/bitcoin_ca.ts \
-  qt/locale/bitcoin_ca@valencia.ts \
-  qt/locale/bitcoin_cs.ts \
-  qt/locale/bitcoin_cy.ts \
-  qt/locale/bitcoin_da.ts \
-  qt/locale/bitcoin_de.ts \
-  qt/locale/bitcoin_el_GR.ts \
-  qt/locale/bitcoin_el.ts \
-  qt/locale/bitcoin_en_GB.ts \
-  qt/locale/bitcoin_en.ts \
-  qt/locale/bitcoin_eo.ts \
-  qt/locale/bitcoin_es_AR.ts \
-  qt/locale/bitcoin_es_CL.ts \
-  qt/locale/bitcoin_es_CO.ts \
-  qt/locale/bitcoin_es_DO.ts \
-  qt/locale/bitcoin_es_ES.ts \
-  qt/locale/bitcoin_es_MX.ts \
-  qt/locale/bitcoin_es.ts \
-  qt/locale/bitcoin_es_UY.ts \
-  qt/locale/bitcoin_es_VE.ts \
-  qt/locale/bitcoin_et_EE.ts \
-  qt/locale/bitcoin_et.ts \
-  qt/locale/bitcoin_eu_ES.ts \
-  qt/locale/bitcoin_fa_IR.ts \
-  qt/locale/bitcoin_fa.ts \
-  qt/locale/bitcoin_fi.ts \
-  qt/locale/bitcoin_fr_CA.ts \
-  qt/locale/bitcoin_fr_FR.ts \
-  qt/locale/bitcoin_fr.ts \
-  qt/locale/bitcoin_gl.ts \
-  qt/locale/bitcoin_he.ts \
-  qt/locale/bitcoin_hi_IN.ts \
-  qt/locale/bitcoin_hr.ts \
-  qt/locale/bitcoin_hu.ts \
-  qt/locale/bitcoin_id_ID.ts \
-  qt/locale/bitcoin_it_IT.ts \
-  qt/locale/bitcoin_it.ts \
-  qt/locale/bitcoin_ja.ts \
-  qt/locale/bitcoin_ka.ts \
-  qt/locale/bitcoin_kk_KZ.ts \
-  qt/locale/bitcoin_ko_KR.ts \
-  qt/locale/bitcoin_ku_IQ.ts \
-  qt/locale/bitcoin_ky.ts \
-  qt/locale/bitcoin_la.ts \
-  qt/locale/bitcoin_lt.ts \
-  qt/locale/bitcoin_lv_LV.ts \
-  qt/locale/bitcoin_mk_MK.ts \
-  qt/locale/bitcoin_mn.ts \
-  qt/locale/bitcoin_ms_MY.ts \
-  qt/locale/bitcoin_nb.ts \
-  qt/locale/bitcoin_ne.ts \
-  qt/locale/bitcoin_nl.ts \
-  qt/locale/bitcoin_pam.ts \
-  qt/locale/bitcoin_pl.ts \
-  qt/locale/bitcoin_pt_BR.ts \
-  qt/locale/bitcoin_pt_PT.ts \
-  qt/locale/bitcoin_ro_RO.ts \
-  qt/locale/bitcoin_ro.ts \
-  qt/locale/bitcoin_ru_RU.ts \
-  qt/locale/bitcoin_ru.ts \
-  qt/locale/bitcoin_sk.ts \
-  qt/locale/bitcoin_sl_SI.ts \
-  qt/locale/bitcoin_sq.ts \
-  qt/locale/bitcoin_sr@latin.ts \
-  qt/locale/bitcoin_sr.ts \
-  qt/locale/bitcoin_sv.ts \
-  qt/locale/bitcoin_ta.ts \
-  qt/locale/bitcoin_th_TH.ts \
-  qt/locale/bitcoin_tr_TR.ts \
-  qt/locale/bitcoin_tr.ts \
-  qt/locale/bitcoin_uk.ts \
-  qt/locale/bitcoin_ur_PK.ts \
-  qt/locale/bitcoin_uz@Cyrl.ts \
-  qt/locale/bitcoin_vi.ts \
-  qt/locale/bitcoin_vi_VN.ts \
-  qt/locale/bitcoin_zh_CN.ts \
-  qt/locale/bitcoin_zh_HK.ts \
-  qt/locale/bitcoin_zh.ts \
-  qt/locale/bitcoin_zh_TW.ts
+  qt/locale/privora_af.ts \
+  qt/locale/privora_af_ZA.ts \
+  qt/locale/privora_ar.ts \
+  qt/locale/privora_be_BY.ts \
+  qt/locale/privora_bg_BG.ts \
+  qt/locale/privora_bg.ts \
+  qt/locale/privora_ca_ES.ts \
+  qt/locale/privora_ca.ts \
+  qt/locale/privora_ca@valencia.ts \
+  qt/locale/privora_cs.ts \
+  qt/locale/privora_cy.ts \
+  qt/locale/privora_da.ts \
+  qt/locale/privora_de.ts \
+  qt/locale/privora_el_GR.ts \
+  qt/locale/privora_el.ts \
+  qt/locale/privora_en_GB.ts \
+  qt/locale/privora_en.ts \
+  qt/locale/privora_eo.ts \
+  qt/locale/privora_es_AR.ts \
+  qt/locale/privora_es_CL.ts \
+  qt/locale/privora_es_CO.ts \
+  qt/locale/privora_es_DO.ts \
+  qt/locale/privora_es_ES.ts \
+  qt/locale/privora_es_MX.ts \
+  qt/locale/privora_es.ts \
+  qt/locale/privora_es_UY.ts \
+  qt/locale/privora_es_VE.ts \
+  qt/locale/privora_et_EE.ts \
+  qt/locale/privora_et.ts \
+  qt/locale/privora_eu_ES.ts \
+  qt/locale/privora_fa_IR.ts \
+  qt/locale/privora_fa.ts \
+  qt/locale/privora_fi.ts \
+  qt/locale/privora_fr_CA.ts \
+  qt/locale/privora_fr_FR.ts \
+  qt/locale/privora_fr.ts \
+  qt/locale/privora_gl.ts \
+  qt/locale/privora_he.ts \
+  qt/locale/privora_hi_IN.ts \
+  qt/locale/privora_hr.ts \
+  qt/locale/privora_hu.ts \
+  qt/locale/privora_id_ID.ts \
+  qt/locale/privora_it_IT.ts \
+  qt/locale/privora_it.ts \
+  qt/locale/privora_ja.ts \
+  qt/locale/privora_ka.ts \
+  qt/locale/privora_kk_KZ.ts \
+  qt/locale/privora_ko_KR.ts \
+  qt/locale/privora_ku_IQ.ts \
+  qt/locale/privora_ky.ts \
+  qt/locale/privora_la.ts \
+  qt/locale/privora_lt.ts \
+  qt/locale/privora_lv_LV.ts \
+  qt/locale/privora_mk_MK.ts \
+  qt/locale/privora_mn.ts \
+  qt/locale/privora_ms_MY.ts \
+  qt/locale/privora_nb.ts \
+  qt/locale/privora_ne.ts \
+  qt/locale/privora_nl.ts \
+  qt/locale/privora_pam.ts \
+  qt/locale/privora_pl.ts \
+  qt/locale/privora_pt_BR.ts \
+  qt/locale/privora_pt_PT.ts \
+  qt/locale/privora_ro_RO.ts \
+  qt/locale/privora_ro.ts \
+  qt/locale/privora_ru_RU.ts \
+  qt/locale/privora_ru.ts \
+  qt/locale/privora_sk.ts \
+  qt/locale/privora_sl_SI.ts \
+  qt/locale/privora_sq.ts \
+  qt/locale/privora_sr@latin.ts \
+  qt/locale/privora_sr.ts \
+  qt/locale/privora_sv.ts \
+  qt/locale/privora_ta.ts \
+  qt/locale/privora_th_TH.ts \
+  qt/locale/privora_tr_TR.ts \
+  qt/locale/privora_tr.ts \
+  qt/locale/privora_uk.ts \
+  qt/locale/privora_ur_PK.ts \
+  qt/locale/privora_uz@Cyrl.ts \
+  qt/locale/privora_vi.ts \
+  qt/locale/privora_vi_VN.ts \
+  qt/locale/privora_zh_CN.ts \
+  qt/locale/privora_zh_HK.ts \
+  qt/locale/privora_zh.ts \
+  qt/locale/privora_zh_TW.ts
 
 QT_FORMS_UI = \
   qt/forms/exportviewkeydialog.ui \
@@ -127,10 +127,10 @@ QT_MOC_CPP = \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
-  qt/moc_bitcoinaddressvalidator.cpp \
-  qt/moc_bitcoinamountfield.cpp \
-  qt/moc_bitcoingui.cpp \
-  qt/moc_bitcoinunits.cpp \
+  qt/moc_privoraaddressvalidator.cpp \
+  qt/moc_privoraamountfield.cpp \
+  qt/moc_privoragui.cpp \
+  qt/moc_privoraunits.cpp \
   qt/moc_cancelpassworddialog.cpp \
   qt/moc_clientmodel.cpp \
   qt/moc_coincontroldialog.cpp \
@@ -179,33 +179,33 @@ QT_MOC_CPP = \
   qt/moc_sparkmodel.cpp \
   qt/moc_createsparknamepage.cpp
 
-BITCOIN_MM = \
+PRIVORA_MM = \
   qt/macdockiconhandler.mm \
   qt/macnotificationhandler.mm
 
 QT_MOC = \
-  qt/bitcoin.moc \
-  qt/bitcoinamountfield.moc \
+  qt/privora.moc \
+  qt/privoraamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
 
-QT_QRC_CPP = qt/qrc_bitcoin.cpp
-QT_QRC = qt/bitcoin.qrc
-QT_QRC_LOCALE_CPP = qt/qrc_bitcoin_locale.cpp
-QT_QRC_LOCALE = qt/bitcoin_locale.qrc
+QT_QRC_CPP = qt/qrc_privora.cpp
+QT_QRC = qt/privora.qrc
+QT_QRC_LOCALE_CPP = qt/qrc_privora_locale.cpp
+QT_QRC_LOCALE = qt/privora_locale.qrc
 
-BITCOIN_QT_H = \
+PRIVORA_QT_H = \
   qt/addressbookpage.h \
   qt/automintdialog.h \
   qt/automintnotification.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
-  qt/bitcoinaddressvalidator.h \
-  qt/bitcoinamountfield.h \
-  qt/bitcoingui.h \
-  qt/bitcoinunits.h \
+  qt/privoraaddressvalidator.h \
+  qt/privoraamountfield.h \
+  qt/privoragui.h \
+  qt/privoraunits.h \
   qt/cancelpassworddialog.h \
   qt/clientmodel.h \
   qt/coincontroldialog.h \
@@ -265,10 +265,10 @@ RES_ICONS = \
   qt/res/icons/about.png \
   qt/res/icons/about_qt.png \
   qt/res/icons/balances.png \
-  qt/res/icons/bitcoin.ico \
-  qt/res/icons/bitcoin_testnet.ico \
-  qt/res/icons/bitcoin.png \
-  qt/res/icons/firo.png \
+  qt/res/icons/privora.ico \
+  qt/res/icons/privora_testnet.ico \
+  qt/res/icons/privora.png \
+  qt/res/icons/privora.png \
   qt/res/icons/zerocoin.png \
   qt/res/icons/paymentcode.png \
   qt/res/icons/masternodes.png \
@@ -362,7 +362,7 @@ RES_ICONS = \
   qt/res/images/checkbox_partly_checked_light.png \
   qt/res/images/checkbox_partly_checked_hover_light.png \
   qt/res/images/checkbox_partly_checked_disabled_light.png \
-  qt/res/images/firo_logo.png \
+  qt/res/images/privora_logo.png \
   qt/res/images/radio_normal_light.png \
   qt/res/images/radio_normal_hover_light.png \
   qt/res/images/radio_checked_light.png \
@@ -373,19 +373,19 @@ RES_ICONS = \
   qt/res/icons/ext_add_light.png
 
 RES_CSS = \
-  qt/res/css/firo.css
+  qt/res/css/privora.css
 
 RES_FONTS = \
   qt/res/fonts/Saira_SemiCondensed-Bold.ttf \
   qt/res/fonts/SourceSansPro-Regular.ttf \
   qt/res/fonts/SourceSansPro-Bold.ttf
 
-BITCOIN_QT_BASE_CPP = \
+PRIVORA_QT_BASE_CPP = \
   qt/bantablemodel.cpp \
-  qt/bitcoinaddressvalidator.cpp \
-  qt/bitcoinamountfield.cpp \
-  qt/bitcoingui.cpp \
-  qt/bitcoinunits.cpp \
+  qt/privoraaddressvalidator.cpp \
+  qt/privoraamountfield.cpp \
+  qt/privoragui.cpp \
+  qt/privoraunits.cpp \
   qt/cancelpassworddialog.cpp \
   qt/clientmodel.cpp \
   qt/csvmodelwriter.cpp \
@@ -408,9 +408,9 @@ BITCOIN_QT_BASE_CPP = \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp
 
-BITCOIN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
+PRIVORA_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
 
-BITCOIN_QT_WALLET_CPP = \
+PRIVORA_QT_WALLET_CPP = \
   qt/addressbookpage.cpp \
   qt/automintdialog.cpp \
   qt/automintnotification.cpp \
@@ -445,12 +445,12 @@ BITCOIN_QT_WALLET_CPP = \
   qt/sparkmodel.cpp \
   qt/createsparknamepage.cpp
 
-BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
+PRIVORA_QT_CPP = $(PRIVORA_QT_BASE_CPP)
 if TARGET_WINDOWS
-BITCOIN_QT_CPP += $(BITCOIN_QT_WINDOWS_CPP)
+PRIVORA_QT_CPP += $(PRIVORA_QT_WINDOWS_CPP)
 endif
 if ENABLE_WALLET
-BITCOIN_QT_CPP += $(BITCOIN_QT_WALLET_CPP)
+PRIVORA_QT_CPP += $(PRIVORA_QT_WALLET_CPP)
 endif # ENABLE_WALLET
 
 RES_IMAGES = \
@@ -459,19 +459,19 @@ RES_IMAGES = \
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
-BITCOIN_RC = qt/res/bitcoin-qt-res.rc
+PRIVORA_RC = qt/res/privora-qt-res.rc
 
-BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
+PRIVORA_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
   -I$(builddir)/qt/forms -DQT_NO_KEYWORDS
 
-qt_libfiroqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+qt_libprivoraqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES) $(PRIVORA_QT_INCLUDES) \
   $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(QR_CFLAGS)
-qt_libfiroqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+qt_libprivoraqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
-qt_libfiroqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
+qt_libprivoraqt_a_SOURCES = $(PRIVORA_QT_CPP) $(PRIVORA_QT_H) $(QT_FORMS_UI) \
   $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(RES_FONTS)
 
-nodist_qt_libfiroqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) \
+nodist_qt_libprivoraqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) \
   $(QT_QRC_CPP) $(QT_QRC_LOCALE_CPP)
 
 # forms/foo.h -> forms/ui_foo.h
@@ -480,72 +480,72 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libfiroqt_a_OBJECTS) $(qt_firo_qt_OBJECTS) : | $(QT_MOC)
+$(qt_libprivoraqt_a_OBJECTS) $(qt_privora_qt_OBJECTS) : | $(QT_MOC)
 
-# bitcoin-qt binary #
-qt_firo_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+# privora-qt binary #
+qt_privora_qt_CPPFLAGS = $(AM_CPPFLAGS) $(PRIVORA_INCLUDES) $(PRIVORA_QT_INCLUDES) \
   $(QT_INCLUDES) $(QR_CFLAGS)
-qt_firo_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+qt_privora_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
-qt_firo_qt_SOURCES = qt/bitcoin.cpp
+qt_privora_qt_SOURCES = qt/privora.cpp
 if TARGET_DARWIN
-  qt_firo_qt_SOURCES += $(BITCOIN_MM)
+  qt_privora_qt_SOURCES += $(PRIVORA_MM)
 endif
 if TARGET_WINDOWS
-  qt_firo_qt_SOURCES += $(BITCOIN_RC)
+  qt_privora_qt_SOURCES += $(PRIVORA_RC)
 endif
-qt_firo_qt_LDADD = qt/libfiroqt.a $(LIBBITCOIN_SERVER)
+qt_privora_qt_LDADD = qt/libprivoraqt.a $(LIBPRIVORA_SERVER)
 
 if ENABLE_WALLET
-qt_firo_qt_LDADD += $(LIBBITCOIN_WALLET)
+qt_privora_qt_LDADD += $(LIBPRIVORA_WALLET)
 endif
 if ENABLE_ZMQ
-qt_firo_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+qt_privora_qt_LDADD += $(LIBPRIVORA_ZMQ) $(ZMQ_LIBS)
 endif
 
-qt_firo_qt_LDADD += -ltor
+qt_privora_qt_LDADD += -ltor
 
-qt_firo_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBFIRO_SIGMA) $(LIBLELANTUS) $(LIBSPARK) \
+qt_privora_qt_LDADD += $(LIBPRIVORA_CLI) $(LIBPRIVORA_COMMON) $(LIBPRIVORA_UTIL) \
+  $(LIBPRIVORA_CONSENSUS) $(LIBPRIVORA_CRYPTO) $(LIBPRIVORA_SIGMA) $(LIBLELANTUS) $(LIBSPARK) \
   $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) $(BACKTRACE_LIB) $(BOOST_LIBS) $(QT_LIBS) \
   $(QT_DBUS_LIBS) $(QR_LIBS) $(BDB_LIBS) $(SSL_LIBS) \
   $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) $(LIBBLSSIG_LIBS) $(LIBBLSSIG_DEPENDS) \
   $(ZLIB_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 
-qt_firo_qt_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-qt_firo_qt_LIBTOOLFLAGS = $(AM_LIBTOOLFLAGS) --tag CXX
+qt_privora_qt_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_privora_qt_LIBTOOLFLAGS = $(AM_LIBTOOLFLAGS) --tag CXX
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
 
 SECONDARY: $(QT_QM)
 
-$(srcdir)/qt/bitcoinstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES) $(libbitcoin_zmq_a_SOURCES) $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_util_a_SOURCES)
+$(srcdir)/qt/privorastrings.cpp: $(libprivora_server_a_SOURCES) $(libprivora_wallet_a_SOURCES) $(libprivora_common_a_SOURCES) $(libprivora_zmq_a_SOURCES) $(libprivora_consensus_a_SOURCES) $(libprivora_util_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
 	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" COPYRIGHT_HOLDERS="$(COPYRIGHT_HOLDERS)" COPYRIGHT_HOLDERS_SUBSTITUTION="$(COPYRIGHT_HOLDERS_SUBSTITUTION)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: $(srcdir)/qt/bitcoinstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_BASE_CPP) qt/bitcoin.cpp $(BITCOIN_QT_WINDOWS_CPP) $(BITCOIN_QT_WALLET_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
+translate: $(srcdir)/qt/privorastrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(PRIVORA_QT_BASE_CPP) qt/privora.cpp $(PRIVORA_QT_WINDOWS_CPP) $(PRIVORA_QT_WALLET_CPP) $(PRIVORA_QT_H) $(PRIVORA_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/bitcoin_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/privora_en.ts
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
 	@cp -f $< $(@D)/temp_$(<F)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name bitcoin_locale --format-version 1 $(@D)/temp_$(<F) > $@
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name privora_locale --format-version 1 $(@D)/temp_$(<F) > $@
 	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(RES_FONTS)
 	@test -f $(RCC)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name bitcoin --format-version 1 $< > $@
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name privora --format-version 1 $< > $@
 
-CLEAN_QT = $(nodist_qt_libfiroqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno
+CLEAN_QT = $(nodist_qt_libprivoraqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno
 
 CLEANFILES += $(CLEAN_QT)
 
-firo_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libfiroqt_a_OBJECTS) $(qt_firo_qt_OBJECTS) qt/firo-qt$(EXEEXT) $(LIBBITCOINQT)
+privora_qt_clean: FORCE
+	rm -f $(CLEAN_QT) $(qt_libprivoraqt_a_OBJECTS) $(qt_privora_qt_OBJECTS) qt/privora-qt$(EXEEXT) $(LIBPRIVORAQT)
 
-firo_qt : qt/firo-qt$(EXEEXT)
+privora_qt : qt/privora-qt$(EXEEXT)
 
 ui_%.h: %.ui
 	@test -f $(UIC)

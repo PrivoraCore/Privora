@@ -14,11 +14,11 @@ RUN update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32
 RUN pip3 install ez_setup
 
 # create user to use
-RUN useradd -m -U firo-builder
+RUN useradd -m -U privora-builder
 
 # create a volume for home directory
-VOLUME [ "/home/firo-builder" ]
+VOLUME [ "/home/privora-builder" ]
 
 # start shell with created user
-USER firo-builder
-WORKDIR /home/firo-builder
+USER privora-builder
+WORKDIR /home/privora-builder

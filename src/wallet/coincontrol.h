@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_COINCONTROL_H
-#define BITCOIN_WALLET_COINCONTROL_H
+#ifndef PRIVORA_WALLET_COINCONTROL_H
+#define PRIVORA_WALLET_COINCONTROL_H
 
 #include "primitives/transaction.h"
 #include "base58.h"
@@ -98,4 +98,4 @@ private:
     std::set<COutPoint> setSelected;
 };
 
-#endif // BITCOIN_WALLET_COINCONTROL_H
+#endif // PRIVORA_WALLET_COINCONTROL_H

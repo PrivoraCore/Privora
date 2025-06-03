@@ -5,7 +5,7 @@
 #
 
 from test_framework.mininode import * #NodeConnCB, NODE_NETWORK, NetworkThread, NodeConn, wait_until, CAddress, msg_addr, msg_ping, msg_pong
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 import time
 
@@ -42,7 +42,7 @@ class AddrTestNode(SingleNodeConnCB):
         self.connection.disconnect_node()
         return self.wait_for_disconnect()
 
-class AddrTest(BitcoinTestFramework):
+class AddrTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.setup_clean_chain = True

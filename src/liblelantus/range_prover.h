@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBLELANTUS_RANGE_PROVER_H
-#define FIRO_LIBLELANTUS_RANGE_PROVER_H
+#ifndef PRIVORA_LIBLELANTUS_RANGE_PROVER_H
+#define PRIVORA_LIBLELANTUS_RANGE_PROVER_H
 
 #include "innerproduct_proof_generator.h"
 
@@ -37,4 +37,4 @@ private:
 
 }//namespace lelantus
 
-#endif //FIRO_LIBLELANTUS_RANGE_PROVER_H
+#endif //PRIVORA_LIBLELANTUS_RANGE_PROVER_H

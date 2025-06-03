@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBSPARK_SCHNORR_H
-#define FIRO_LIBSPARK_SCHNORR_H
+#ifndef PRIVORA_LIBSPARK_SCHNORR_H
+#define PRIVORA_LIBSPARK_SCHNORR_H
 
 #include "schnorr_proof.h"
 #include <secp256k1/include/MultiExponent.h>

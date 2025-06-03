@@ -21,8 +21,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef FIRO_BIP39_H
-#define FIRO_BIP39_H
+#ifndef PRIVORA_BIP39_H
+#define PRIVORA_BIP39_H
 
 #include "support/allocators/secure.h"
 

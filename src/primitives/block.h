@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_PRIMITIVES_BLOCK_H
-#define BITCOIN_PRIMITIVES_BLOCK_H
+#ifndef PRIVORA_PRIMITIVES_BLOCK_H
+#define PRIVORA_PRIMITIVES_BLOCK_H
 
 #include <deque>
 #include <type_traits>
@@ -15,7 +15,7 @@
 #include "definition.h"
 #include "crypto/MerkleTreeProof/mtp.h"
 #include "crypto/progpow.h"
-#include "firo_params.h"
+#include "privora_params.h"
 #include "crypto/progpow.h"
 
 // Can't include sigma.h
@@ -49,7 +49,7 @@ inline int GetZerocoinChainID()
     return 0x0001; // We are the first :)
 }
 
-// Firo - MTP
+// Privora - MTP
 class CMTPHashData {
 public:
     uint8_t hashRootMTP[16]; // 16 is 128 bit of blake2b
@@ -128,12 +128,12 @@ public:
     uint32_t nBits;
     uint32_t nNonce;   //! std satoshi
 
-    // Firo - ProgPow 
+    // Privora - ProgPow 
     uint32_t nHeight;
     uint64_t nNonce64;
     uint256 mix_hash;
 
-    // Firo - MTP
+    // Privora - MTP
     int32_t nVersionMTP = 0x1000;
     uint256 mtpHashValue;
 
@@ -166,7 +166,7 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
 
-        // Firo - ProgPoW
+        // Privora - ProgPoW
         // Return std 4byte, if ProgPoW return 8byte
         if (IsProgPow()) {
 
@@ -178,7 +178,7 @@ public:
 
             READWRITE(nNonce);
 
-            // Firo - MTP
+            // Privora - MTP
             // On read: allocate and read. On write: write only if already allocated
             if (IsMTP()) {
                 READWRITE(nVersionMTP);
@@ -230,14 +230,14 @@ public:
         nBits = 0;
         nNonce = 0;
 
-        // Firo - ProgPow
+        // Privora - ProgPow
         nNonce64 = 0;
         nHeight  = 0;
         mix_hash.SetNull();
 
         cachedPoWHash.SetNull();
 
-        // Firo - MTP
+        // Privora - MTP
         mtpHashData.reset();
         mtpHashValue.SetNull();
         reserved[0].SetNull();
@@ -401,4 +401,4 @@ struct CBlockLocator
 /** Compute the consensus-critical block weight (see BIP 141). */
 int64_t GetBlockWeight(const CBlock& tx);
 
-#endif // BITCOIN_PRIMITIVES_BLOCK_H
+#endif // PRIVORA_PRIMITIVES_BLOCK_H

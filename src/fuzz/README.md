@@ -3,12 +3,12 @@
 ## Quickstart Guide
 To quickly get started fuzzing libspark using honggfuzz:
 
-### Build firo
+### Build privora
 - clone this repo:
 ```
-git clone -b spark https://github.com/firoorg/firo.git
+git clone -b spark https://github.com/privoraorg/privora.git
 ```
-- Build firo: Follow instruction from https://github.com/firoorg/firo/tree/spark#readme
+- Build privora: Follow instruction from https://github.com/privoraorg/privora/tree/spark#readme
 
 Once the build is successful, we have to install honggfuzz and required dependencies.
 
@@ -36,10 +36,10 @@ sudo apt install libboost-chrono-dev
 ```
 
 ### Fuzzing using honggfuzz
-* In order to fuzz `firo/src/libpark` using Honggfuzz:
+* In order to fuzz `privora/src/libpark` using Honggfuzz:
 
 ```
-cd firo/src/fuzz/
+cd privora/src/fuzz/
 export CC=hfuzz-clang
 export CXX=hfuzz-clang++
 ```

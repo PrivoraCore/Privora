@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,7 +13,7 @@
 #include <iostream>
 #include "util.h"
 #include "chainparams.h"
-#include "bitcoin_bignum/bignum.h"
+#include "privora_bignum/bignum.h"
 #include "utilstrencodings.h"
 #include "crypto/MerkleTreeProof/mtp.h"
 #include "mtpstate.h"
@@ -197,7 +197,7 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     return bnNew.GetCompact();
 }
 
-// Firo - MTP
+// Privora - MTP
 bool CheckMerkleTreeProof(const CBlockHeader &block, const Consensus::Params &params) {
     if (!block.IsMTP() || block.IsProgPow())
 	    return true;

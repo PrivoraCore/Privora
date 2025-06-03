@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_SENDCOINSENTRY_H
-#define BITCOIN_QT_SENDCOINSENTRY_H
+#ifndef PRIVORA_QT_SENDCOINSENTRY_H
+#define PRIVORA_QT_SENDCOINSENTRY_H
 
 #include "walletmodel.h"
 
@@ -17,7 +17,7 @@ namespace Ui {
 }
 
 /**
- * A single entry in the dialog for sending bitcoins.
+ * A single entry in the dialog for sending privoras.
  * Stacked widget, with different UIs for payment requests
  * with a strong payee identity.
  */
@@ -81,4 +81,4 @@ private:
     
 };
 
-#endif // BITCOIN_QT_SENDCOINSENTRY_H
+#endif // PRIVORA_QT_SENDCOINSENTRY_H

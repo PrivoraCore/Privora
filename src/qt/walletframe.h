@@ -1,18 +1,18 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_WALLETFRAME_H
-#define BITCOIN_QT_WALLETFRAME_H
+#ifndef PRIVORA_QT_WALLETFRAME_H
+#define PRIVORA_QT_WALLETFRAME_H
 
 #if defined(HAVE_CONFIG_H)
-#include "../config/bitcoin-config.h"
+#include "../config/privora-config.h"
 #endif
 
 #include <QFrame>
 #include <QMap>
 
-class BitcoinGUI;
+class PrivoraGUI;
 class ClientModel;
 class PlatformStyle;
 class SendCoinsRecipient;
@@ -25,9 +25,9 @@ QT_END_NAMESPACE
 
 /**
  * A container for embedding all wallet-related
- * controls into BitcoinGUI. The purpose of this class is to allow future
+ * controls into PrivoraGUI. The purpose of this class is to allow future
  * refinements of the wallet controls with minimal need for further
- * modifications to BitcoinGUI, thus greatly simplifying merges while
+ * modifications to PrivoraGUI, thus greatly simplifying merges while
  * reducing the risk of breaking top-level stuff.
  */
 class WalletFrame : public QFrame
@@ -35,7 +35,7 @@ class WalletFrame : public QFrame
     Q_OBJECT
 
 public:
-    explicit WalletFrame(const PlatformStyle *platformStyle, BitcoinGUI *_gui = 0);
+    explicit WalletFrame(const PlatformStyle *platformStyle, PrivoraGUI *_gui = 0);
     ~WalletFrame();
 
     void setClientModel(ClientModel *clientModel);
@@ -55,7 +55,7 @@ Q_SIGNALS:
 
 private:
     QStackedWidget *walletStack;
-    BitcoinGUI *gui;
+    PrivoraGUI *gui;
     ClientModel *clientModel;
     QMap<QString, WalletView*> mapWalletViews;
 
@@ -70,8 +70,8 @@ public Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-    /** Switch directory to bitcoin tx history tab */
-    void gotoBitcoinHistoryTab();
+    /** Switch directory to privora tx history tab */
+    void gotoPrivoraHistoryTab();
     /** Switch to masternode page */
     void gotoMasternodePage();
     /** Switch to receive coins page */
@@ -105,4 +105,4 @@ public Q_SLOTS:
     void updateAddressbook();
 };
 
-#endif // BITCOIN_QT_WALLETFRAME_H
+#endif // PRIVORA_QT_WALLETFRAME_H

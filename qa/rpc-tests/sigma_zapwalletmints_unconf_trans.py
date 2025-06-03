@@ -2,7 +2,7 @@
 import time
 from decimal import *
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 
@@ -26,7 +26,7 @@ from test_framework.util import *
 # 15. spend
 # 16. generate block
 # 17. check listunspentmints it should decreased
-class SigmaZapWalletMintsUnconfirmedTest(BitcoinTestFramework):
+class SigmaZapWalletMintsUnconfirmedTest(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 4
@@ -60,7 +60,7 @@ class SigmaZapWalletMintsUnconfirmedTest(BitcoinTestFramework):
         # 5. restart with `["-zapwalletmints"]`
         last_block_height = self.nodes[0].getinfo()["blocks"]
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         self.nodes[0] = start_node(0,self.options.tmpdir, ["-zapwalletmints"])
         while self.nodes[0].getinfo()["blocks"] != last_block_height:
@@ -79,7 +79,7 @@ class SigmaZapWalletMintsUnconfirmedTest(BitcoinTestFramework):
         # 8. restart with `["-zapwalletmints"]`
         last_block_height = self.nodes[0].getinfo()["blocks"]
         self.nodes[0].stop()
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
 
         self.nodes[0] = start_node(0, self.options.tmpdir, ["-zapwalletmints"])
         while self.nodes[0].getinfo()["blocks"] != last_block_height:

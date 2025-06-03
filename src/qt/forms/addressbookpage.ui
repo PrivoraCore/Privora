@@ -158,7 +158,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../bitcoin.qrc"/>
+  <include location="../privora.qrc"/>
  </resources>
  <connections/>
 </ui>

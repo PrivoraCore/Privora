@@ -22,7 +22,7 @@ public:
 
     MyAddrContT const & getMyUsedAddresses() const;
     MyAddrContT const & getMyNextAddresses() const;
-    bool addressUsed(CBitcoinAddress const & address);
+    bool addressUsed(CPrivoraAddress const & address);
 
     CPaymentCode const & getMyPcode() const;
     uint32_t getAccountNum() const;
@@ -54,7 +54,7 @@ private:
 
     virtual MyAddrContT const & generateMyUsedAddresses() const = 0;
     virtual MyAddrContT const & generateMyNextAddresses() const = 0;
-    virtual bool markAddressUsed(CBitcoinAddress const &) = 0;
+    virtual bool markAddressUsed(CPrivoraAddress const &) = 0;
 };
 
 /******************************************************************************/
@@ -74,8 +74,8 @@ public:
     std::vector<unsigned char> getMaskedPayload(COutPoint const & outpoint, CKey const & outpointSecret);
 
     CPaymentCode const & getTheirPcode() const;
-    CBitcoinAddress generateTheirNextSecretAddress();
-    CBitcoinAddress getTheirNextSecretAddress() const;
+    CPrivoraAddress generateTheirNextSecretAddress();
+    CPrivoraAddress getTheirNextSecretAddress() const;
     size_t setTheirUsedAddressNumber(size_t number);
 
     TheirAddrContT getTheirUsedAddresses() const;
@@ -106,7 +106,7 @@ private:
     void updateMyNextAddresses();
     virtual MyAddrContT const & generateMyUsedAddresses() const;
     virtual MyAddrContT const & generateMyNextAddresses() const;
-    virtual bool markAddressUsed(CBitcoinAddress const &);
+    virtual bool markAddressUsed(CPrivoraAddress const &);
 };
 
 /******************************************************************************/
@@ -122,7 +122,7 @@ public:
     CAccountReceiver() = default;
     CAccountReceiver(CExtKey const & walletKey, uint32_t accountNum, std::string const & label);
 
-    CBitcoinAddress const & getMyNotificationAddress() const;
+    CPrivoraAddress const & getMyNotificationAddress() const;
 
     void acceptPcode(CPaymentCode const & theirPcode);
     bool acceptMaskedPayload(std::vector<unsigned char> const & maskedPayload, COutPoint const & outpoint, CPubKey const & outpoinPubkey);
@@ -150,14 +150,14 @@ public:
 
 private:
     PChannelContT mutable pchannels;
-    boost::optional<CBitcoinAddress> mutable myNotificationAddress;
+    boost::optional<CPrivoraAddress> mutable myNotificationAddress;
 
     MyAddrContT mutable usedAddresses, nextAddresses;
     std::string label;
 
     virtual MyAddrContT const & generateMyUsedAddresses() const;
     virtual MyAddrContT const & generateMyNextAddresses() const;
-    virtual bool markAddressUsed(CBitcoinAddress const &);
+    virtual bool markAddressUsed(CPrivoraAddress const &);
 };
 
 /******************************************************************************/

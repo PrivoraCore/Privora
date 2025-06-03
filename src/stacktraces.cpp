@@ -10,7 +10,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
-#include "bitcoin-config.h"
+#include "privora-config.h"
 
 #include <mutex>
 #include <map>

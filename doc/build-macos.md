@@ -47,7 +47,7 @@ If `m4` is not found even after installation and linking with `--force`, you may
 2. Once installed, open Xcode at least once to complete the setup.
 
 #### Berkeley DB
-It is recommended to use Berkeley DB 4.8. If you have to build it yourself, you can use [the installation script included in contrib/](https://github.com/bitcoin/bitcoin/blob/master/contrib/install_db4.sh) like so:
+It is recommended to use Berkeley DB 4.8. If you have to build it yourself, you can use [the installation script included in contrib/](https://github.com/privora/privora/blob/master/contrib/install_db4.sh) like so:
 ```bash
 ./contrib/install_db4.sh 
 ```
@@ -58,13 +58,13 @@ from the root of the repository.
 ## Build Instructions
 
 #### Download the Source
-Before building, download the Firo source code:
+Before building, download the Privora source code:
 ```bash
-git clone https://github.com/firoorg/firo
-cd firo
+git clone https://github.com/privoraorg/privora
+cd privora
 ```
 
-#### Build Firo Core
+#### Build Privora Core
 1. **Prepare the build environment**:
    ```bash
    cd depends
@@ -72,7 +72,7 @@ cd firo
    cd ..
    ```
 
-2. **Configure and build Firo-core**:
+2. **Configure and build Privora-core**:
    ```bash
    ./autogen.sh
    ./configure --prefix=`pwd`/depends/`depends/config.guess`
@@ -94,30 +94,30 @@ cd firo
 Running
 -------
 
-Firo Core is now available at `./src/firod`
+Privora Core is now available at `./src/privorad`
 
 Before running, it's recommended you create an RPC configuration file.
 
-    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/firo/firo.conf"
+    echo -e "rpcuser=privorarpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/privora/privora.conf"
 
-    chmod 600 "/Users/${USER}/Library/Application Support/firo/firo.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/privora/privora.conf"
 
-The first time you run firod, it will start downloading the blockchain. This process could take several hours.
+The first time you run privorad, it will start downloading the blockchain. This process could take several hours.
 
 You can monitor the download process by looking at the debug.log file:
 
-    tail -f $HOME/Library/Application\ Support/firo/debug.log
+    tail -f $HOME/Library/Application\ Support/privora/debug.log
 
 Other commands:
 -------
 
-    ./src/firod -daemon # Starts the Firo daemon.
-    ./src/firo-cli --help # Outputs a list of command-line options.
-    ./src/firo-cli help # Outputs a list of RPC commands when the daemon is running.
+    ./src/privorad -daemon # Starts the Privora daemon.
+    ./src/privora-cli --help # Outputs a list of command-line options.
+    ./src/privora-cli help # Outputs a list of RPC commands when the daemon is running.
 
 Using Qt Creator as IDE
 ------------------------
-You can use Qt Creator as an IDE, for bitcoin development.
+You can use Qt Creator as an IDE, for privora development.
 Download and install the community edition of [Qt Creator](https://www.qt.io/download/).
 Uncheck everything except Qt Creator during the installation process.
 
@@ -127,7 +127,7 @@ Uncheck everything except Qt Creator during the installation process.
    ./configure --prefix=`pwd`/depends/`depends/config.guess` --enable-debug
    ```
 3. In Qt Creator do "New Project" -> Import Project -> Import Existing Project
-4. Enter "bitcoin-qt" as project name, enter `src/qt` as location
+4. Enter "privora-qt" as project name, enter `src/qt` as location
 5. Leave the file selection as it is
 6. Confirm the "summary page"
 7. In the "Projects" tab select "Manage Kits..."
@@ -140,4 +140,4 @@ Notes
 
 * Tested on macOS 10.11 through 10.14 on 64-bit Intel processors, and on macOS 14.5 on an M2 chip.
 
-* Building with downloaded Qt binaries is not officially supported. See the notes in [#7714](https://github.com/bitcoin/bitcoin/issues/7714)
+* Building with downloaded Qt binaries is not officially supported. See the notes in [#7714](https://github.com/privora/privora/issues/7714)

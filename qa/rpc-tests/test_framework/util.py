@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Privora Core developers
 # Copyright (c) 2014-2017 The Dash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -39,7 +39,7 @@ PORT_MIN = 11000
 # The number of ports to "reserve" for p2p and rpc, each
 PORT_RANGE = 5000
 
-BITCOIND_PROC_WAIT_TIMEOUT = 60
+PRIVORAD_PROC_WAIT_TIMEOUT = 60
 
 
 class PortSeed:
@@ -128,7 +128,7 @@ def rpc_port(n):
     return PORT_MIN + PORT_RANGE + n + (MAX_NODES * PortSeed.n) % (PORT_RANGE - 1 - MAX_NODES)
 
 def check_json_precision():
-    """Make sure json library being used does not lose precision converting BTC values"""
+    """Make sure json library being used does not lose precision converting VORA values"""
     n = Decimal("20000000.00000003")
     satoshis = int(json.loads(json.dumps(float(n)))*1.0e8)
     if satoshis != 2000000000000003:
@@ -218,14 +218,14 @@ def sync_znodes(rpc_connections, fast_mnsync=False):
     for node in rpc_connections:
         wait_to_sync(node, fast_mnsync)
 
-bitcoind_processes = {}
+privorad_processes = {}
 
 def initialize_datadir(dirname, n):
     datadir = os.path.join(dirname, "node"+str(n))
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
     rpc_u, rpc_p = rpc_auth_pair(n)
-    with open(os.path.join(datadir, "firo.conf"), 'w', encoding='utf8') as f:
+    with open(os.path.join(datadir, "privora.conf"), 'w', encoding='utf8') as f:
         f.write("regtest=1\n")
         f.write("rpcuser=" + rpc_u + "\n")
         f.write("rpcpassword=" + rpc_p + "\n")
@@ -249,14 +249,14 @@ def rpc_url(i, rpchost=None):
             host = rpchost
     return "http://%s:%s@%s:%d" % (rpc_u, rpc_p, host, int(port))
 
-def wait_for_bitcoind_start(process, url, i):
+def wait_for_privorad_start(process, url, i):
     '''
-    Wait for firod to start. This means that RPC is accessible and fully initialized.
-    Raise an exception if firod exits during initialization.
+    Wait for privorad to start. This means that RPC is accessible and fully initialized.
+    Raise an exception if privorad exits during initialization.
     '''
     while True:
         if process.poll() is not None:
-            raise Exception('firod exited with status %i during initialization' % process.returncode)
+            raise Exception('privorad exited with status %i during initialization' % process.returncode)
         try:
             rpc = get_rpc_proxy(url, i)
             blocks = rpc.getblockcount()
@@ -289,16 +289,16 @@ def initialize_chain(test_dir, num_nodes, cachedir):
             if os.path.isdir(os.path.join(cachedir,"node"+str(i))):
                 shutil.rmtree(os.path.join(cachedir,"node"+str(i)))
 
-        # Create cache directories, run bitcoinds:
+        # Create cache directories, run privorads:
         for i in range(MAX_NODES):
             datadir=initialize_datadir(cachedir, i)
-            args = [ os.getenv("FIROD", "firod"), "-server", "-keypool=1", "-datadir="+datadir, "-discover=0" ]
+            args = [ os.getenv("PRIVORAD", "privorad"), "-server", "-keypool=1", "-datadir="+datadir, "-discover=0" ]
             if i > 0:
                 args.append("-connect=127.0.0.1:"+str(p2p_port(0)))
-            bitcoind_processes[i] = subprocess.Popen(args)
+            privorad_processes[i] = subprocess.Popen(args)
             if os.getenv("PYTHON_DEBUG", ""):
-                print("initialize_chain: bitcoind started, waiting for RPC to come up")
-            wait_for_bitcoind_start(bitcoind_processes[i], rpc_url(i), i)
+                print("initialize_chain: privorad started, waiting for RPC to come up")
+            wait_for_privorad_start(privorad_processes[i], rpc_url(i), i)
             if os.getenv("PYTHON_DEBUG", ""):
                 print("initialize_chain: RPC successfully started")
 
@@ -345,7 +345,7 @@ def initialize_chain(test_dir, num_nodes, cachedir):
         to_dir = os.path.join(test_dir,  "node"+str(i))
         if from_dir != to_dir:
             shutil.copytree(from_dir, to_dir)
-        initialize_datadir(test_dir, i) # Overwrite port/rpcport in bitcoin.conf
+        initialize_datadir(test_dir, i) # Overwrite port/rpcport in privora.conf
 
 def initialize_chain_clean(test_dir, num_nodes):
     """
@@ -378,11 +378,11 @@ def _rpchost_to_args(rpchost):
 
 def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=None, redirect_stderr=False, stderr=None):
     """
-    Start a bitcoind and return RPC connection to it
+    Start a privorad and return RPC connection to it
     """
     datadir = os.path.join(dirname, "node"+str(i))
     if binary is None:
-        binary = os.getenv("FIROD", "firod")
+        binary = os.getenv("PRIVORAD", "privorad")
     args = [ binary, "-datadir="+datadir, "-server", "-keypool=1", "-discover=0", "-rest", "-dandelion=0", "-usemnemonic=0", "-mocktime="+str(get_mocktime()) ]
 #Useful args for debugging
 #        "screen", "--",
@@ -395,10 +395,10 @@ def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=
     # Otherwise the whole test would be considered to be failed in such cases
     if redirect_stderr:
         stderr = sys.stdout
-    bitcoind_processes[i] = subprocess.Popen(args, stderr=stderr)
-    logger.debug("start_node: firod started, waiting for RPC to come up")
+    privorad_processes[i] = subprocess.Popen(args, stderr=stderr)
+    logger.debug("start_node: privorad started, waiting for RPC to come up")
     url = rpc_url(i, rpchost)
-    wait_for_bitcoind_start(bitcoind_processes[i], url, i)
+    wait_for_privorad_start(privorad_processes[i], url, i)
     logger.debug("start_node: RPC successfully started")
     proxy = get_rpc_proxy(url, i, timeout=timewait)
 
@@ -409,7 +409,7 @@ def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=
 
 def start_nodes(num_nodes, dirname, extra_args=None, rpchost=None, timewait=None, binary=None):
     """
-    Start multiple bitcoinds, return RPC connections to them
+    Start multiple privorads, return RPC connections to them
     """
     if extra_args is None: extra_args = [ None for _ in range(num_nodes) ]
     if binary is None: binary = [ None for _ in range(num_nodes) ]
@@ -438,9 +438,9 @@ def log_filename(dirname, n_node, logname):
     return os.path.join(dirname, "node"+str(n_node), "regtest", logname)
 
 def wait_node(i):
-    return_code = bitcoind_processes[i].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
+    return_code = privorad_processes[i].wait(timeout=PRIVORAD_PROC_WAIT_TIMEOUT)
     assert_equal(return_code, 0)
-    del bitcoind_processes[i]
+    del privorad_processes[i]
 
 def stop_node(node, i, wait=True):
     logger.debug("Stopping node %d" % i)
@@ -457,7 +457,7 @@ def stop_nodes(nodes, fast=True):
     if fast:
         for i, node in enumerate(nodes):
             wait_node(i)
-    assert not bitcoind_processes.values() # All connections must be gone now
+    assert not privorad_processes.values() # All connections must be gone now
 
 def set_node_times(nodes, t):
     for node in nodes:
@@ -598,10 +598,10 @@ def assert_fee_amount(fee, tx_size, fee_per_kB):
     """Assert the fee was in range"""
     target_fee = tx_size * fee_per_kB / 1000
     if fee < target_fee:
-        raise AssertionError("Fee of %s BTC too low! (Should be %s BTC)"%(str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s VORA too low! (Should be %s VORA)"%(str(fee), str(target_fee)))
     # allow the wallet's estimation to be at most 2 bytes off
     if fee > (tx_size + 2) * fee_per_kB / 1000:
-        raise AssertionError("Fee of %s BTC too high! (Should be %s BTC)"%(str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s VORA too high! (Should be %s VORA)"%(str(fee), str(target_fee)))
 
 def assert_equal(thing1, thing2, *args):
     if thing1 != thing2 or any(thing1 != arg for arg in args):

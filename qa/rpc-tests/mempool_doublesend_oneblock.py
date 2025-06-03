@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import *
 
 
@@ -15,7 +15,7 @@ from test_framework.util import *
 #retry send rawtransaction tx2
 #error appeared txn-mempool-conflict
 #bad-txns-inputs-spent
-class MempoolDoubleSpendOneBlock(BitcoinTestFramework):
+class MempoolDoubleSpendOneBlock(PrivoraTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 1

@@ -1,0 +1,6 @@
+usr/local/bin/privora-qt usr/bin
+share/pixmaps/privora32.xpm usr/share/pixmaps
+share/pixmaps/privora16.xpm usr/share/pixmaps
+share/pixmaps/privora128.png usr/share/pixmaps
+debian/privora-qt.desktop usr/share/applications
+debian/privora-qt.protocol usr/share/kde4/services/

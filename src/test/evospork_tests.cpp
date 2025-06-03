@@ -1,4 +1,4 @@
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 #include "test/fixtures.h"
 
 #include "script/interpreter.h"
@@ -98,7 +98,7 @@ static void SignTransaction(CMutableTransaction& tx, const CKey& coinbaseKey)
 
 static CMutableTransaction CreateSporkTx(SimpleUTXOMap &utxos, const CKey &coinbaseKey, const std::vector<CSporkAction> &actions)
 {
-    CBitcoinSecret secretKey;
+    CPrivoraSecret secretKey;
     secretKey.SetString("cW2YM2xaeCaebfpKguBahUAgEzLXgSserWRuD29kSyKHq1TTgwRQ");
 
     CSporkTx sporkTxPayload;

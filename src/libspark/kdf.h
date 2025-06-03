@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_KDF_H
-#define FIRO_SPARK_KDF_H
+#ifndef PRIVORA_SPARK_KDF_H
+#define PRIVORA_SPARK_KDF_H
 #include <openssl/evp.h>
 #include "util.h"
 

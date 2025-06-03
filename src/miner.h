@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_MINER_H
-#define BITCOIN_MINER_H
+#ifndef PRIVORA_MINER_H
+#define PRIVORA_MINER_H
 
 #include "primitives/block.h"
 #include "txmempool.h"
@@ -227,7 +227,7 @@ private:
       * of updated descendants. */
     int UpdatePackagesForAdded(const CTxMemPool::setEntries& alreadyAdded, indexed_modified_transaction_set &mapModifiedTx);
 
-    /** Firo: fill in founders' reward and znode payout outputs */
+    /** Privora: fill in founders' reward and znode payout outputs */
     void FillFoundersReward(CMutableTransaction &coinbaseTx, bool fMTP, bool fShorterBlockDistance);
 
     /** Fill txBlackList set */
@@ -243,6 +243,6 @@ private:
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 /** Run the miner threads */
-void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainparams);
+void GeneratePrivoras(bool fGenerate, int nThreads, const CChainParams& chainparams);
 
-#endif // BITCOIN_MINER_H
+#endif // PRIVORA_MINER_H

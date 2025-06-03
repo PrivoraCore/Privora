@@ -1,5 +1,5 @@
-#ifndef FIRO_SPARK_HASH_H
-#define FIRO_SPARK_HASH_H
+#ifndef PRIVORA_SPARK_HASH_H
+#define PRIVORA_SPARK_HASH_H
 #include <openssl/evp.h>
 #include "util.h"
 

@@ -1,9 +1,9 @@
-// Copyright (c) 2012-2016 The Bitcoin Core developers
+// Copyright (c) 2012-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VERSION_H
-#define BITCOIN_VERSION_H
+#ifndef PRIVORA_VERSION_H
+#define PRIVORA_VERSION_H
 
 /**
  * network protocol versioning
@@ -52,7 +52,7 @@ static const int SHORT_IDS_BLOCKS_VERSION = 90013;
 static const int INVALID_CB_NO_BAN_VERSION = 90013;
 
 //! minimum version of official client to connect to
-static const int MIN_FIRO_CLIENT_VERSION = 141000; // 0.14.10.0
+static const int MIN_PRIVORA_CLIENT_VERSION = 141000; // 0.14.10.0
 
 //! introduction of DIP3/deterministic masternodes
 static const int DMN_PROTO_VERSION = 90030;
@@ -63,4 +63,4 @@ static const int LLMQS_PROTO_VERSION = 90030;
 //! introducing blocks with stripped MTP data
 static const int MTPDATA_STRIPPED_VERSION = 90031;
 
-#endif // BITCOIN_VERSION_H
+#endif // PRIVORA_VERSION_H

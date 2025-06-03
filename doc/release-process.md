@@ -3,9 +3,9 @@ Release Process
 
 Before every release candidate:
 
-* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/firoorg/firo/blob/master/doc/translation_process.md#synchronising-translations).
+* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/privoraorg/privora/blob/master/doc/translation_process.md#synchronising-translations).
 
-* Update manpages, see [gen-manpages.sh](https://github.com/bitcoin/bitcoin/blob/master/contrib/devtools/README.md#gen-manpagessh).
+* Update manpages, see [gen-manpages.sh](https://github.com/privora/privora/blob/master/contrib/devtools/README.md#gen-manpagessh).
 
 Before every minor and major release:
 
@@ -21,7 +21,7 @@ Before every minor and major release:
 
 Before every major release:
 
-* Update hardcoded [seeds](/contrib/seeds/README.md), see [this pull request](https://github.com/bitcoin/bitcoin/pull/7415) for an example.
+* Update hardcoded [seeds](/contrib/seeds/README.md), see [this pull request](https://github.com/privora/privora/pull/7415) for an example.
 * Update [`BLOCK_CHAIN_SIZE`](/src/qt/intro.cpp) to the current size plus some overhead.
 
 ### First time / New builders
@@ -31,12 +31,12 @@ If you're using the automated script (found in [contrib/gitian-build.sh](/contri
 Check out the source code in the following directory hierarchy.
 
     cd /path/to/your/toplevel/build
-    git clone https://github.com/bitcoin-core/gitian.sigs.git
-    git clone https://github.com/bitcoin-core/bitcoin-detached-sigs.git
+    git clone https://github.com/privora-core/gitian.sigs.git
+    git clone https://github.com/privora-core/privora-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
-    git clone https://github.com/firoorg/firo
+    git clone https://github.com/privoraorg/privora
 
-### Bitcoin maintainers/release engineers, update version in sources
+### Privora maintainers/release engineers, update version in sources
 
 Update the following:
 
@@ -75,7 +75,7 @@ If you're using the automated script (found in [contrib/gitian-build.sh](/contri
 
 Setup Gitian descriptors:
 
-    pushd ./firo
+    pushd ./privora
     export SIGNER=(your Gitian key, ie bluematt, sipa, etc)
     export VERSION=(new version, e.g. 0.13.2.x)
     git fetch
@@ -98,7 +98,7 @@ Ensure gitian-builder is up-to-date:
 
     pushd ./gitian-builder
     mkdir -p inputs
-    wget -P inputs https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
+    wget -P inputs https://privoracore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
     wget -P inputs http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
     popd
 
@@ -109,7 +109,7 @@ Create the OS X SDK tarball, see the [OS X readme](README_osx.md) for details, a
 By default, Gitian will fetch source files as needed. To cache them ahead of time:
 
     pushd ./gitian-builder
-    make -C ../firo/depends download SOURCES_PATH=`pwd`/cache/common
+    make -C ../privora/depends download SOURCES_PATH=`pwd`/cache/common
     popd
 
 Only missing files will be fetched, so this is safe to re-run for each build.
@@ -117,50 +117,50 @@ Only missing files will be fetched, so this is safe to re-run for each build.
 NOTE: Offline builds must use the --url flag to ensure Gitian fetches only from local URLs. For example:
 
     pushd ./gitian-builder
-    ./bin/gbuild --url firo=/path/to/firo,signature=/path/to/sigs {rest of arguments}
+    ./bin/gbuild --url privora=/path/to/privora,signature=/path/to/sigs {rest of arguments}
     popd
 
 The gbuild invocations below <b>DO NOT DO THIS</b> by default.
 
-### Build and sign Firo Core for Linux, Windows, and OS X:
+### Build and sign Privora Core for Linux, Windows, and OS X:
 
     pushd ./gitian-builder
-    ./bin/gbuild --memory 3000 --commit firo=v${VERSION} ../firo/contrib/gitian-descriptors/gitian-linux.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-linux.yml
-    mv build/out/firo-*.tar.gz build/out/src/firo-*.tar.gz ../
+    ./bin/gbuild --memory 3000 --commit privora=v${VERSION} ../privora/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-linux.yml
+    mv build/out/privora-*.tar.gz build/out/src/privora-*.tar.gz ../
 
-    ./bin/gbuild --memory 3000 --commit firo=v${VERSION} ../firo/contrib/gitian-descriptors/gitian-win.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-win.yml
-    mv build/out/firo-*-win-unsigned.tar.gz inputs/firo-win-unsigned.tar.gz
-    mv build/out/firo-*.zip build/out/bitcoin-*.exe ../
+    ./bin/gbuild --memory 3000 --commit privora=v${VERSION} ../privora/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-win.yml
+    mv build/out/privora-*-win-unsigned.tar.gz inputs/privora-win-unsigned.tar.gz
+    mv build/out/privora-*.zip build/out/privora-*.exe ../
 
-    ./bin/gbuild --memory 3000 --commit firo=v${VERSION} ../firo/contrib/gitian-descriptors/gitian-osx.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-osx.yml
-    mv build/out/firo-*-osx-unsigned.tar.gz inputs/firo-osx-unsigned.tar.gz
-    mv build/out/firo-*.tar.gz build/out/firo-*.dmg ../
+    ./bin/gbuild --memory 3000 --commit privora=v${VERSION} ../privora/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-osx.yml
+    mv build/out/privora-*-osx-unsigned.tar.gz inputs/privora-osx-unsigned.tar.gz
+    mv build/out/privora-*.tar.gz build/out/privora-*.dmg ../
     popd
 
 Build output expected:
 
-  1. source tarball (`firo-${VERSION}.tar.gz`)
-  2. linux 32-bit and 64-bit dist tarballs (firo-${VERSION}-linux[32|64].tar.gz`)
-  3. windows 32-bit and 64-bit unsigned installers and dist zips (`firo-${VERSION}-win[32|64]-setup-unsigned.exe`, `firo-${VERSION}-win[32|64].zip`)
-  4. OS X unsigned installer and dist tarball (`firo-${VERSION}-osx-unsigned.dmg`, `firo-${VERSION}-osx64.tar.gz`)
+  1. source tarball (`privora-${VERSION}.tar.gz`)
+  2. linux 32-bit and 64-bit dist tarballs (privora-${VERSION}-linux[32|64].tar.gz`)
+  3. windows 32-bit and 64-bit unsigned installers and dist zips (`privora-${VERSION}-win[32|64]-setup-unsigned.exe`, `privora-${VERSION}-win[32|64].zip`)
+  4. OS X unsigned installer and dist tarball (`privora-${VERSION}-osx-unsigned.dmg`, `privora-${VERSION}-osx64.tar.gz`)
   5. Gitian signatures (in `gitian.sigs/${VERSION}-<linux|{win,osx}-unsigned>/(your Gitian key)/`)
 
 ### Verify other gitian builders signatures to your own. (Optional)
 
 Add other gitian builders keys to your gpg keyring, and/or refresh keys.
 
-    gpg --import bitcoin/contrib/gitian-keys/*.pgp
+    gpg --import privora/contrib/gitian-keys/*.pgp
     gpg --refresh-keys
 
 Verify the signatures
 
     pushd ./gitian-builder
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../firo/contrib/gitian-descriptors/gitian-linux.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../firo/contrib/gitian-descriptors/gitian-win.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../firo/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../privora/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../privora/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../privora/contrib/gitian-descriptors/gitian-osx.yml
     popd
 
 ### Next steps:
@@ -178,25 +178,25 @@ Commit your signature to gitian.sigs:
 Wait for Windows/OS X detached signatures:
 
 - Once the Windows/OS X builds each have 3 matching signatures, they will be signed with their respective release keys.
-- Detached signatures will then be committed to the [bitcoin-detached-sigs](https://github.com/bitcoin-core/bitcoin-detached-sigs) repository, which can be combined with the unsigned apps to create signed binaries.
+- Detached signatures will then be committed to the [privora-detached-sigs](https://github.com/privora-core/privora-detached-sigs) repository, which can be combined with the unsigned apps to create signed binaries.
 
 Create (and optionally verify) the signed OS X binary:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../firo/contrib/gitian-descriptors/gitian-osx-signer.yml
-    mv build/out/firo-osx-signed.dmg ../firo-${VERSION}-osx.dmg
+    ./bin/gbuild -i --commit signature=v${VERSION} ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../privora/contrib/gitian-descriptors/gitian-osx-signer.yml
+    mv build/out/privora-osx-signed.dmg ../privora-${VERSION}-osx.dmg
     popd
 
 Create (and optionally verify) the signed Windows binaries:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../firo/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../firo/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../firo/contrib/gitian-descriptors/gitian-win-signer.yml
-    mv build/out/firo-*win64-setup.exe ../firo-${VERSION}-win64-setup.exe
-    mv build/out/firo-*win32-setup.exe ../firo-${VERSION}-win32-setup.exe
+    ./bin/gbuild -i --commit signature=v${VERSION} ../privora/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../privora/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../privora/contrib/gitian-descriptors/gitian-win-signer.yml
+    mv build/out/privora-*win64-setup.exe ../privora-${VERSION}-win64-setup.exe
+    mv build/out/privora-*win32-setup.exe ../privora-${VERSION}-win32-setup.exe
     popd
 
 Commit your signature for the signed OS X/Windows binaries:
@@ -218,23 +218,23 @@ sha256sum * > SHA256SUMS
 
 The list of files should be:
 ```
-firo-${VERSION}-aarch64-linux-gnu.tar.gz
-firo-${VERSION}-arm-linux-gnueabihf.tar.gz
-firo-${VERSION}-i686-pc-linux-gnu.tar.gz
-firo-${VERSION}-x86_64-linux-gnu.tar.gz
-firo-${VERSION}-osx64.tar.gz
-firo-${VERSION}-osx.dmg
-firo-${VERSION}.tar.gz
-firo-${VERSION}-win32-setup.exe
-firo-${VERSION}-win32.zip
-firo-${VERSION}-win64-setup.exe
-firo-${VERSION}-win64.zip
+privora-${VERSION}-aarch64-linux-gnu.tar.gz
+privora-${VERSION}-arm-linux-gnueabihf.tar.gz
+privora-${VERSION}-i686-pc-linux-gnu.tar.gz
+privora-${VERSION}-x86_64-linux-gnu.tar.gz
+privora-${VERSION}-osx64.tar.gz
+privora-${VERSION}-osx.dmg
+privora-${VERSION}.tar.gz
+privora-${VERSION}-win32-setup.exe
+privora-${VERSION}-win32.zip
+privora-${VERSION}-win64-setup.exe
+privora-${VERSION}-win64.zip
 ```
 The `*-debug*` files generated by the gitian build contain debug symbols
 for troubleshooting by developers. It is assumed that anyone that is interested
 in debugging can run gitian to generate the files for themselves. To avoid
 end-user confusion about which file to pick, as well as save storage
-space *do not upload these to the bitcoin.org server, nor put them in the torrent*.
+space *do not upload these to the privora.org server, nor put them in the torrent*.
 
 - GPG-sign it, delete the unsigned file:
 ```
@@ -245,48 +245,48 @@ rm SHA256SUMS
 Note: check that SHA256SUMS itself doesn't end up in SHA256SUMS, which is a spurious/nonsensical entry.
 
 - Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the znode.io server
-  into `/var/www/bin/firo-core-${VERSION}`
+  into `/var/www/bin/privora-core-${VERSION}`
 
 - A `.torrent` will appear in the directory after a few minutes. Optionally help seed this torrent. To get the `magnet:` URI use:
 ```bash
 transmission-show -m <torrent file>
 ```
 Insert the magnet URI into the announcement sent to mailing lists. This permits
-people without access to `bitcoin.org` to download the binary distribution.
+people without access to `privora.org` to download the binary distribution.
 Also put it into the `optional_magnetlink:` slot in the YAML file for
-bitcoin.org (see below for bitcoin.org update instructions).
+privora.org (see below for privora.org update instructions).
 
-- Update bitcoin.org version
+- Update privora.org version
 
-  - First, check to see if the Bitcoin.org maintainers have prepared a
-    release: https://github.com/bitcoin-dot-org/bitcoin.org/labels/Releases
+  - First, check to see if the Privora.org maintainers have prepared a
+    release: https://github.com/privora-dot-org/privora.org/labels/Releases
 
       - If they have, it will have previously failed their Travis CI
         checks because the final release files weren't uploaded.
         Trigger a Travis CI rebuild---if it passes, merge.
 
-  - If they have not prepared a release, follow the Bitcoin.org release
-    instructions: https://github.com/bitcoin-dot-org/bitcoin.org#release-notes
+  - If they have not prepared a release, follow the Privora.org release
+    instructions: https://github.com/privora-dot-org/privora.org#release-notes
 
   - After the pull request is merged, the website will automatically show the newest version within 15 minutes, as well
     as update the OS download links. Ping @saivann/@harding (saivann/harding on Freenode) in case anything goes wrong
 
 - Announce the release:
 
-  - bitcoin-dev and bitcoin-core-dev mailing list
+  - privora-dev and privora-core-dev mailing list
 
-  - Firo Core announcements list https://bitcoincore.org/en/list/announcements/join/
+  - Privora Core announcements list https://privoracore.org/en/list/announcements/join/
 
-  - bitcoincore.org blog post
+  - privoracore.org blog post
 
-  - Update title of #bitcoin on Freenode IRC
+  - Update title of #privora on Freenode IRC
 
-  - Optionally twitter, reddit /r/Bitcoin, ... but this will usually sort out itself
+  - Optionally twitter, reddit /r/Privora, ... but this will usually sort out itself
 
-  - Notify BlueMatt so that he can start building [the PPAs](https://launchpad.net/~bitcoin/+archive/ubuntu/bitcoin)
+  - Notify BlueMatt so that he can start building [the PPAs](https://launchpad.net/~privora/+archive/ubuntu/privora)
 
   - Archive release notes for the new version to `doc/release-notes/` (branch `master` and branch of the release)
 
-  - Create a [new GitHub release](https://github.com/bitcoin/bitcoin/releases/new) with a link to the archived release notes.
+  - Create a [new GitHub release](https://github.com/privora/privora/releases/new) with a link to the archived release notes.
 
   - Celebrate

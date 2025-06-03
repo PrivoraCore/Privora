@@ -1,5 +1,5 @@
-#ifndef FIRO_LIBSPARK_BPPLUS_H
-#define FIRO_LIBSPARK_BPPLUS_H
+#ifndef PRIVORA_LIBSPARK_BPPLUS_H
+#define PRIVORA_LIBSPARK_BPPLUS_H
 
 #include "bpplus_proof.h"
 #include <secp256k1/include/MultiExponent.h>

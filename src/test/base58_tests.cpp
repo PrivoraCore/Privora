@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,7 +13,7 @@
 #include "uint256.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "test/test_bitcoin.h"
+#include "test/test_privora.h"
 
 #include <boost/foreach.hpp>
 #include <boost/test/unit_test.hpp>
@@ -23,7 +23,7 @@
 
 extern UniValue read_json(const std::string& jsondata);
 
-std::string bitcoin_address_to_firo(const std::string address) {
+std::string privora_address_to_privora(const std::string address) {
     std::vector<unsigned char> vchTemp;
     if(DecodeBase58(address.c_str(), vchTemp) && vchTemp.size() > 4) {
         vchTemp.resize(vchTemp.size() - 4);
@@ -155,8 +155,8 @@ public:
 BOOST_AUTO_TEST_CASE(base58_keys_valid_parse)
 {
     UniValue tests = read_json(std::string(json_tests::base58_keys_valid, json_tests::base58_keys_valid + sizeof(json_tests::base58_keys_valid)));
-    CBitcoinSecret secret;
-    CBitcoinAddress addr;
+    CPrivoraSecret secret;
+    CPrivoraAddress addr;
     SelectParams(CBaseChainParams::MAIN);
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
@@ -180,22 +180,22 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_parse)
         {
             bool isCompressed = find_value(metadata, "isCompressed").get_bool();
             // Must be valid private key
-            // Note: CBitcoinSecret::SetString tests isValid, whereas CBitcoinAddress does not!
-            BOOST_CHECK_MESSAGE(secret.SetString(bitcoin_address_to_firo(exp_base58string)), "!SetString:"+ strTest);
+            // Note: CPrivoraSecret::SetString tests isValid, whereas CPrivoraAddress does not!
+            BOOST_CHECK_MESSAGE(secret.SetString(privora_address_to_privora(exp_base58string)), "!SetString:"+ strTest);
             BOOST_CHECK_MESSAGE(secret.IsValid(), "!IsValid:" + strTest);
             CKey privkey = secret.GetKey();
             BOOST_CHECK_MESSAGE(privkey.IsCompressed() == isCompressed, "compressed mismatch:" + strTest);
             BOOST_CHECK_MESSAGE(privkey.size() == exp_payload.size() && std::equal(privkey.begin(), privkey.end(), exp_payload.begin()), "key mismatch:" + strTest);
 
             // Private key must be invalid public key
-            addr.SetString(bitcoin_address_to_firo(exp_base58string));
+            addr.SetString(privora_address_to_privora(exp_base58string));
             BOOST_CHECK_MESSAGE(!addr.IsValid(), "IsValid privkey as pubkey:" + strTest);
         }
         else
         {
             std::string exp_addrType = find_value(metadata, "addrType").get_str(); // "script" or "pubkey"
             // Must be valid public key
-            BOOST_CHECK_MESSAGE(addr.SetString(bitcoin_address_to_firo(exp_base58string)), "SetString:" + strTest);
+            BOOST_CHECK_MESSAGE(addr.SetString(privora_address_to_privora(exp_base58string)), "SetString:" + strTest);
             BOOST_CHECK_MESSAGE(addr.IsValid(), "!IsValid:" + strTest);
             BOOST_CHECK_MESSAGE(addr.IsScript() == (exp_addrType == "script"), "isScript mismatch" + strTest);
             CTxDestination dest = addr.Get();
@@ -236,9 +236,9 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_gen)
             CKey key;
             key.Set(exp_payload.begin(), exp_payload.end(), isCompressed);
             assert(key.IsValid());
-            CBitcoinSecret secret;
+            CPrivoraSecret secret;
             secret.SetKey(key);
-            BOOST_CHECK_MESSAGE(secret.ToString() == bitcoin_address_to_firo(exp_base58string), "result mismatch: " + strTest);
+            BOOST_CHECK_MESSAGE(secret.ToString() == privora_address_to_privora(exp_base58string), "result mismatch: " + strTest);
         }
         else
         {
@@ -261,14 +261,14 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_gen)
                 BOOST_ERROR("Bad addrtype: " << strTest);
                 continue;
             }
-            CBitcoinAddress addrOut;
+            CPrivoraAddress addrOut;
             BOOST_CHECK_MESSAGE(addrOut.Set(dest), "encode dest: " + strTest);
-            BOOST_CHECK_MESSAGE(addrOut.ToString() == bitcoin_address_to_firo(exp_base58string), "mismatch: " + strTest);
+            BOOST_CHECK_MESSAGE(addrOut.ToString() == privora_address_to_privora(exp_base58string), "mismatch: " + strTest);
         }
     }
 
     // Visiting a CNoDestination must fail
-    CBitcoinAddress dummyAddr;
+    CPrivoraAddress dummyAddr;
     CTxDestination nodest = CNoDestination();
     BOOST_CHECK(!dummyAddr.Set(nodest));
 
@@ -279,8 +279,8 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_gen)
 BOOST_AUTO_TEST_CASE(base58_keys_invalid)
 {
     UniValue tests = read_json(std::string(json_tests::base58_keys_invalid, json_tests::base58_keys_invalid + sizeof(json_tests::base58_keys_invalid))); // Negative testcases
-    CBitcoinSecret secret;
-    CBitcoinAddress addr;
+    CPrivoraSecret secret;
+    CPrivoraAddress addr;
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
         UniValue test = tests[idx];

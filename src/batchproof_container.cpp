@@ -231,7 +231,7 @@ void BatchProofContainer::batch_sigma() {
         if (isFail) {
             LogPrintf("Sigma batch verification failed.");
             throw std::invalid_argument(
-                    "Sigma batch verification failed, please run Firo with -reindex -batching=0");
+                    "Sigma batch verification failed, please run Privora with -reindex -batching=0");
         }
         parallelTasks.clear();
     }
@@ -333,7 +333,7 @@ void BatchProofContainer::batch_lelantus() {
 
         if (isFail) {
             LogPrintf("Lelantus batch verification failed.");
-            throw std::invalid_argument("Lelantus batch verification failed, please run Firo with -reindex -batching=0");
+            throw std::invalid_argument("Lelantus batch verification failed, please run Privora with -reindex -batching=0");
         }
 
         parallelTasks.clear();
@@ -383,7 +383,7 @@ void BatchProofContainer::batch_rangeProofs() {
 
         if (!rangeVerifier.verify(V, commitments, proofs)) {
             LogPrintf("RangeProof batch verification failed.\n");
-            throw std::invalid_argument("RangeProof batch verification failed, please run Firo with -reindex -batching=0");
+            throw std::invalid_argument("RangeProof batch verification failed, please run Privora with -reindex -batching=0");
         }
     }
 
@@ -437,7 +437,7 @@ void BatchProofContainer::batch_spark() {
 
     if (!passed) {
         LogPrintf("Spark batch verification failed.");
-        throw std::invalid_argument("Spark batch verification failed, please run Firo with -reindex -batching=0");
+        throw std::invalid_argument("Spark batch verification failed, please run Privora with -reindex -batching=0");
     }
 
     if (!sparkTransactions.empty())

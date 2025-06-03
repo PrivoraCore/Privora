@@ -1,7 +1,7 @@
 #include "../fuzzing_utilities.h"
 #include "../FuzzedDataProvider.h"
 #include "../../libspark/coin.h"
-// #include "../../test/test_bitcoin.h"
+// #include "../../test/test_privora.h"
 
 #include <cassert>
 

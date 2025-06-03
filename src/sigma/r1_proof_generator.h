@@ -1,5 +1,5 @@
-#ifndef FIRO_SIGMA_R1_PROOF_GENERATOR_H
-#define FIRO_SIGMA_R1_PROOF_GENERATOR_H
+#ifndef PRIVORA_SIGMA_R1_PROOF_GENERATOR_H
+#define PRIVORA_SIGMA_R1_PROOF_GENERATOR_H
 
 #include "r1_proof.h"
 #include "sigma_primitives.h"
@@ -73,4 +73,4 @@ private:
 
 #include "r1_proof_generator.hpp"
 
-#endif // FIRO_SIGMA_R1_PROOF_GENERATOR_H
+#endif // PRIVORA_SIGMA_R1_PROOF_GENERATOR_H

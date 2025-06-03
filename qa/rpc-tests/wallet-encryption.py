@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# Copyright (c) 2016 The Bitcoin Core developers
-# Copyright (c) 2020 The Firo Core developers
+# Copyright (c) 2016 The Privora Core developers
+# Copyright (c) 2020 The Privora Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test Wallet encryption"""
@@ -8,15 +8,15 @@
 import re
 import time
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_jsonrpc,
-    bitcoind_processes,
+    privorad_processes,
     start_nodes,
 )
 
-class WalletEncryptionTest(BitcoinTestFramework):
+class WalletEncryptionTest(PrivoraTestFramework):
 
     def __init__(self):
         super().__init__()
@@ -52,7 +52,7 @@ class WalletEncryptionTest(BitcoinTestFramework):
         # Encrypt the wallet
         assert_raises_jsonrpc(-1, "encryptwallet <passphrase>\nEncrypts the wallet with <passphrase>.", self.nodes[0].encryptwallet, '')
         self.nodes[0].encryptwallet(passphrase)
-        bitcoind_processes[0].wait()
+        privorad_processes[0].wait()
         self.nodes = start_nodes(self.num_nodes, self.options.tmpdir)
 
         # Test that the wallet is encrypted

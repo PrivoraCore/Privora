@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(partialspend)
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey1), "Fail to get new address");
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey2), "Fail to get new address");
 
-    const CBitcoinAddress randomAddr1(newKey1.GetID());
-    const CBitcoinAddress randomAddr2(newKey2.GetID());
+    const CPrivoraAddress randomAddr1(newKey1.GetID());
+    const CPrivoraAddress randomAddr2(newKey2.GetID());
 
     sigma::CSigmaState* sigmaState = sigma::CSigmaState::GetState();
     // Can't test denomination 0.1, because we're unable to pay the fees.
@@ -207,8 +207,8 @@ BOOST_AUTO_TEST_CASE(partialspend_remint) {
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey1), "Fail to get new address");
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey2), "Fail to get new address");
 
-    const CBitcoinAddress randomAddr1(newKey1.GetID());
-    const CBitcoinAddress randomAddr2(newKey2.GetID());
+    const CPrivoraAddress randomAddr1(newKey1.GetID());
+    const CPrivoraAddress randomAddr2(newKey2.GetID());
 
     sigma::CSigmaState* sigmaState = sigma::CSigmaState::GetState();
 
@@ -244,7 +244,7 @@ BOOST_AUTO_TEST_CASE(partialspend_remint) {
 
     BOOST_CHECK_MESSAGE(mempool.size() == 0, "Mempool was not cleared");
 
-    // Fees are expected to be less than 0.2 firo.
+    // Fees are expected to be less than 0.2 privora.
     std::vector<CRecipient> recipients = {
         {GetScriptForDestination(randomAddr1.Get()), denomAmount1 , false},
         {GetScriptForDestination(randomAddr2.Get()), denomAmount1 - 4 * denomAmount01, false},
@@ -293,8 +293,8 @@ BOOST_AUTO_TEST_CASE(same_serial_in_a_transaction) {
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey1), "Fail to get new address");
     BOOST_CHECK_MESSAGE(pwalletMain->GetKeyFromPool(newKey2), "Fail to get new address");
 
-    const CBitcoinAddress randomAddr1(newKey1.GetID());
-    const CBitcoinAddress randomAddr2(newKey2.GetID());
+    const CPrivoraAddress randomAddr1(newKey1.GetID());
+    const CPrivoraAddress randomAddr2(newKey2.GetID());
 
     sigma::CSigmaState* sigmaState = sigma::CSigmaState::GetState();
 

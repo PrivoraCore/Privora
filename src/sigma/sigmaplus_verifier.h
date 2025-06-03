@@ -1,5 +1,5 @@
-#ifndef FIRO_SIGMA_SIGMAPLUS_VERIFIER_H
-#define FIRO_SIGMA_SIGMAPLUS_VERIFIER_H
+#ifndef PRIVORA_SIGMA_SIGMAPLUS_VERIFIER_H
+#define PRIVORA_SIGMA_SIGMAPLUS_VERIFIER_H
 
 #include "r1_proof_verifier.h"
 #include "util.h"
@@ -55,4 +55,4 @@ private:
 
 #include "sigmaplus_verifier.hpp"
 
-#endif // FIRO_SIGMA_SIGMAPLUS_VERIFIER_H
+#endif // PRIVORA_SIGMA_SIGMAPLUS_VERIFIER_H

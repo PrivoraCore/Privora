@@ -225,7 +225,7 @@ void MasternodeList::updateDIP3List()
         CTxDestination payeeDest;
         QString payeeStr = tr("UNKNOWN");
         if (ExtractDestination(dmn->pdmnState->scriptPayout, payeeDest)) {
-            payeeStr = QString::fromStdString(CBitcoinAddress(payeeDest).ToString());
+            payeeStr = QString::fromStdString(CPrivoraAddress(payeeDest).ToString());
         }
         QTableWidgetItem* payeeItem = new QTableWidgetItem(payeeStr);
 
@@ -236,7 +236,7 @@ void MasternodeList::updateDIP3List()
             if (dmn->pdmnState->scriptOperatorPayout != CScript()) {
                 CTxDestination operatorDest;
                 if (ExtractDestination(dmn->pdmnState->scriptOperatorPayout, operatorDest)) {
-                    operatorRewardStr += tr("to %1").arg(QString::fromStdString(CBitcoinAddress(operatorDest).ToString()));
+                    operatorRewardStr += tr("to %1").arg(QString::fromStdString(CPrivoraAddress(operatorDest).ToString()));
                 } else {
                     operatorRewardStr += tr("to UNKNOWN");
                 }
@@ -249,11 +249,11 @@ void MasternodeList::updateDIP3List()
         QString collateralStr = tr("UNKNOWN");
         auto collateralDestIt = mapCollateralDests.find(dmn->proTxHash);
         if (collateralDestIt != mapCollateralDests.end()) {
-            collateralStr = QString::fromStdString(CBitcoinAddress(collateralDestIt->second).ToString());
+            collateralStr = QString::fromStdString(CPrivoraAddress(collateralDestIt->second).ToString());
         }
         QTableWidgetItem* collateralItem = new QTableWidgetItem(collateralStr);
 
-        QString ownerStr = QString::fromStdString(CBitcoinAddress(dmn->pdmnState->keyIDOwner).ToString());
+        QString ownerStr = QString::fromStdString(CPrivoraAddress(dmn->pdmnState->keyIDOwner).ToString());
         QTableWidgetItem* ownerItem = new QTableWidgetItem(ownerStr);
 
         QTableWidgetItem* proTxHashItem = new QTableWidgetItem(QString::fromStdString(dmn->proTxHash.ToString()));

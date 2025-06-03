@@ -27,7 +27,7 @@ bool CheckSporkTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValida
     }
 
     CKeyID sporkKeyID;
-    if (!CBitcoinAddress(chainParams.evoSporkKeyID).GetKeyID(sporkKeyID)) {
+    if (!CPrivoraAddress(chainParams.evoSporkKeyID).GetKeyID(sporkKeyID)) {
         return state.DoS(100, false, REJECT_INVALID, "bad-protx-sig", false);
     }
 

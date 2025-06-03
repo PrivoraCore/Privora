@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2016 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Privora Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@
 #include "askpassphrasedialog.h"
 #include "automintdialog.h"
 #include "automintmodel.h"
-#include "bitcoingui.h"
+#include "privoragui.h"
 #include "clientmodel.h"
 #include "exportviewkeydialog.h"
 #include "guiutil.h"
@@ -42,7 +42,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     clientModel(0),
     walletModel(0),
     overviewPage(0),
-    firoTransactionsView(0),
+    privoraTransactionsView(0),
     platformStyle(_platformStyle)
 {
     overviewPage = new OverviewPage(platformStyle);
@@ -67,7 +67,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(masternodeListPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
-    connect(overviewPage, &OverviewPage::transactionClicked, this, &WalletView::focusBitcoinHistoryTab);
+    connect(overviewPage, &OverviewPage::transactionClicked, this, &WalletView::focusPrivoraHistoryTab);
 }
 
 WalletView::~WalletView()
@@ -76,12 +76,12 @@ WalletView::~WalletView()
 
 void WalletView::setupTransactionPage()
 {
-    // Create Firo transactions list
-    firoTransactionList = new TransactionView(platformStyle);
+    // Create Privora transactions list
+    privoraTransactionList = new TransactionView(platformStyle);
 
-    connect(firoTransactionList, &TransactionView::message, this, &WalletView::message);
+    connect(privoraTransactionList, &TransactionView::message, this, &WalletView::message);
 
-    // Create export panel for Firo transactions
+    // Create export panel for Privora transactions
     auto exportButton = new QPushButton(tr("&Export"));
 
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
@@ -90,49 +90,49 @@ void WalletView::setupTransactionPage()
         exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
 
-    connect(exportButton, &QPushButton::clicked, firoTransactionList, &TransactionView::exportClicked);
+    connect(exportButton, &QPushButton::clicked, privoraTransactionList, &TransactionView::exportClicked);
 
     auto exportLayout = new QHBoxLayout();
     exportLayout->addStretch();
     exportLayout->addWidget(exportButton);
 
     // Compose transaction list and export panel together
-    auto firoLayout = new QVBoxLayout();
-    firoLayout->addWidget(firoTransactionList);
-    firoLayout->addLayout(exportLayout);
+    auto privoraLayout = new QVBoxLayout();
+    privoraLayout->addWidget(privoraTransactionList);
+    privoraLayout->addLayout(exportLayout);
     // TODO: fix this
-    connect(overviewPage, &OverviewPage::transactionClicked, firoTransactionList, qOverload<const QModelIndex&>(&TransactionView::focusTransaction));
+    connect(overviewPage, &OverviewPage::transactionClicked, privoraTransactionList, qOverload<const QModelIndex&>(&TransactionView::focusTransaction));
     connect(overviewPage, &OverviewPage::outOfSyncWarningClicked, this, &WalletView::requestedSyncWarningInfo);
 
-    firoTransactionsView = new QWidget();
-    firoTransactionsView->setLayout(firoLayout);
+    privoraTransactionsView = new QWidget();
+    privoraTransactionsView->setLayout(privoraLayout);
 
     // Set layout for transaction page
     auto pageLayout = new QVBoxLayout();
-        pageLayout->addWidget(firoTransactionsView);
+        pageLayout->addWidget(privoraTransactionsView);
 
     transactionsPage->setLayout(pageLayout);
 }
 
 void WalletView::setupSendCoinPage()
 {
-    sendFiroView = new SendCoinsDialog(platformStyle);
+    sendPrivoraView = new SendCoinsDialog(platformStyle);
 
-    connect(sendFiroView, &SendCoinsDialog::message, this, &WalletView::message);
+    connect(sendPrivoraView, &SendCoinsDialog::message, this, &WalletView::message);
 
     // Set layout for send coin page
     auto pageLayout = new QVBoxLayout();
-        pageLayout->addWidget(sendFiroView);
+        pageLayout->addWidget(sendPrivoraView);
 
     sendCoinsPage->setLayout(pageLayout);
 }
 
-void WalletView::setBitcoinGUI(BitcoinGUI *gui)
+void WalletView::setPrivoraGUI(PrivoraGUI *gui)
 {
     if (gui)
     {
         // Clicking on a transaction on the overview page simply sends you to transaction history page
-        connect(overviewPage, &OverviewPage::transactionClicked, gui, &BitcoinGUI::gotoHistoryPage);
+        connect(overviewPage, &OverviewPage::transactionClicked, gui, &PrivoraGUI::gotoHistoryPage);
 
         // Receive and report messages
         connect(this, &WalletView::message, [gui](const QString &title, const QString &message, unsigned int style) {
@@ -140,13 +140,13 @@ void WalletView::setBitcoinGUI(BitcoinGUI *gui)
         });
 
         // Pass through encryption status changed signals
-        connect(this, &WalletView::encryptionStatusChanged, gui, &BitcoinGUI::setEncryptionStatus);
+        connect(this, &WalletView::encryptionStatusChanged, gui, &PrivoraGUI::setEncryptionStatus);
 
         // Pass through transaction notifications
-        connect(this, &WalletView::incomingTransaction, gui, &BitcoinGUI::incomingTransaction);
+        connect(this, &WalletView::incomingTransaction, gui, &PrivoraGUI::incomingTransaction);
 
         // Connect HD enabled state signal
-        connect(this, &WalletView::hdEnabledStatusChanged, gui, &BitcoinGUI::setHDStatus);
+        connect(this, &WalletView::hdEnabledStatusChanged, gui, &PrivoraGUI::setHDStatus);
     }
 }
 
@@ -155,7 +155,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
     this->clientModel = _clientModel;
 
     overviewPage->setClientModel(clientModel);
-    sendFiroView->setClientModel(clientModel);
+    sendPrivoraView->setClientModel(clientModel);
     masternodeListPage->setClientModel(clientModel);
 }
 
@@ -164,7 +164,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     this->walletModel = _walletModel;
 
     // Put transaction list in tabs
-    firoTransactionList->setModel(_walletModel);
+    privoraTransactionList->setModel(_walletModel);
     overviewPage->setWalletModel(_walletModel);
     receiveCoinsPage->setModel(_walletModel);
     // TODO: fix this
@@ -172,7 +172,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     usedReceivingAddressesPage->setModel(_walletModel->getAddressTableModel());
     usedSendingAddressesPage->setModel(_walletModel->getAddressTableModel());
     masternodeListPage->setWalletModel(_walletModel);
-    sendFiroView->setModel(_walletModel);
+    sendPrivoraView->setModel(_walletModel);
     automintSparkNotification->setModel(_walletModel);
 
     if (_walletModel)
@@ -240,15 +240,15 @@ void WalletView::gotoHistoryPage()
     setCurrentWidget(transactionsPage);
 }
 
-void WalletView::gotoBitcoinHistoryTab()
+void WalletView::gotoPrivoraHistoryTab()
 {
     setCurrentWidget(transactionsPage);
 }
 
-void WalletView::focusBitcoinHistoryTab(const QModelIndex &idx)
+void WalletView::focusPrivoraHistoryTab(const QModelIndex &idx)
 {
-    gotoBitcoinHistoryTab();
-    firoTransactionList->focusTransaction(idx);
+    gotoPrivoraHistoryTab();
+    privoraTransactionList->focusTransaction(idx);
 }
 
 void WalletView::gotoMasternodePage()
@@ -266,7 +266,7 @@ void WalletView::gotoSendCoinsPage(QString addr)
     setCurrentWidget(sendCoinsPage);
 
     if (!addr.isEmpty()){
-        sendFiroView->setAddress(addr);
+        sendPrivoraView->setAddress(addr);
     }
 }
 
@@ -296,7 +296,7 @@ void WalletView::gotoVerifyMessageTab(QString addr)
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
-    return sendFiroView->handlePaymentRequest(recipient);
+    return sendPrivoraView->handlePaymentRequest(recipient);
 }
 
 void WalletView::showOutOfSyncWarning(bool fShow)

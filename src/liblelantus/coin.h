@@ -1,8 +1,8 @@
-#ifndef FIRO_LIBLELANTUS_COIN_H
-#define FIRO_LIBLELANTUS_COIN_H
+#ifndef PRIVORA_LIBLELANTUS_COIN_H
+#define PRIVORA_LIBLELANTUS_COIN_H
 
 #include "params.h"
-#include "../firo_params.h"
+#include "../privora_params.h"
 #include "../uint256.h"
 #include "../sigma/openssl_context.h"
 #include "../uint256.h"
@@ -89,4 +89,4 @@ private:
 
 }// namespace lelantus
 
-#endif //FIRO_LIBLELANTUS_COIN_H
+#endif //PRIVORA_LIBLELANTUS_COIN_H

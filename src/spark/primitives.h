@@ -1,5 +1,5 @@
-#ifndef FIRO_PRIMITIVES_H
-#define FIRO_PRIMITIVES_H
+#ifndef PRIVORA_PRIMITIVES_H
+#define PRIVORA_PRIMITIVES_H
 
 #include "libspark/coin.h"
 #include "serialize.h"
@@ -146,4 +146,4 @@ struct CMintedCoinInfo {
 }
 
 
-#endif //FIRO_PRIMITIVES_H
+#endif //PRIVORA_PRIMITIVES_H

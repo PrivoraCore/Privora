@@ -8,7 +8,7 @@ Tests:
 1. Resistance to active probing:
    Stem:  0 --> 1 --> 2 --> 0 where each node has argument "-dandelion=1"
    Probe: TestNode --> 0
-   Node 0 generates a Dandelion transaction "tx": 1.0 BTC from Node 0 to Node 2
+   Node 0 generates a Dandelion transaction "tx": 1.0 VORA from Node 0 to Node 2
    TestNode immediately sends getdata for tx to Node 0
    Assert that Node 0 does not reply with tx
 
@@ -27,7 +27,7 @@ Tests:
 
 from collections import defaultdict
 from test_framework.mininode import *                          # NodeConnCB
-from test_framework.test_framework import BitcoinTestFramework # BitcoinTestFramework
+from test_framework.test_framework import PrivoraTestFramework # PrivoraTestFramework
 from test_framework.util import *                              # other stuff
 import time                                                    # sleep
 
@@ -107,7 +107,7 @@ class TestP2PConn(NodeConnCB):
         self.connection.send_message(msg)
 
 
-class DandelionTest(BitcoinTestFramework):
+class DandelionTest(PrivoraTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 8
