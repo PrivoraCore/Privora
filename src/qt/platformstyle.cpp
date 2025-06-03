@@ -40,8 +40,8 @@ void MakeSingleColorImage(QImage& img, const QColor& colorbase)
         for (int y = img.height(); y--; )
         {
             const QRgb rgb = img.pixel(x, y);
-            // set default to firo red
-            img.setPixel(x, y, qRgba(155, 28, 46, qAlpha(rgb)));
+            // set default to privora orange
+            img.setPixel(x, y, qRgba(255, 140, 26, qAlpha(rgb)));
         }
     }
 }
