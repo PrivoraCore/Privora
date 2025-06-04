@@ -129,13 +129,22 @@ enum ChainType {
 struct Params {
     ChainType chainType;
 
+    int nSubsidyHalvingInterval;
+
+    int nMasternodePayout;
+    int nDevelopmentFundPercent;
+    std::string developmentFundAddress;
+
+
+
+
     uint256 hashGenesisBlock;
     /** First subsidy halving */
     int nSubsidyHalvingFirst;
     /** Second subsidy halving */
     int nSubsidyHalvingSecond;
     /** Subsequent subsidy halving intervals */
-    int nSubsidyHalvingInterval;
+    // int nSubsidyHalvingInterval;
 
     /** parameters for coinbase payment distribution between first halving and stage 3 (aka stage 2) */
     /** P2PKH or P2SH address for developer funds */
@@ -416,7 +425,7 @@ struct Params {
     /** Time between blocks for LLMQ random time purposes. Can be less than actual average distance between blocks */
     int nLLMQPowTargetSpacing;
 
-    int64_t DifficultyAdjustmentInterval(bool fMTP = false) const { return nPowTargetTimespan / (fMTP ? nPowTargetSpacingMTP : nPowTargetSpacing); }
+    int64_t DifficultyAdjustmentInterval(bool fMTP = false) const { return nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
     

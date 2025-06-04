@@ -34,7 +34,7 @@ static constexpr int AdjustEndingBlockNumberAfterSubsidyHalving(int intervalStar
         return halvingPoint + (intervalStart + intervalLength - halvingPoint)*2;
 }
 
-static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesisOutputScript, uint32_t nTime, uint32_t nNonce,
+static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesisOutputScript, uint32_t nTime, uint64_t nNonce,
         uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
         std::vector<unsigned char> extraNonce) {
     CMutableTransaction txNew;
@@ -49,7 +49,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
     CBlock genesis;
     genesis.nTime    = nTime;
     genesis.nBits    = nBits;
-    genesis.nNonce   = nNonce;
+    genesis.nNonce64   = nNonce;
     genesis.nVersion = nVersion;
     genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
     genesis.hashPrevBlock.SetNull();
@@ -68,7 +68,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
  *     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
  *   vMerkleTree: 4a5e1e
  */
-static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
+static CBlock CreateGenesisBlock(uint32_t nTime, uint64_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
                    std::vector<unsigned char> extraNonce) {
     //btzc: privora timestamp
     const char *pszTimestamp = "Times 2014/10/31 Maine Judge Says Nurse Must Follow Ebola Quarantine for Now";
@@ -196,27 +196,16 @@ public:
 
         consensus.chainType = Consensus::chainMain;
 
-        consensus.nSubsidyHalvingFirst = 302438;
-        consensus.nSubsidyHalvingSecond = AdjustEndingBlockNumberAfterSubsidyHalving(302438, 420000, 486221); // =958655
-        consensus.nSubsidyHalvingInterval = 420000*2;
+        // consensus.nSubsidyHalvingFirst = 302438;
+        // consensus.nSubsidyHalvingSecond = AdjustEndingBlockNumberAfterSubsidyHalving(302438, 420000, 486221); // =958655
 
-        consensus.stage2DevelopmentFundShare = 15;
-        consensus.stage2ZnodeShare = 35;
-        consensus.stage2DevelopmentFundAddress = "aFrAVZFr8pva5mG8XKaUH8EXcFVVNxLiuB";
 
-        consensus.stage3StartTime = 1655380800; // Thursday, 16 June 2022 12:00:00 UTC
-        consensus.stage3StartBlock = 486221;
-        consensus.stage3DevelopmentFundShare = 15;
-        consensus.stage3CommunityFundShare = 10;
-        consensus.stage3MasternodeShare = 50;
-        consensus.stage3DevelopmentFundAddress = "aLgRaYSFk6iVw2FqY1oei8Tdn2aTsGPVmP";
-        consensus.stage3CommunityFundAddress = "aFA2TbqG9cnhhzX5Yny2pBJRK5EaEqLCH7";
+        consensus.nSubsidyHalvingInterval = 420000;
 
-        consensus.stage4StartBlock = consensus.nSubsidyHalvingSecond;
-        consensus.stage4CommunityFundShare = 10;
-        consensus.stage4DevelopmentFundShare = 15;
-        consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
+        consensus.nMasternodePayout = 40;
+        consensus.nDevelopmentFundPercent = 15;
+        consensus.developmentFundAddress = "aFrAVZFr8pva5mG8XKaUH8EXcFVVNxLiuB";
+
 
         consensus.nStartBlacklist = 293990;
         consensus.nStartDuplicationCheck = 293526;
@@ -349,11 +338,16 @@ public:
         extraNonce[1] = 0x3f;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 142392, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
-        const std::string s = genesis.GetHash().ToString();
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x4381deb85b1b2c9843c222944b616d997516dcbd6a964e1eaf0def0830695233"));
-        assert(genesis.hashMerkleRoot == uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
+        // genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 142392, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+
+
+
+        // consensus.hashGenesisBlock = genesis.GetHash();
+        // assert(consensus.hashGenesisBlock == uint256S("0x4381deb85b1b2c9843c222944b616d997516dcbd6a964e1eaf0def0830695233"));
+        // assert(genesis.hashMerkleRoot == uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
+
+
+
         vSeeds.push_back(CDNSSeedData("amsterdam.privora.org", "amsterdam.privora.org", false));
         vSeeds.push_back(CDNSSeedData("australia.privora.org", "australia.privora.org", false));
         vSeeds.push_back(CDNSSeedData("chicago.privora.org", "chicago.privora.org", false));
@@ -363,6 +357,9 @@ public:
         vSeeds.push_back(CDNSSeedData("sanfrancisco.privora.org", "sanfrancisco.privora.org", false));
         vSeeds.push_back(CDNSSeedData("tokyo.privora.org", "tokyo.privora.org", false));
         vSeeds.push_back(CDNSSeedData("singapore.privora.org", "singapore.privora.org", false));
+
+
+
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 82);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
@@ -528,28 +525,6 @@ public:
 
         consensus.chainType = Consensus::chainTestnet;
 
-        consensus.nSubsidyHalvingFirst = 12000;
-        consensus.nSubsidyHalvingSecond = 150000;
-        consensus.nSubsidyHalvingInterval = 150000;
-
-        consensus.stage2DevelopmentFundShare = 15;
-        consensus.stage2ZnodeShare = 35;
-        consensus.stage2DevelopmentFundAddress = "TUuKypsbbnHHmZ2auC2BBWfaP1oTEnxjK2";
-
-        consensus.stage3StartTime = 1653409800;  // May 24th 2022 04:30 UTC
-        consensus.stage3StartBlock = 84459;
-        consensus.stage3DevelopmentFundShare = 15;
-        consensus.stage3CommunityFundShare = 10;
-        consensus.stage3MasternodeShare = 50;
-        consensus.stage3DevelopmentFundAddress = "TWDxLLKsFp6qcV1LL4U2uNmW4HwMcapmMU";
-        consensus.stage3CommunityFundAddress = "TCkC4uoErEyCB4MK3d6ouyJELoXnuyqe9L";
-
-        consensus.stage4StartBlock = 167500;
-        consensus.stage4CommunityFundShare = 10;
-        consensus.stage4DevelopmentFundShare = 15;
-        consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
-
         consensus.nStartBlacklist = 0;
         consensus.nStartDuplicationCheck = 0;
         consensus.nMajorityEnforceBlockUpgrade = 51;
@@ -673,12 +648,12 @@ public:
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
 
-        genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 3577337, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock ==
-                uint256S("0xaa22adcc12becaf436027ffe62a8fb21b234c58c23865291e5dc52cf53f64fca"));
-        assert(genesis.hashMerkleRoot ==
-                uint256S("0xf70dba2d976778b985de7b5503ede884988d78fbb998d6969e4f676b40b9a741"));
+        // genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 3577337, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+        // consensus.hashGenesisBlock = genesis.GetHash();
+        // assert(consensus.hashGenesisBlock ==
+        //         uint256S("0xaa22adcc12becaf436027ffe62a8fb21b234c58c23865291e5dc52cf53f64fca"));
+        // assert(genesis.hashMerkleRoot ==
+        //         uint256S("0xf70dba2d976778b985de7b5503ede884988d78fbb998d6969e4f676b40b9a741"));
         vFixedSeeds.clear();
         vSeeds.clear();
         // privora test seeds
@@ -814,27 +789,6 @@ public:
 
         consensus.chainType = Consensus::chainDevnet;
 
-        consensus.nSubsidyHalvingFirst = 1;
-        consensus.nSubsidyHalvingSecond = 3000;
-        consensus.nSubsidyHalvingInterval = 10000;
-
-        consensus.stage2DevelopmentFundShare = 15;
-        consensus.stage2ZnodeShare = 35;
-        consensus.stage2DevelopmentFundAddress = "Tq99tes2sRbQ1yNUJPJ7BforYnKcitgwWq";
-
-        consensus.stage3StartTime = 1653382800;
-        consensus.stage3StartBlock = 1514;  // this is incorrect value but we have to leave it for now
-        consensus.stage3DevelopmentFundShare = 15;
-        consensus.stage3CommunityFundShare = 10;
-        consensus.stage3MasternodeShare = 50;
-        consensus.stage3DevelopmentFundAddress = "TfvbHyGTo8hexoKBBS8fz9Gq7g9VZQQpcg";
-        consensus.stage3CommunityFundAddress = "TgoL9nh8vDTz7UB5WkBbknBksBdUaD9qbT";
-
-        consensus.stage4StartBlock = consensus.nSubsidyHalvingSecond;
-        consensus.stage4CommunityFundShare = 10;
-        consensus.stage4DevelopmentFundShare = 15;
-        consensus.stage4MasternodeShare = 70;
-        consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nStartBlacklist = 0;
         consensus.nStartDuplicationCheck = 0;
@@ -946,12 +900,12 @@ public:
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
 
-        genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 440914, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock ==
-                uint256S("0xc4c408cfedb0a03a259d4b3046425a0ac9582f4a33960d6a34d1555538621961"));
-        assert(genesis.hashMerkleRoot ==
-                uint256S("0xb84e4b6a3743eb4f24ed7e4b88355d7d5fc0aba0cbe8f04e96556ad35c52c873"));
+        // genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 440914, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+        // consensus.hashGenesisBlock = genesis.GetHash();
+        // assert(consensus.hashGenesisBlock ==
+        //         uint256S("0xc4c408cfedb0a03a259d4b3046425a0ac9582f4a33960d6a34d1555538621961"));
+        // assert(genesis.hashMerkleRoot ==
+        //         uint256S("0xb84e4b6a3743eb4f24ed7e4b88355d7d5fc0aba0cbe8f04e96556ad35c52c873"));
         vFixedSeeds.clear();
         vSeeds.clear();
         // privora test seeds
@@ -1062,28 +1016,22 @@ public:
 
         consensus.chainType = Consensus::chainRegtest;
 
-        // To be changed for specific tests
-        consensus.nSubsidyHalvingFirst = 1500;
-        consensus.nSubsidyHalvingSecond = 2500;
-        consensus.nSubsidyHalvingInterval = 1000;
+
+            SelectParams(CBaseChainParams::MAIN);  // Ensure the global pointer is set
+
+
+
+        consensus.nSubsidyHalvingInterval = 20;
+
+        consensus.nMasternodePayout = 40;
+        consensus.nDevelopmentFundPercent = 15;
+        consensus.developmentFundAddress = "aFrAVZFr8pva5mG8XKaUH8EXcFVVNxLiuB";
+
 
         consensus.nStartBlacklist = 0;
         consensus.nStartDuplicationCheck = 0;
-        consensus.stage2DevelopmentFundShare = 15;
-        consensus.stage2ZnodeShare = 35;
 
-        consensus.stage3StartTime = INT_MAX;        // tests should set this value individually
-        consensus.stage3StartBlock = INT_MAX;       // same as above
-        consensus.stage3DevelopmentFundShare = 15;
-        consensus.stage3CommunityFundShare = 10;
-        consensus.stage3MasternodeShare = 50;
-        consensus.stage3DevelopmentFundAddress = "TGEGf26GwyUBE2P2o2beBAfE9Y438dCp5t";  // private key cMrz8Df36VR9TvZjtvSqLPhUQR7pcpkXRXaLNYUxfkKsRuCzHpAN
-        consensus.stage3CommunityFundAddress = "TJmPzeJF4DECrBwUftc265U7rTPxKmpa4F";  // private key cTyPWqTMM1CgT5qy3K3LSgC1H6Q2RHvnXZHvjWtKB4vq9qXqKmMu
 
-        consensus.stage4StartBlock = consensus.nSubsidyHalvingSecond;
-        consensus.stage4CommunityFundShare = 15;
-        consensus.stage4DevelopmentFundShare = 25;
-        consensus.stage4MasternodeShare = 50;
         consensus.tailEmissionBlockSubsidy = 4 * COIN; // real value would be 1 PRIVORA (because of two halvings due to different block times)
 
         consensus.nMajorityEnforceBlockUpgrade = 750;
@@ -1190,8 +1138,59 @@ public:
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 414098459, 0x207fffff, 1, 0 * COIN, extraNonce);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        // genesis = CreateGenesisBlock(ZC_GENESIS_BLOCK_TIME, 414098459, 0x207fffff, 1, 0 * COIN, extraNonce);
+        // consensus.hashGenesisBlock = genesis.GetHash();
+
+
+        genesis = CreateGenesisBlock(1740441600, 4, 0x207fffff, 2, 0 * COIN, extraNonce);
+        consensus.hashGenesisBlock = genesis.GetHashFull(genesis.mix_hash);
+
+
+        //     arith_uint256 test;
+        // bool fNegative;
+        // bool fOverflow;
+        // test.SetCompact(0x207fffff, &fNegative, &fOverflow);
+        // std::cout << "Test threshold: " << test.GetHex() << "\n\n";
+
+        // uint256 mix_hash;
+
+        // int genesisNonce = 0;
+        // uint256 TempHashHolding = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
+        // uint256 BestBlockHash = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        // for (int i=0;i<40000000;i++) {
+        //     genesis = CreateGenesisBlock(1740441600, i, 0x207fffff, 2, 0 * COIN, extraNonce);
+        //     //genesis.hashPrevBlock = TempHashHolding;
+        //     // Depending on when the timestamp is on the genesis block. You will need to use GetX16RHash or GetX16RV2Hash. Replace GetHash() with these below
+        //     consensus.hashGenesisBlock = genesis.GetHashFull(mix_hash);
+
+        //     arith_uint256 BestBlockHashArith = UintToArith256(BestBlockHash);
+        //     if (UintToArith256(consensus.hashGenesisBlock) < BestBlockHashArith) {
+        //         BestBlockHash = consensus.hashGenesisBlock;
+        //         std::cout << BestBlockHash.GetHex() << " Nonce: " << i << "\n";
+        //         std::cout << "   PrevBlockHash: " << genesis.hashPrevBlock.GetHex() << "\n";
+        //         std::cout << mix_hash.GetHex() << std::endl;
+        //     }
+
+        //     TempHashHolding = consensus.hashGenesisBlock;
+
+        //     if (BestBlockHashArith < test) {
+        //         genesisNonce = i - 1;
+        //         break;
+        //     }
+        //     //std::cout << consensus.hashGenesisBlock.GetHex() << "\n";
+        // }
+        // std::cout << "\n";
+        // std::cout << "\n";
+        // std::cout << "\n";
+
+        // std::cout << "hashGenesisBlock to 0x" << BestBlockHash.GetHex() << std::endl;
+        // std::cout << "Genesis Nonce to " << genesisNonce << std::endl;
+        // std::cout << "Genesis Merkle " << genesis.hashMerkleRoot.GetHex() << std::endl;
+
+
+        assert(consensus.hashGenesisBlock == uint256S("0x4f2d9e1b51127c5f4534646dd1457f062438d66beb96392c07c3f10bcd019c38"));
+        assert(genesis.hashMerkleRoot == uint256S("0x25b361d60bc7a66b311e72389bf5d9add911c735102bcb6425f63aceeff5b7b8"));
+        assert(genesis.mix_hash == uint256S("0x03580d099e814566bfbc770f087c595b0a0ba281371027b5c9f085d2d354cbe3"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -1204,7 +1203,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"))
+            (0, uint256S("0x00"))
         };
 
         chainTxData = ChainTxData{

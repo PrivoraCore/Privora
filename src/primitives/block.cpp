@@ -14,9 +14,6 @@
 #include "chainparams.h"
 #include "crypto/scrypt.h"
 #include "crypto/progpow.h"
-#include "crypto/Lyra2Z/Lyra2Z.h"
-#include "crypto/Lyra2Z/Lyra2.h"
-#include "crypto/MerkleTreeProof/mtp.h"
 #include "util.h"
 #include <iostream>
 #include <chrono>
@@ -47,43 +44,27 @@ unsigned char GetNfactor(int64_t nTimestamp) {
 }
 
 uint256 CBlockHeader::GetHash() const {
-    return SerializeHash(*this);
+    // return SerializeHash(*this);
+    uint256 mix_hash;
+        uint256 hash = GetProgPowHashFull(mix_hash);
+        const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
+                    std::cout << hash.ToString() << " " << mix_hash.ToString() << std::endl;
+
+        return hash;
 }
 
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
-    if (IsProgPow()) {
-        return GetProgPowHashFull(mix_hash);
-    }
-    return GetHash();
-}
+        uint256 hash = GetProgPowHashFull(mix_hash);
+        const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
+                    std::cout << hash.ToString() << " " << mix_hash.ToString() << std::endl;
 
-bool CBlockHeader::IsMTP() const {
-    // In case if nTime == ZC_GENESIS_BLOCK_TIME we're being called from CChainParams() constructor and
-    // it is not possible to get Params()
-    return (nTime > ZC_GENESIS_BLOCK_TIME && nTime >= Params().GetConsensus().nMTPSwitchTime);
-}
-
-bool CBlockHeader::IsProgPow() const {
-    // This isnt ideal, but suffers from the same issue as the IsMTP() call above. Also can't get
-    // chainActive/mapBlockIndex in the consensus library (without disabling binary hardening)..
-    return (nTime > ZC_GENESIS_BLOCK_TIME && nTime >= Params().GetConsensus().nPPSwitchTime);
-}
-
-bool CBlockHeader::IsShorterBlocksSpacing() const {
-    return (nTime > ZC_GENESIS_BLOCK_TIME && nTime >= Params().GetConsensus().stage3StartTime);
+        return hash;
 }
 
 int CBlockHeader::GetTargetBlocksSpacing() const {
     const Consensus::Params &params = Params().GetConsensus();
-    if (nTime <= ZC_GENESIS_BLOCK_TIME)
-        return params.nPowTargetSpacing;
-    else if (nTime >= params.stage3StartTime)
-        return params.nPowTargetSpacingMTP/2;
-    else if ((params.nMTPFiveMinutesStartBlock == 0 && nTime >= params.nMTPSwitchTime) ||
-                    (params.nMTPFiveMinutesStartBlock != 0 && nHeight >= params.nMTPFiveMinutesStartBlock))
-        return params.nPowTargetSpacingMTP;
-    else
-        return params.nPowTargetSpacing;
+
+    return params.nPowTargetSpacing;
 }
 
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
@@ -117,38 +98,9 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
         return cachedPoWHash;
 
     uint256 powHash;
-    if (IsProgPow()) {
-        powHash = progpow_hash_light(GetProgPowHeader());
-    } else if (IsMTP()) {
-        // MTP processing is the same across all the types on networks
-        powHash = mtpHashValue;
-    } else if (nHeight == 0) {
-        // genesis block
-        scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(powHash), GetNfactor(nTime));
-    } else if (Params().GetConsensus().IsMain()) {
-        if (nHeight >= 20500) {
-            // Lyra2Z
-            lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
-        }
-        else if (nHeight > 0) {
-            // we take values from precomputed table because calculations of these are horribly slow
-            powHash = GetPrecomputedBlockPoWHash(nHeight);
-
-            /*
-             * This is original code for reference
-             * 
-             * if (nHeight >= HF_LYRA2_HEIGHT) {
-             *   LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 8192, 256);
-             * } else if (nHeight >= HF_LYRA2VAR_HEIGHT) {
-             *    LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, nHeight, 256);
-             * }
-             */
-        }
-    } else {
-        // regtest - use simple block hash
-        // current testnet is MTP since block 1, shouldn't get here
-        powHash = GetHash();
-    }
+    uint256 mix_hash;
+    uint256 hash = GetProgPowHashFull(mix_hash);
+    const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
     
     cachedPoWHash = powHash;
     return powHash;
@@ -156,17 +108,44 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 
 std::string CBlock::ToString() const {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, nNonce64=%u, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, mix_hash: %s, nTime=%u, nBits=%08x, nNonce=%u, nNonce64=%u, vtx=%u)\n",
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashMerkleRoot.ToString(),
+        mix_hash.ToString(),
         nTime, nBits, nNonce, nNonce64,
         vtx.size());
     for (unsigned int i = 0; i < vtx.size(); i++)
     {
         s << "  " << vtx[i]->ToString() << "\n";
     }
+    return s.str();
+}
+
+std::string CBlockHeader::ToString() const
+{
+    std::stringstream s;
+    s << strprintf("CBlockHeader("
+                   "nVersion=0x%08x, "
+                   "hashPrevBlock=%s, "
+                   "hashMerkleRoot=%s, "
+                   "nTime=%u, "
+                   "nBits=%08x, "
+                   "nHeight=%d, "
+                   "nNonce=%u, "
+                   "nNonce64=%llu, "
+                   "mix_hash=%s"
+                   ")",
+                   nVersion,
+                   hashPrevBlock.ToString(),
+                   hashMerkleRoot.ToString(),
+                   nTime,
+                   nBits,
+                   nHeight,
+                   nNonce,
+                   static_cast<unsigned long long>(nNonce64),
+                   mix_hash.ToString());
     return s.str();
 }
 

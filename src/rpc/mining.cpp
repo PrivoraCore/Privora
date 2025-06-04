@@ -146,37 +146,18 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
          * nonce range is quite wide (64bits)
          */
 
-        if (pblock->IsProgPow()) {
-            while (nMaxTries > 0 && pblock->nNonce64 < nInnerLoopCount) {
-                uint256 mix_hash;
-                auto final_hash{progpow_hash_full(pblock->GetProgPowHeader(), mix_hash)};
-                if (CheckProofOfWork(final_hash, pblock->nBits, Params().GetConsensus()))
-                {
-                    pblock->mix_hash = mix_hash;
-                    break;
-                }
-                ++pblock->nNonce64;
-                --nMaxTries;
+        while (nMaxTries > 0 && pblock->nNonce64 < nInnerLoopCount) {
+            uint256 mix_hash;
+            auto final_hash{progpow_hash_full(pblock->GetProgPowHeader(), mix_hash)};
+            if (CheckProofOfWork(final_hash, pblock->nBits, Params().GetConsensus()))
+            {
+                pblock->mix_hash = mix_hash;
+                break;
             }
-        } else if (pblock->IsMTP()) {
-            while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount) {
-                // Note from @AndreaLanfranchi for future devs
-                // Not sure about this but my strong guess is 
-                // pblock->mtpHashValue should be valued only on positive validation
-                // of proof. As it's code I'm not involved into I'm leaving for reference
-                pblock->mtpHashValue = mtp::hash(*pblock, Params().GetConsensus().powLimit);
-                if (CheckProofOfWork(pblock->mtpHashValue, pblock->nBits, Params().GetConsensus()))
-                    break;
-                ++pblock->nNonce;
-                --nMaxTries;
-            }
-        } else {
-            while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(nHeight+1), pblock->nBits, Params().GetConsensus())) {
-                ++pblock->nNonce;
-                --nMaxTries;
-                pblock->cachedPoWHash.SetNull();
-            }
+            ++pblock->nNonce64;
+            --nMaxTries;
         }
+
         if (nMaxTries == 0) {
             break;
         }
@@ -745,10 +726,6 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     UniValue aRules(UniValue::VARR);
     UniValue vbavailable(UniValue::VOBJ);
     for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
-        // MTP deployment has different set of rules
-        if (j == Consensus::DEPLOYMENT_MTP)
-            continue;
-
         Consensus::DeploymentPos pos = Consensus::DeploymentPos(j);
         ThresholdState state = VersionBitsState(pindexPrev, consensusParams, pos, versionbitscache);
         switch (state) {
@@ -856,22 +833,20 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         result.push_back(Pair("default_witness_commitment", HexStr(pblocktemplate->vchCoinbaseCommitment.begin(), pblocktemplate->vchCoinbaseCommitment.end())));
     }
 
-    if (pblock->IsProgPow()) {
-        static std::string lastHeader{};
-        if (mapPPBlockTemplates.count(lastHeader) && ((pblock->nTime - 30) < mapPPBlockTemplates.at(lastHeader).nTime))
-        {
-            result.pushKV("pprpcheader", lastHeader);
-            result.pushKV("pprpcepoch", ethash::get_epoch_number(pblock->nHeight));
-            return result;
-        }
-        pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
-        lastHeader = pblock->GetProgPowHeaderHash().GetHex();
+    static std::string lastHeader{};
+    if (mapPPBlockTemplates.count(lastHeader) && ((pblock->nTime - 30) < mapPPBlockTemplates.at(lastHeader).nTime))
+    {
         result.pushKV("pprpcheader", lastHeader);
         result.pushKV("pprpcepoch", ethash::get_epoch_number(pblock->nHeight));
-        if (fRewardAddressSet)
-            // don't bother to save block unless reward address is set
-            mapPPBlockTemplates[lastHeader] = *pblock;
+        return result;
     }
+    pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+    lastHeader = pblock->GetProgPowHeaderHash().GetHex();
+    result.pushKV("pprpcheader", lastHeader);
+    result.pushKV("pprpcepoch", ethash::get_epoch_number(pblock->nHeight));
+    if (fRewardAddressSet)
+        // don't bother to save block unless reward address is set
+        mapPPBlockTemplates[lastHeader] = *pblock;
 
     return result;
 }

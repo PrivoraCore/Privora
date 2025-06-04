@@ -15,8 +15,6 @@
 #include "chainparams.h"
 #include "privora_bignum/bignum.h"
 #include "utilstrencodings.h"
-#include "crypto/MerkleTreeProof/mtp.h"
-#include "mtpstate.h"
 #include "fixed.h"
 
 static CBigNum bnProofOfWorkLimit(~arith_uint256(0) >> 8);
@@ -51,41 +49,37 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         }
     }
 
-    // 9/29/2016 - Reset to Lyra2(2,block_height,256) due to ASIC KnC Miner Scrypt
-    // 36 block look back, reset to mininmum diff
-    if (params.IsMain() && pindexLast->nHeight + 1 >= HF_LYRA2VAR_HEIGHT && pindexLast->nHeight + 1 <= HF_LYRA2VAR_HEIGHT + 36 - 1) {
-        return params.nFixedDifficulty;
-    }
-    // 02/11/2017 - Increase diff to match with new hashrates of Lyra2Z algo
-    if (params.IsMain() && pindexLast->nHeight + 1 == HF_LYRA2Z_HEIGHT) {
-        CBigNum bnNew;
-        bnNew.SetCompact(pindexLast->nBits);
-        bnNew /= 20000; // increase the diff by 20000x since the new hashrate is approx. 20000 times higher
-        LogPrintf("Lyra2Z HF - Before: %08x %.8f\n", pindexLast->nBits, GetDifficultyHelper(pindexLast->nBits));
-        LogPrintf("Lyra2Z HF - After: %08x %.8f\n", bnNew.GetCompact(), GetDifficultyHelper(bnNew.GetCompact()));
-        if (bnNew > bnProofOfWorkLimit) { bnNew = bnProofOfWorkLimit; } // safe threshold
-        return bnNew.GetCompact();
-    }
+    // // 9/29/2016 - Reset to Lyra2(2,block_height,256) due to ASIC KnC Miner Scrypt
+    // // 36 block look back, reset to mininmum diff
+    // if (params.IsMain() && pindexLast->nHeight + 1 >= HF_LYRA2VAR_HEIGHT && pindexLast->nHeight + 1 <= HF_LYRA2VAR_HEIGHT + 36 - 1) {
+    //     return params.nFixedDifficulty;
+    // }
+    // // 02/11/2017 - Increase diff to match with new hashrates of Lyra2Z algo
+    // if (params.IsMain() && pindexLast->nHeight + 1 == HF_LYRA2Z_HEIGHT) {
+    //     CBigNum bnNew;
+    //     bnNew.SetCompact(pindexLast->nBits);
+    //     bnNew /= 20000; // increase the diff by 20000x since the new hashrate is approx. 20000 times higher
+    //     LogPrintf("Lyra2Z HF - Before: %08x %.8f\n", pindexLast->nBits, GetDifficultyHelper(pindexLast->nBits));
+    //     LogPrintf("Lyra2Z HF - After: %08x %.8f\n", bnNew.GetCompact(), GetDifficultyHelper(bnNew.GetCompact()));
+    //     if (bnNew > bnProofOfWorkLimit) { bnNew = bnProofOfWorkLimit; } // safe threshold
+    //     return bnNew.GetCompact();
+    // }
 
-    int nFirstMTPBlock = MTPState::GetMTPState()->GetFirstMTPBlockNumber(params, pindexLast);
-    bool fMTP = nFirstMTPBlock > 0;
+    // int nFirstMTPBlock = MTPState::GetMTPState()->GetFirstMTPBlockNumber(params, pindexLast);
+    // bool fMTP = nFirstMTPBlock > 0;
 
-    if (pblock->IsProgPow()) {
-        if (pindexLast->nTime < params.nPPSwitchTime) {
-            // first ProgPOW block ever
-            return params.nInitialPPDifficulty;
-        }
-    }
-    else if (pblock->IsMTP() && !fMTP) {
-        // first MTP block ever
-        return params.nInitialMTPDifficulty;
-    }
+    // if (pblock->IsProgPow()) {
+    //     if (pindexLast->nTime < params.nPPSwitchTime) {
+    //         // first ProgPOW block ever
+    //         return params.nInitialPPDifficulty;
+    //     }
+    // }
+    // else if (pblock->IsMTP() && !fMTP) {
+    //     // first MTP block ever
+    //     return params.nInitialMTPDifficulty;
+    // }
 
-    uint32_t BlocksTargetSpacing =
-        (params.nMTPFiveMinutesStartBlock == 0 && fMTP) || (params.nMTPFiveMinutesStartBlock > 0 && pindexLast->nHeight >= params.nMTPFiveMinutesStartBlock) ?
-            params.nPowTargetSpacingMTP : params.nPowTargetSpacing;
-    if (pindexLast->nTime >= params.stage3StartTime)
-        BlocksTargetSpacing /= 2;
+    uint32_t BlocksTargetSpacing = params.nPowTargetSpacing;
 
     unsigned int TimeDaySeconds = 60 * 60 * 24;
     int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
@@ -94,45 +88,45 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     uint32_t PastBlocksMax = PastSecondsMax / BlocksTargetSpacing; // 1008 blocks
     uint32_t StartingPoWBlock = 0;
 
-    if (pblock->IsShorterBlocksSpacing()) {
-        if (pindexLast->nTime < params.stage3StartTime) {
-            // first time we see a block with shorter interval
-            // Normally we should take difficulty and halve it. But to give some leeway to the miners
-            // we divide it by 4
-            uint32_t base = (pindexLast->nBits & 0x007fffff) << 2;
-            uint32_t exponent = pindexLast->nBits >> 24;
+    // if (pblock->IsShorterBlocksSpacing()) {
+    //     if (pindexLast->nTime < params.stage3StartTime) {
+    //         // first time we see a block with shorter interval
+    //         // Normally we should take difficulty and halve it. But to give some leeway to the miners
+    //         // we divide it by 4
+    //         uint32_t base = (pindexLast->nBits & 0x007fffff) << 2;
+    //         uint32_t exponent = pindexLast->nBits >> 24;
 
-            if (base > 0x007fffff) {
-                base >>= 8;
-                exponent++;
-            }
-            return (exponent << 24) | base;
-        }
+    //         if (base > 0x007fffff) {
+    //             base >>= 8;
+    //             exponent++;
+    //         }
+    //         return (exponent << 24) | base;
+    //     }
 
-        uint32_t  numberOfStage3Blocks = pindexLast->nHeight;
+    //     uint32_t  numberOfStage3Blocks = pindexLast->nHeight;
 
-        if (params.stage3StartBlock != 0) {
-            // we know the first stage3 block
-            numberOfStage3Blocks = pindexLast->nHeight - params.stage3StartBlock + 1;
-        }
-        else if (pblock->nTime < params.stage3StartTime + BlocksTargetSpacing*PastBlocksMax*3) {
-            // transition to stage3 happened recently, look for the last block before the transition
-            const CBlockIndex *pindex = pindexLast;
-            while (pindex && pindex->nTime >= params.stage3StartTime)
-                pindex = pindex->pprev;
+    //     if (params.stage3StartBlock != 0) {
+    //         // we know the first stage3 block
+    //         numberOfStage3Blocks = pindexLast->nHeight - params.stage3StartBlock + 1;
+    //     }
+    //     else if (pblock->nTime < params.stage3StartTime + BlocksTargetSpacing*PastBlocksMax*3) {
+    //         // transition to stage3 happened recently, look for the last block before the transition
+    //         const CBlockIndex *pindex = pindexLast;
+    //         while (pindex && pindex->nTime >= params.stage3StartTime)
+    //             pindex = pindex->pprev;
 
-            if (pindex)
-                numberOfStage3Blocks = pindexLast->nHeight - pindex->nHeight;
-        }
+    //         if (pindex)
+    //             numberOfStage3Blocks = pindexLast->nHeight - pindex->nHeight;
+    //     }
 
-        if (numberOfStage3Blocks < params.DifficultyAdjustmentInterval(true)/2)
-            // do not retarget if too few stage3 blocks
-            return pindexLast->nBits;
+    //     if (numberOfStage3Blocks < params.DifficultyAdjustmentInterval(true)/2)
+    //         // do not retarget if too few stage3 blocks
+    //         return pindexLast->nBits;
             
-        PastBlocksMin = std::min(PastBlocksMin, numberOfStage3Blocks);
-        PastBlocksMax = std::min(PastBlocksMax, numberOfStage3Blocks);
-    }
-    else if (pblock->IsProgPow()) {
+    //     PastBlocksMin = std::min(PastBlocksMin, numberOfStage3Blocks);
+    //     PastBlocksMax = std::min(PastBlocksMax, numberOfStage3Blocks);
+    // }
+    // else if (pblock->IsProgPow()) {
         uint32_t numberOfPPBlocks = pindexLast->nHeight;
 
         if (params.nPPBlockNumber != 0) {
@@ -155,16 +149,16 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
         PastBlocksMin = std::min(PastBlocksMin, numberOfPPBlocks);
         PastBlocksMax = std::min(PastBlocksMax, numberOfPPBlocks);
-    }
-    else if (nFirstMTPBlock > 1) {
-        // There are both legacy and MTP blocks in the chain. Limit PoW calculation scope to MTP blocks only
-        uint32_t numberOfMTPBlocks = pindexLast->nHeight - nFirstMTPBlock + 1;
-        PastBlocksMin = std::min(PastBlocksMin, numberOfMTPBlocks);
-        PastBlocksMax = std::min(PastBlocksMax, numberOfMTPBlocks);
-        StartingPoWBlock = nFirstMTPBlock;
-    }
+    // }
+    // else if (nFirstMTPBlock > 1) {
+    //     // There are both legacy and MTP blocks in the chain. Limit PoW calculation scope to MTP blocks only
+    //     uint32_t numberOfMTPBlocks = pindexLast->nHeight - nFirstMTPBlock + 1;
+    //     PastBlocksMin = std::min(PastBlocksMin, numberOfMTPBlocks);
+    //     PastBlocksMax = std::min(PastBlocksMax, numberOfMTPBlocks);
+    //     StartingPoWBlock = nFirstMTPBlock;
+    // }
 
-    if ((pindexLast->nHeight + 1 - StartingPoWBlock) % params.DifficultyAdjustmentInterval(fMTP) != 0) // Retarget every nInterval blocks
+    if ((pindexLast->nHeight + 1 - StartingPoWBlock) % params.DifficultyAdjustmentInterval() != 0) // Retarget every nInterval blocks
     {
         return pindexLast->nBits;
     }
@@ -195,25 +189,6 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
         bnNew = bnPowLimit;
 
     return bnNew.GetCompact();
-}
-
-// Privora - MTP
-bool CheckMerkleTreeProof(const CBlockHeader &block, const Consensus::Params &params) {
-    if (!block.IsMTP() || block.IsProgPow())
-	    return true;
-
-    if (!block.mtpHashData || block.mtpHashData->IsMTPDataStripped())
-        // MTP data was stripped from the block, can't verify. Return true
-        return true;
-
-    uint256 calculatedMtpHashValue;
-    bool isVerified = mtp::verify(block.nNonce, block, Params().GetConsensus().powLimit, &calculatedMtpHashValue) &&
-        block.mtpHashValue == calculatedMtpHashValue;
-
-    if(!isVerified)
-        return false;
-
-    return true;
 }
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)

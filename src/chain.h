@@ -216,12 +216,6 @@ public:
     uint64_t nNonce64;
     uint256 mix_hash;
 
-    // Privora - MTP
-    int32_t nVersionMTP = 0x1000;
-    uint256 mtpHashValue;
-    // Reserved fields
-    uint256 reserved[2];
-
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     int32_t nSequenceId;
 
@@ -296,13 +290,8 @@ public:
         nBits          = 0;
         nNonce         = 0;
 
-        // Privora - ProgPow
         nNonce64       = 0;
         mix_hash       = uint256();
-
-        // Privora - MTP
-        nVersionMTP = 0;
-        mtpHashValue = reserved[0] = reserved[1] = uint256();
 
         sigmaMintedPubCoins.clear();
         lelantusMintedPubCoins.clear();
@@ -335,16 +324,9 @@ public:
         nBits          = block.nBits;
         nNonce         = block.nNonce;
 
-        if (block.IsProgPow()) {
-            nHeight    = block.nHeight;
-            nNonce64   = block.nNonce64;
-            mix_hash   = block.mix_hash;
-        } else if (block.IsMTP()) {
-                nVersionMTP = block.nVersionMTP;
-                mtpHashValue = block.mtpHashValue;
-                reserved[0] = block.reserved[0];
-                reserved[1] = block.reserved[1];
-        }
+        nHeight    = block.nHeight;
+        nNonce64   = block.nNonce64;
+        mix_hash   = block.mix_hash;
     }
 
     CDiskBlockPos GetBlockPos() const {
@@ -375,20 +357,9 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
 
-        if (block.IsProgPow()) {
-            block.nHeight    = nHeight;
-            block.nNonce64   = nNonce64;
-            block.mix_hash   = mix_hash;
-        } else {
-            block.nNonce     = nNonce;
-            // Privora - MTP
-            if(block.IsMTP()){
-                block.nVersionMTP = nVersionMTP;
-                block.mtpHashValue = mtpHashValue;
-                block.reserved[0] = reserved[0];
-                block.reserved[1] = reserved[1];
-            }
-        }
+        block.nHeight    = nHeight;
+        block.nNonce64   = nNonce64;
+        block.mix_hash   = mix_hash;
 
         return block;
     }
@@ -400,7 +371,7 @@ public:
 
     uint256 GetBlockPoWHash() const
     {
-        return GetBlockHeader().GetPoWHash(nHeight);
+        return GetBlockHeader().GetHash();
     }
 
     int64_t GetBlockTime() const
@@ -508,7 +479,6 @@ public:
         if (nStatus & BLOCK_HAVE_UNDO)
             READWRITE(VARINT(nUndoPos));
 
-        // block header
         READWRITE(this->nVersion);
         READWRITE(hashPrev);
         READWRITE(hashMerkleRoot);
@@ -517,19 +487,8 @@ public:
 
         const auto &params = Params().GetConsensus();
 
-        if (nTime >= params.nPPSwitchTime) {
-            READWRITE(nNonce64);
-            READWRITE(mix_hash);
-        } else {
-            READWRITE(nNonce);
-            // Zcoin - MTP
-            if (nTime > ZC_GENESIS_BLOCK_TIME && nTime >= params.nMTPSwitchTime) {
-                READWRITE(nVersionMTP);
-                READWRITE(mtpHashValue);
-                READWRITE(reserved[0]);
-                READWRITE(reserved[1]);
-            }
-        }
+        READWRITE(nNonce64);
+        READWRITE(mix_hash);
         
         if (!(s.GetType() & SER_GETHASH) && nVersion >= ZC_ADVANCED_INDEX_VERSION) {
             READWRITE(mintedPubCoins);
@@ -608,20 +567,9 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
 
-        if (block.IsProgPow()) {
-            block.nHeight    = nHeight;
-            block.nNonce64   = nNonce64;
-            block.mix_hash   = mix_hash;
-        } else {
-            block.nNonce     = nNonce;
-            if (block.IsMTP()) {
-                block.nVersionMTP = nVersionMTP;
-                block.mtpHashValue = mtpHashValue;
-                block.reserved[0] = reserved[0];
-                block.reserved[1] = reserved[1];
-            }
-        }
-
+        block.nHeight    = nHeight;
+        block.nNonce64   = nNonce64;
+        block.mix_hash   = mix_hash;
 
         return block.GetHash();
     }

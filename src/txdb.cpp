@@ -425,19 +425,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
 
-                // Privora - ProgPoW
-                if (diskindex.nTime > ZC_GENESIS_BLOCK_TIME && diskindex.nTime >= consensusParams.nPPSwitchTime) {
-                    pindexNew->nNonce64 = diskindex.nNonce64;
-                    pindexNew->mix_hash = diskindex.mix_hash;
-                }
-
-                // Privora - MTP
-                else if (diskindex.nTime > ZC_GENESIS_BLOCK_TIME && diskindex.nTime >= consensusParams.nMTPSwitchTime) {
-                    pindexNew->nVersionMTP = diskindex.nVersionMTP;
-                    pindexNew->mtpHashValue = diskindex.mtpHashValue;
-                    pindexNew->reserved[0] = diskindex.reserved[0];
-                    pindexNew->reserved[1] = diskindex.reserved[1];
-                }
+                pindexNew->nNonce64 = diskindex.nNonce64;
+                pindexNew->mix_hash = diskindex.mix_hash;
 
                 pindexNew->sigmaMintedPubCoins   = diskindex.sigmaMintedPubCoins;
                 pindexNew->sigmaSpentSerials     = diskindex.sigmaSpentSerials;
@@ -459,7 +448,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->removedSparkNames = diskindex.removedSparkNames;
 
                 if (fCheckPoWForAllBlocks) {
-                    if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, consensusParams))
+                    if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, consensusParams))
                         return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
                 }
                 else {
@@ -487,7 +476,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
     if (!fCheckPoWForAllBlocks) {
         // delayed check for all the blocks
         for (const auto &blockIndex: lastNBlocks) {
-            if (!CheckProofOfWork(blockIndex.second->GetBlockPoWHash(), blockIndex.second->nBits, consensusParams))
+            if (!CheckProofOfWork(blockIndex.second->GetBlockHash(), blockIndex.second->nBits, consensusParams))
                 return error("LoadBlockIndex(): CheckProofOfWork failed: %s", blockIndex.second->ToString());
         }
     }

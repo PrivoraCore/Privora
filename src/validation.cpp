@@ -50,7 +50,6 @@
 #include "versionbits.h"
 #include "definition.h"
 #include "utiltime.h"
-#include "mtpstate.h"
 #include "sparkname.h"
 
 #include "coins.h"
@@ -1871,6 +1870,10 @@ bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHea
     fileout << FLATDATA(messageStart) << nSize;
 
     // Write block
+
+    std::cout << "Deserialized block: " << block.ToString() << std::endl;
+
+
     long fileOutPos = ftell(fileout.Get());
     if (fileOutPos < 0)
         return error("WriteBlockToDisk: ftell failed");
@@ -1897,13 +1900,8 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, int nHeight, con
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    // Privora - MTP
-    if (!CheckMerkleTreeProof(block, consensusParams)){
-    	return error("ReadBlockFromDisk: CheckMerkleTreeProof: Errors in block header at %s", pos.ToString());
-    }
-
     // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: CheckProofOfWork: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -1940,47 +1938,53 @@ CAmount GetBlockSubsidyWithMTPFlag(int nHeight, const Consensus::Params &consens
     if (nHeight == 0)
         return 0;
 
-    CAmount nSubsidy;
+    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
+    
+    // After the eighth halving, the subsidy is kept at return 39.0625 until the 21,953,728 block
+    if (halvings >= 8) {
+        // if (nHeight >= 21953728) return 0 * COIN;
 
-    if (nHeight < consensusParams.nSubsidyHalvingFirst)
-        nSubsidy = 50 * COIN;
-    else if (nHeight < consensusParams.nSubsidyHalvingSecond)
-        nSubsidy = 25 * COIN;
-    else if (nHeight < consensusParams.stage4StartBlock)
-        nSubsidy = 25 * COIN / 2;
-    else if (nHeight < consensusParams.stage4StartBlock + consensusParams.nSubsidyHalvingInterval)
-        nSubsidy = 25 * COIN;
-    else
-        nSubsidy = consensusParams.tailEmissionBlockSubsidy;    // 1 coin tail emission
-        
-    if (nHeight > 0 && fMTP)
-        nSubsidy /= consensusParams.nMTPRewardReduction;
+        return 39.0625 * COIN;
+    }
 
-    if (nHeight > 0 && fShorterBlockDistance)
-        nSubsidy /= 2;
-
+    CAmount nSubsidy = 100 * COIN;
+    // Subsidy is cut in half every 1,051,200 blocks until the eight halving.
+    nSubsidy >>= halvings;
     return nSubsidy;
+
+    // CAmount nSubsidy;
+
+    // if (nHeight < consensusParams.nSubsidyHalvingFirst)
+    //     nSubsidy = 50 * COIN;
+    // else if (nHeight < consensusParams.nSubsidyHalvingSecond)
+    //     nSubsidy = 25 * COIN;
+    // else if (nHeight < consensusParams.stage4StartBlock)
+    //     nSubsidy = 25 * COIN / 2;
+    // else if (nHeight < consensusParams.stage4StartBlock + consensusParams.nSubsidyHalvingInterval)
+    //     nSubsidy = 25 * COIN;
+    // else
+    //     nSubsidy = consensusParams.tailEmissionBlockSubsidy;    // 1 coin tail emission
+        
+    // if (nHeight > 0 && fMTP)
+    //     nSubsidy /= consensusParams.nMTPRewardReduction;
+
+    // if (nHeight > 0 && fShorterBlockDistance)
+    //     nSubsidy /= 2;
+
+    // return nSubsidy;
 }
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, int nTime) {
     return GetBlockSubsidyWithMTPFlag(nHeight, consensusParams,
-            nTime >= (int)consensusParams.nMTPSwitchTime,
-            nTime >= (int)consensusParams.stage3StartTime);
+            nTime >= 0,
+            nTime >= 0);
 }
 
 CAmount GetMasternodePayment(int nHeight, int nTime, CAmount blockValue)
 {
     const Consensus::Params &params = Params().GetConsensus();
-    if (nHeight >= params.stage4StartBlock)
-        return blockValue*params.stage4MasternodeShare/100;
-    else if (nHeight >= params.nSubsidyHalvingSecond)
-        return blockValue/2;
-    else if (nTime >= params.stage3StartTime)
-        return blockValue*params.stage3MasternodeShare/100;
-    else if (nHeight >= params.nSubsidyHalvingFirst)
-        return blockValue*params.stage2ZnodeShare/100;
-    else
-        return blockValue*3/10; // 30%
+
+    return (blockValue / 100) * params.nMasternodePayout;
 }
 
 bool IsInitialBlockDownload() {
@@ -2222,8 +2226,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight, bool fMTP) {
     // Check for founders inputs
     if ((nHeight > params.nCheckBugFixedAtBlock) && (nHeight < params.nSubsidyHalvingFirst)) {
-        // Reduce everything by a factor of two when MTP is in place
-        int reductionFactor = fMTP ? params.nMTPRewardReduction : 1;
+        int reductionFactor = 1;
 
         bool found_1 = false;
         bool found_2 = false;
@@ -2811,10 +2814,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
     }
 
-    if (block.IsProgPow() && !fJustCheck)
+    if (!fJustCheck)
     {
-        // do full PP hash check
-
         // if nHeight is too big progpow_hash_full will use too much memory. This condition allows
         // progpow usage until block 2600000
         if (block.nHeight >= progpow::epoch_length*2000)
@@ -3168,9 +3169,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     int64_t nTime5_1 = GetTimeMicros(); nTimeISFilter += nTime5_1 - nTime4;
     LogPrint("bench", "      - IS filter: %.2fms [%.2fs]\n", 0.001 * (nTime5_1 - nTime4), nTimeISFilter * 0.000001);
-
-    if (!fJustCheck)
-        MTPState::GetMTPState()->SetLastBlock(pindex, chainparams.GetConsensus());
 
     // evo spork handling
     // back up spork state if fJustCheck is true
@@ -3529,9 +3527,6 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
         int nUpgraded = 0;
         const CBlockIndex* pindex = chainActive.Tip();
         for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++) {
-            // Bit 12 (MTP) has different rules, do not produce any warning on it
-            if (bit == 12)
-                continue;
 
             WarningBitsConditionChecker checker(bit);
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
@@ -3689,9 +3684,6 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     for (auto& sparkTransaction : sparkTransactionsToRemove) {
         batchProofContainer->remove(sparkTransaction);
     }
-
-    // Roll back MTP state
-    MTPState::GetMTPState()->SetLastBlock(pindexDelete->pprev, chainparams.GetConsensus());
 
     // Write the chain state to disk, if necessary.
     if (!FlushStateToDisk(state, FLUSH_STATE_IF_NEEDED))
@@ -4559,17 +4551,8 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const 
     if (fCheckPOW)
     {
         uint256 final_hash;
-        if (block.IsProgPow())
-        {
-            // If we use GetProgPowHashFull user may experience very slow header sync
-            // We use simplified function for header check and then will use full check in ConnectBlock()
-            // This won't make sync faster but it will give user a better experience
-            final_hash = block.GetProgPowHashLight();
-        }
-        else
-        {
-            final_hash = block.GetPoWHash(nHeight);
-        }
+        final_hash = block.GetProgPowHashLight();
+
         if (!CheckProofOfWork(final_hash, block.nBits, consensusParams))
         {
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
@@ -4615,12 +4598,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
         // while still invalidating it.
         if (mutated)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-duplicate", true, "duplicate transaction");
-
-        if (!block.IsProgPow()) {
-            // Privora - MTP
-            if (block.IsMTP() && !CheckMerkleTreeProof(block, consensusParams))
-                return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
-        }
     }
 
     // All potential-corruption validation must be done before we do any
@@ -4759,12 +4736,6 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
 
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, CBlockIndex * const pindexPrev, int64_t nAdjustedTime)
 {
-	// Privora - MTP
-    bool fBlockHasMTP = (block.nVersion & 4096) != 0 || (pindexPrev && consensusParams.nMTPSwitchTime == 0);
-
-    if (block.IsMTP() != fBlockHasMTP)
-		return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),strprintf("rejected nVersion=0x%08x block", block.nVersion));
-
 	// Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
@@ -4820,14 +4791,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
 {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
 
-    // once ProgPow always ProgPow
-    if (pindexPrev && pindexPrev->nTime >= consensusParams.nPPSwitchTime && block.nTime < consensusParams.nPPSwitchTime)
-        return state.Invalid(false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
-
-    if (pindexPrev && pindexPrev->nTime >= consensusParams.stage3StartTime && block.nTime < consensusParams.stage3StartTime)
-        return state.Invalid(false, REJECT_INVALID, "bad-blk-stage3-state", "Cannot go back to 5 minutes between blocks");
-
-    if (block.IsProgPow() && block.nHeight != nHeight)
+    if (block.nHeight != nHeight)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
@@ -4853,60 +4817,16 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
         }
     }
 
-    if (nHeight >= consensusParams.nSubsidyHalvingFirst) {
-        if (block.nTime >= consensusParams.stage3StartTime) {
-            bool fStage3 = nHeight < consensusParams.nSubsidyHalvingSecond;
-            bool fStage4 = nHeight >= consensusParams.stage4StartBlock;
-            CAmount devPayoutValue = 0, communityPayoutValue = 0;
-            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get());
-            CScript communityPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get());
-
-            // There is no dev/community payout for testnet for some time
-            if (fStage3 || fStage4) {
-                int devShare = fStage3 ? consensusParams.stage3DevelopmentFundShare : consensusParams.stage4DevelopmentFundShare;
-                int communityShare = fStage3 ? consensusParams.stage3CommunityFundShare : consensusParams.stage4CommunityFundShare;
-                devPayoutValue = (GetBlockSubsidy(nHeight, consensusParams, block.nTime) * devShare) / 100;
-                communityPayoutValue = (GetBlockSubsidy(nHeight, consensusParams, block.nTime) * communityShare) / 100;
-
-                bool devFound = false, communityFound = false;
-                for (const CTxOut &txout: block.vtx[0]->vout) {
-                    if (txout.scriptPubKey == devPayoutScript && txout.nValue == devPayoutValue)
-                        devFound = true;
-                    else if (txout.scriptPubKey == communityPayoutScript && txout.nValue == communityPayoutValue)
-                        communityFound = true;
-                }
-                if (!devFound || !communityFound)
-                    return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), "Stage 3 developer/community reward check failed");
-            }
-        }
-        else {
-            // "stage 2" interval between first and second halvings
-            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get());
-            CAmount devPayoutValue = (GetBlockSubsidy(nHeight, consensusParams, block.nTime) * consensusParams.stage2DevelopmentFundShare) / 100;
-            bool found = false;
-            for (const CTxOut &txout: block.vtx[0]->vout) {
-                if ((found = txout.scriptPubKey == devPayoutScript && txout.nValue == devPayoutValue) == true)
-                    break;
-            }
-            if (!found)
-                return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), "Stage 2 developer reward check failed");
-        }
-    }
-    else if (!CheckZerocoinFoundersInputs(*block.vtx[0], state, consensusParams, nHeight, block.IsMTP())) {
-        return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), "Founders' reward check failed");
+    CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(consensusParams.developmentFundAddress).Get());
+    CAmount devPayoutValue = (GetBlockSubsidy(nHeight, consensusParams, block.nTime) * consensusParams.nDevelopmentFundPercent) / 100;
+    bool found = false;
+    for (const CTxOut &txout: block.vtx[0]->vout) {
+        if ((found = txout.scriptPubKey == devPayoutScript && txout.nValue == devPayoutValue) == true)
+            break;
     }
 
-    // Enforce rule that the coinbase starts with serialized block height
-    /*
-    if (nHeight >= consensusParams.BIP34Height)
-    {
-        CScript expect = CScript() << nHeight;
-        if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
-            !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
-        }
-    }
-    */
+    if (!found)
+        return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), " developer reward check failed");
 
     // Validation for witness commitments.
     // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the
@@ -5504,9 +5424,6 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     sigma::BuildSigmaStateFromIndex(&chainActive);
     lelantus::BuildLelantusStateFromIndex(&chainActive);
     spark::BuildSparkStateFromIndex(&chainActive);
-
-    // Initialize MTP state
-    MTPState::GetMTPState()->InitializeFromChain(&chainActive, chainparams.GetConsensus());
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),

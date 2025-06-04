@@ -30,9 +30,6 @@
 #endif // ENABLE_WALLET
 #include "definition.h"
 #include "crypto/scrypt.h"
-#include "crypto/MerkleTreeProof/mtp.h"
-#include "crypto/Lyra2Z/Lyra2Z.h"
-#include "crypto/Lyra2Z/Lyra2.h"
 #include "sigma.h"
 #include "lelantus.h"
 #include "evo/spork.h"
@@ -191,15 +188,15 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     bool fDIP0008Active_context = nHeight >= chainparams.GetConsensus().DIP0008Height;
 
     pblock->nTime = GetAdjustedTime();
-    bool fMTP = (pblock->nTime >= params.nMTPSwitchTime);
+
     bool fShorterBlockDistance = nHeight >= params.stage3StartBlock;
     const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
 
-    pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus()) | (fMTP ? 0x1000 : 0);
+    pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus()) | 0x1000;
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
     if (chainparams.MineBlocksOnDemand())
-        pblock->nVersion = GetArg("-blockversion", pblock->nVersion) | (fMTP ? 0x1000 : 0);
+        pblock->nVersion = GetArg("-blockversion", pblock->nVersion) | 0x1000;
 
     nLockTimeCutoff = (STANDARD_LOCKTIME_VERIFY_FLAGS & LOCKTIME_MEDIAN_TIME_PAST)
                        ? nMedianTimePast
@@ -254,7 +251,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout[0].nValue = nFees + nBlockSubsidy;
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
 
-    FillFoundersReward(coinbaseTx, fMTP, fShorterBlockDistance);
+    FillFoundersReward(coinbaseTx, true, fShorterBlockDistance);
 
     if (fDIP0003Active_context) {
         coinbaseTx.vin[0].scriptSig = CScript() << OP_RETURN;
@@ -303,10 +300,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     pblock->nNonce64       = 0;
     pblock->nHeight        = nHeight;
     pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(*pblock->vtx[0]);
-
-    // Privora - MTP
-    if (fMTP)
-        pblock->mtpHashData = std::make_shared<CMTPHashData>();
 
     CValidationState state;
     if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
@@ -831,114 +824,14 @@ void BlockAssembler::addPriorityTxs()
 
 void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fMTP, bool fShorterBlockDistance) {
     const auto &params = chainparams.GetConsensus();
-    CAmount coin = COIN / (fMTP ? params.nMTPRewardReduction : 1);
-    if (fShorterBlockDistance)
-        coin /= 2;
 
-    if ((nHeight >= params.nSubsidyHalvingFirst && nHeight < params.nSubsidyHalvingSecond) || nHeight >= params.stage4StartBlock) {
-        if (fShorterBlockDistance) {
-            bool fStage3 = nHeight < params.nSubsidyHalvingSecond;
-            bool fStage4 = nHeight >= params.stage4StartBlock;
-            CAmount devPayoutValue = 0, communityPayoutValue = 0;
-            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage3DevelopmentFundAddress).Get());
-            CScript communityPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage3CommunityFundAddress).Get());
+    if (nHeight > 0) {
 
-            // There is no dev/community payout for testnet for some time
-            if (fStage3 || fStage4) {
-                int devShare = fStage3 ? params.stage3DevelopmentFundShare : params.stage4DevelopmentFundShare;
-                int communityShare = fStage3 ? params.stage3CommunityFundShare : params.stage4CommunityFundShare;
-                devPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, fMTP, true) * devShare) / 100;
-                communityPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, fMTP, true) * communityShare) / 100;
-            }
+        CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.developmentFundAddress).Get());
+        CAmount devPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, true, false) * params.nDevelopmentFundPercent) / 100;
 
-            if (devPayoutValue != 0) {
-                coinbaseTx.vout[0].nValue -= devPayoutValue;
-                coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));
-            }
-
-            if (communityPayoutValue != 0) {
-                coinbaseTx.vout[0].nValue -= communityPayoutValue;
-                coinbaseTx.vout.push_back(CTxOut(communityPayoutValue, communityPayoutScript));
-            }
-        }
-        else {
-            // Stage 2
-            CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.stage2DevelopmentFundAddress).Get());
-            CAmount devPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, fMTP, false) * params.stage2DevelopmentFundShare) / 100;
-
-            coinbaseTx.vout[0].nValue -= devPayoutValue;
-            coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));
-        }
-    }
-
-    else if ((nHeight > 0) && (nHeight < params.nSubsidyHalvingFirst)) {
-        // Stage 1: To founders and investors
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        CScript FOUNDER_3_SCRIPT;
-        CScript FOUNDER_4_SCRIPT;
-        CScript FOUNDER_5_SCRIPT;
-        if (nHeight < params.nZnodePaymentsStartBlock) {
-            // Take some reward away from us
-            coinbaseTx.vout[0].nValue -= 10 * coin;
-
-            if (params.IsMain() && (GetAdjustedTime() > nStartRewardTime)) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
-                if (nHeight + 1 < 14000) {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
-                } else {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
-                }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
-            } else if (params.IsMain() && (GetAdjustedTime() <= nStartRewardTime)) {
-                throw std::runtime_error("CreateNewBlock() : Create new block too early");
-            } else if (!params.IsMain()) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
-            }
-
-            // And give it to the founders
-            coinbaseTx.vout.push_back(CTxOut(2 * coin, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(2 * coin, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(2 * coin, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(2 * coin, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(2 * coin, CScript(FOUNDER_5_SCRIPT.begin(), FOUNDER_5_SCRIPT.end())));
-        } else if (nHeight >= Params().GetConsensus().nZnodePaymentsStartBlock) {
-            // Take some reward away from us
-            coinbaseTx.vout[0].nValue -= 7 * coin;
-
-            if (params.IsMain() && (GetAdjustedTime() > nStartRewardTime)) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
-                if (nHeight + 1 < 14000) {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
-                } else {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
-                }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
-            } else if (params.IsMain() && (GetAdjustedTime() <= nStartRewardTime)) {
-                throw std::runtime_error("CreateNewBlock() : Create new block too early");
-            } else if (!params.IsMain()) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CPrivoraAddress("TDk19wPKYq91i18qmY6U9FeTdTxwPeSveo").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CPrivoraAddress("TWZZcDGkNixTAMtRBqzZkkMHbq1G6vUTk5").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CPrivoraAddress("TRZTFdNCKCKbLMQV8cZDkQN9Vwuuq4gDzT").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CPrivoraAddress("TG2ruj59E5b1u9G3F7HQVs6pCcVDBxrQve").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
-            }
-
-            // And give it to the founders
-            coinbaseTx.vout.push_back(CTxOut(1 * coin, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(1 * coin, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(1 * coin, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(3 * coin, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
-            coinbaseTx.vout.push_back(CTxOut(1 * coin, CScript(FOUNDER_5_SCRIPT.begin(), FOUNDER_5_SCRIPT.end())));
-        }
+        coinbaseTx.vout[0].nValue -= devPayoutValue;
+        coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));
     }
 }
 
@@ -1203,34 +1096,9 @@ void static PrivoraMiner(const CChainParams &chainparams) {
                 uint256 mix_hash;
 
                 while (true) {
-                    if (pblock->IsProgPow()) {
-                        thash = pblock->GetProgPowHashFull(mix_hash);
-                    } else if (pblock->IsMTP()) {
-                        thash = mtp::hash(*pblock, Params().GetConsensus().powLimit);
-                        pblock->mtpHashValue = thash;
-                    } else if (!fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2Z_HEIGHT) {
-                        lyra2z_hash(BEGIN(pblock->nVersion), BEGIN(thash));
-                    } else if (!fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2_HEIGHT) {
-                        LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, 8192, 256);
-                    } else if (!fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2VAR_HEIGHT) {
-                        LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2,
-                              pindexPrev->nHeight + 1, 256);
-                    } else if (fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2Z_HEIGHT_TESTNET) { // testnet
-                        lyra2z_hash(BEGIN(pblock->nVersion), BEGIN(thash));
-                    } else if (fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2_HEIGHT_TESTNET) { // testnet
-                        LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, 8192, 256);
-                    } else if (fTestNet && pindexPrev->nHeight + 1 >= HF_LYRA2VAR_HEIGHT_TESTNET) { // testnet
-                        LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, pindexPrev->nHeight + 1, 256);
-                    } else {
-                        unsigned long int scrypt_scratpad_size_current_block =
-                                ((1 << (GetNfactor(pblock->nTime) + 1)) * 128) + 63;
-                        char *scratchpad = (char *) malloc(scrypt_scratpad_size_current_block * sizeof(char));
-                        scrypt_N_1_1_256_sp_generic(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad,
-                                                    GetNfactor(pblock->nTime));
-//                        LogPrintf("scrypt thash: %s\n", thash.ToString().c_str());
-//                        LogPrintf("hashTarget: %s\n", hashTarget.ToString().c_str());
-                        free(scratchpad);
-                    }
+
+                    thash = pblock->GetProgPowHashFull(mix_hash);
+ 
 
                     boost::this_thread::interruption_point();
 
