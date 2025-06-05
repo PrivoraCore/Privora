@@ -18,16 +18,15 @@ static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
     int maxHalvings = 64;
     CAmount nInitialSubsidy = 50 * COIN;
 
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensusParams, consensusParams.nMTPSwitchTime-1000), nInitialSubsidy);
-    nInitialSubsidy /= consensusParams.nMTPRewardReduction;
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(2, consensusParams, consensusParams.nMTPSwitchTime), nInitialSubsidy);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensusParams), nInitialSubsidy);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2, consensusParams), nInitialSubsidy);
     CAmount baseSubsidy = nInitialSubsidy;
 
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.nSubsidyHalvingFirst, consensusParams, consensusParams.nMTPSwitchTime), baseSubsidy/2);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.stage3StartBlock, consensusParams, consensusParams.stage3StartTime), baseSubsidy/4);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.nSubsidyHalvingSecond, consensusParams, consensusParams.stage3StartTime), baseSubsidy/4);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.nSubsidyHalvingFirst, consensusParams), baseSubsidy/2);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.stage3StartBlock, consensusParams), baseSubsidy/4);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.nSubsidyHalvingSecond, consensusParams), baseSubsidy/4);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(consensusParams.nSubsidyHalvingSecond + consensusParams.nSubsidyHalvingInterval,
-                consensusParams, consensusParams.stage3StartTime), consensusParams.tailEmissionBlockSubsidy/consensusParams.nMTPRewardReduction/2);
+                consensusParams), consensusParams.tailEmissionBlockSubsidy/2);
 }
 
 BOOST_AUTO_TEST_CASE(block_subsidy_test)

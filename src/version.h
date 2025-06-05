@@ -60,7 +60,4 @@ static const int DMN_PROTO_VERSION = 90030;
 //! introduction of LLMQs
 static const int LLMQS_PROTO_VERSION = 90030;
 
-//! introducing blocks with stripped MTP data
-static const int MTPDATA_STRIPPED_VERSION = 90031;
-
 #endif // PRIVORA_VERSION_H

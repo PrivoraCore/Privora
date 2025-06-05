@@ -21,8 +21,6 @@ enum DeploymentPos
     DEPLOYMENT_CSV, // Deployment of BIP68, BIP112, and BIP113.
     DEPLOYMENT_SEGWIT, // Deployment of BIP141, BIP143, and BIP147.
 
-    DEPLOYMENT_MTP, // Deployment of MTP
-
     // NOTE: Also add new deployments to VersionBitsDeploymentInfo in versionbits.cpp
     MAX_VERSION_BITS_DEPLOYMENTS
 };
@@ -361,13 +359,6 @@ struct Params {
     // Number of block that introduces ability to specify super-transparent addresses
     int nExchangeAddressStartBlock;
 
-    /** switch to MTP time */
-    uint32_t nMTPSwitchTime;
-    /** number of block when MTP switch occurs or 0 if not clear yet */
-    int nMTPStartBlock;
-    /** block number to reduce distance between blocks */
-    int nMTPFiveMinutesStartBlock;
-
     /** switch to ProgPoW (PP) time */
     uint32_t nPPSwitchTime;
     /** initial difficulty for ProgPOW */
@@ -379,18 +370,6 @@ struct Params {
     int nDifficultyAdjustStartBlock;
     /** fixed diffuculty to use before adjustment takes place */
     int nFixedDifficulty;
-
-    /** pow target spacing after switch to MTP */
-    int64_t nPowTargetSpacingMTP;
-
-    /** initial MTP difficulty */
-    int nInitialMTPDifficulty;
-
-    /** reduction coefficient for rewards after MTP kicks in */
-    int nMTPRewardReduction;
-
-    /** after this time MTP data is stripped from all the outgoing blocks */
-    uint32_t nMTPStripDataTime;
 
     /** block number to disable zerocoin on consensus level */
     int nDisableZerocoinStartBlock;
@@ -425,7 +404,7 @@ struct Params {
     /** Time between blocks for LLMQ random time purposes. Can be less than actual average distance between blocks */
     int nLLMQPowTargetSpacing;
 
-    int64_t DifficultyAdjustmentInterval(bool fMTP = false) const { return nPowTargetSpacing; }
+    int64_t DifficultyAdjustmentInterval() const { return nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
     

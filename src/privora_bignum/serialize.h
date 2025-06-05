@@ -243,7 +243,7 @@ template<typename Stream> inline void Unserialize(Stream& s, bool& a) { char f=s
 
 /**
  * Please note that Privora drops support for big-endian architectures and thus these functions are simple read/writes
- * It significantly improves MTP structures serialization performance
+ * It significantly improves structures serialization performance
  */
 
 template <typename ItemType>
