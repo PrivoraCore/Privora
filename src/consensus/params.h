@@ -195,11 +195,7 @@ struct Params {
     int BIP65Height;
     /** Block height at which BIP66 becomes active */
     int BIP66Height;
-    /**
-     * Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,
-     * (nPowTargetTimespan / nPowTargetSpacing) which is also used for BIP9 deployments.
-     * Examples: 1916 for 95%, 1512 for testchains.
-     */
+
     uint32_t nRuleChangeActivationThreshold;
     uint32_t nMinerConfirmationWindow;
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
@@ -208,7 +204,7 @@ struct Params {
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
-    int64_t nPowTargetTimespan;
+    int64_t nPowTargetWindow;
     int64_t nChainStartTime;
     unsigned char nMinNFactor;
     unsigned char nMaxNFactor;
@@ -358,13 +354,6 @@ struct Params {
 
     // Number of block that introduces ability to specify super-transparent addresses
     int nExchangeAddressStartBlock;
-
-    /** switch to ProgPoW (PP) time */
-    uint32_t nPPSwitchTime;
-    /** initial difficulty for ProgPOW */
-    int nInitialPPDifficulty;
-    /** block height at the moment of PP transition (0 if unknown) */
-    int nPPBlockNumber;
 
     /** don't adjust difficulty until some block number */
     int nDifficultyAdjustStartBlock;

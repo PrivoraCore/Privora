@@ -35,7 +35,6 @@ struct ProgpowTestingSetup : public TestChain100Setup
     ProgpowTestingSetup() : TestChain100Setup(), mutableParams(const_cast<Consensus::Params&>(Params().GetConsensus()))
     {
         originalParams = mutableParams;
-        mutableParams.nPPSwitchTime = INT_MAX;
         coinbaseKey.MakeNewKey(true);
         coinbaseScript = GetScriptForDestination(coinbaseKey.GetPubKey().GetID());
     }
@@ -65,36 +64,9 @@ struct ProgpowTestingSetup : public TestChain100Setup
 
 BOOST_FIXTURE_TEST_SUITE(progpow_tests, ProgpowTestingSetup)
 
-BOOST_AUTO_TEST_CASE(transition)
-{
-    mutableParams.nPPSwitchTime = INT_MAX;
-
-    CBlock regularBlock = CreateAndProcessBlock({}, coinbaseKey);
-    BOOST_ASSERT(!regularBlock.IsProgPow());
-
-    mutableParams.nPPSwitchTime = (uint32_t)(chainActive.Tip()->GetMedianTimePast()+10);
-    SetMockTime(mutableParams.nPPSwitchTime+1);
-
-    int oldHeight = chainActive.Height();
-    CBlock ppBlock = CreateAndProcessBlock({}, coinbaseKey);
-    BOOST_ASSERT(chainActive.Height() == oldHeight+1);
-    BOOST_ASSERT(ppBlock.IsProgPow());
-
-    // Try to add regular block after PP one. Should throw an exception
-    SetMockTime(mutableParams.nPPSwitchTime-1);
-    try {
-        CreateBlock({}, coinbaseKey);
-        BOOST_ASSERT(false);
-    }
-    catch (std::runtime_error &err) {
-        BOOST_ASSERT(std::string(err.what()).find("bad-blk-progpow-state") != std::string::npos);
-    }
-}
-
 BOOST_AUTO_TEST_CASE(corruption)
 {
-    mutableParams.nPPSwitchTime = (uint32_t)(chainActive.Tip()->GetMedianTimePast()+10);
-    SetMockTime(mutableParams.nPPSwitchTime+1);
+    SetMockTime(0);
 
     CBlock block = CreateBlock({}, coinbaseKey);
     BOOST_ASSERT(block.IsProgPow());

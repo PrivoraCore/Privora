@@ -23,17 +23,6 @@
 
 using namespace secp_primitives;
 
-// If some feature is enabled at block intervalStart and its duration is intervalLength halving distance between blocks
-// causes the end to happen sooner in real time. This function adjusts the end block number so the approximate ending time
-// is left intact
-static constexpr int AdjustEndingBlockNumberAfterSubsidyHalving(int intervalStart, int intervalLength, int halvingPoint) {
-    if (halvingPoint < intervalStart || halvingPoint >= intervalStart + intervalLength)
-        // halving occurs outside of interval
-        return intervalStart + intervalLength;
-    else
-        return halvingPoint + (intervalStart + intervalLength - halvingPoint)*2;
-}
-
 static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesisOutputScript, uint32_t nTime, uint64_t nNonce,
         uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
         std::vector<unsigned char> extraNonce) {
@@ -196,9 +185,6 @@ public:
 
         consensus.chainType = Consensus::chainMain;
 
-        // consensus.nSubsidyHalvingFirst = 302438;
-        // consensus.nSubsidyHalvingSecond = AdjustEndingBlockNumberAfterSubsidyHalving(302438, 420000, 486221); // =958655
-
 
         consensus.nSubsidyHalvingInterval = 420000;
 
@@ -221,8 +207,8 @@ public:
         consensus.BIP65Height = INT_MAX;
         consensus.BIP66Height = INT_MAX;
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 10 * 60; // 10 minute blocks
+        consensus.nPowTargetWindow = 30;
+        consensus.nPowTargetSpacing = 2.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
@@ -441,7 +427,7 @@ public:
 
         consensus.evoSporkKeyID = "a78fERshquPsTv2TuKMSsxTeKom56uBwLP";
         consensus.nEvoSporkStartBlock = ZC_LELANTUS_STARTING_BLOCK;
-        consensus.nEvoSporkStopBlock = AdjustEndingBlockNumberAfterSubsidyHalving(ZC_LELANTUS_STARTING_BLOCK, 4*24*12*365, 486221);  // =1028515, four years after lelantus, one year after spark
+        consensus.nEvoSporkStopBlock = 0;
         consensus.nEvoSporkStopBlockExtensionVersion = 140903;
         consensus.nEvoSporkStopBlockPrevious = ZC_LELANTUS_STARTING_BLOCK + 1*24*12*365; // one year after lelantus
         consensus.nEvoSporkStopBlockExtensionGracefulPeriod = 24*12*14; // two weeks
@@ -465,11 +451,6 @@ public:
 
         // moving lelantus data to v3 payload
         consensus.nLelantusV3PayloadStartBlock = 401580;
-        
-        // ProgPow
-        consensus.nPPSwitchTime = 1635228000;           // Tue Oct 26 2021 06:00:00 GMT+0000
-        consensus.nPPBlockNumber = 419264;
-        consensus.nInitialPPDifficulty = 0x1b1774cd;    // 40GH/s
 
         // exchange address
         consensus.nExchangeAddressStartBlock = consensus.nSparkStartBlock;
@@ -525,8 +506,8 @@ public:
         consensus.BIP65Height = INT_MAX;
         consensus.BIP66Height = INT_MAX;
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 5 * 60; // 5 minute blocks
+        consensus.nPowTargetWindow = 30;
+        consensus.nPowTargetSpacing = 2.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
@@ -736,11 +717,6 @@ public:
 
         // moving lelantus data to v3 payload
         consensus.nLelantusV3PayloadStartBlock = 35000;
-        
-        // ProgPow
-        consensus.nPPSwitchTime = 1630069200;           // August 27 2021, 13:00 UTC
-        consensus.nPPBlockNumber = 37305;
-        consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
         // exchange address
         consensus.nExchangeAddressStartBlock = 147000;
@@ -777,8 +753,8 @@ public:
         consensus.BIP65Height = INT_MAX;
         consensus.BIP66Height = INT_MAX;
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 5 * 60; // 5 minute blocks
+        consensus.nPowTargetWindow = 30;
+        consensus.nPowTargetSpacing = 2.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
@@ -951,11 +927,6 @@ public:
         // moving lelantus data to v3 payload
         consensus.nLelantusV3PayloadStartBlock = 1;
 
-        // ProgPow
-        consensus.nPPSwitchTime = 1631261566;           // immediately after network start
-        consensus.nPPBlockNumber = 1;
-        consensus.nInitialPPDifficulty = 0x2000ffff;
-
         // exchange address
         consensus.nExchangeAddressStartBlock = 2500;
 
@@ -1003,8 +974,8 @@ public:
         consensus.BIP65Height = 1351; // BIP65 activated on regtest (Used in rpc activation tests)
         consensus.BIP66Height = 1251; // BIP66 activated on regtest (Used in rpc activation tests)
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60 * 1000; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 1; // 10 minute blocks
+        consensus.nPowTargetWindow = 30;
+        consensus.nPowTargetSpacing = 2.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nZnodePaymentsStartBlock = 120;
@@ -1231,12 +1202,6 @@ public:
 
         // moving lelantus data to v3 payload
         consensus.nLelantusV3PayloadStartBlock = 800;
-        
-        // ProgPow
-        // this can be overridden with either -ppswitchtime or -ppswitchtimefromnow flags
-        consensus.nPPSwitchTime = INT_MAX;
-        consensus.nPPBlockNumber = INT_MAX;
-        consensus.nInitialPPDifficulty = 0x2000ffff;
 
         // spark names
         consensus.nSparkNamesStartBlock = 2000;
