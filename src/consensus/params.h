@@ -178,16 +178,9 @@ struct Params {
     /** percentage of block subsidy going to masternode */
     int stage4MasternodeShare;
 
-    /**  tail emission (after stage 4) */
-    int tailEmissionBlockSubsidy;
-
     int nStartDuplicationCheck;
     int nStartBlacklist;
 
-    /** Used to check majorities for block version upgrade */
-    int nMajorityEnforceBlockUpgrade;
-    int nMajorityRejectBlockOutdated;
-    int nMajorityWindow;
     /** Block height and hash at which BIP34 becomes active */
     int BIP34Height;
     uint256 BIP34Hash;
@@ -205,9 +198,7 @@ struct Params {
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetWindow;
-    int64_t nChainStartTime;
-    unsigned char nMinNFactor;
-    unsigned char nMaxNFactor;
+
     int nZnodePaymentsStartBlock;
 
     int nInstantSendConfirmationsRequired; // in blocks
