@@ -164,7 +164,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     int64_t nTimeStart = GetTimeMicros();
 
-    // fMTP is always true currently
     const Consensus::Params &params = chainparams.GetConsensus();
 
     resetBlock();
@@ -189,7 +188,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     pblock->nTime = GetAdjustedTime();
 
-    bool fShorterBlockDistance = nHeight >= params.stage3StartBlock;
     const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
 
     pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus()) | 0x1000;
@@ -251,7 +249,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout[0].nValue = nFees + nBlockSubsidy;
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
 
-    FillFoundersReward(coinbaseTx, true, fShorterBlockDistance);
+    FillFoundersReward(coinbaseTx);
 
     if (fDIP0003Active_context) {
         coinbaseTx.vin[0].scriptSig = CScript() << OP_RETURN;
@@ -417,8 +415,6 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
     }
 
     // Must check that lock times are still valid
-    // This can be removed once MTP is always enforced
-    // as long as reorgs keep the mempool consistent.
     if (!IsFinalTx(iter->GetTx(), nHeight, nLockTimeCutoff))
         return false;
 
@@ -822,13 +818,13 @@ void BlockAssembler::addPriorityTxs()
     fNeedSizeAccounting = fSizeAccounting;
 }
 
-void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx, bool fMTP, bool fShorterBlockDistance) {
+void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx) {
     const auto &params = chainparams.GetConsensus();
 
     if (nHeight > 0) {
 
         CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.developmentFundAddress).Get());
-        CAmount devPayoutValue = (GetBlockSubsidyWithMTPFlag(nHeight, params, true, false) * params.nDevelopmentFundPercent) / 100;
+        CAmount devPayoutValue = (GetBlockSubsidy(nHeight, params) * params.nDevelopmentFundPercent) / 100;
 
         coinbaseTx.vout[0].nValue -= devPayoutValue;
         coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));

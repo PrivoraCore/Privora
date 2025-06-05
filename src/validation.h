@@ -312,7 +312,6 @@ std::string GetWarnings(const std::string& strFor);
 bool GetTransaction(const uint256 &hash, CTransactionRef &tx, const Consensus::Params& params, uint256 &hashBlock, bool fAllowSlow = false);
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());
-CAmount GetBlockSubsidyWithMTPFlag(int nHeight, const Consensus::Params& consensusParams, bool fMTP, bool fShorterBlockDistance);
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams, int nTime = 1475020800);
 CAmount GetMasternodePayment(int nHeight, int nTime, CAmount blockValue);
 
@@ -440,7 +439,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
 } // namespace Consensus
 
-bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight, bool fMTP);
+bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight);
 
 /**
  * Check if transaction is final and can be included in a block with the
@@ -570,7 +569,7 @@ void ReprocessBlocks(int nBlocks);
 int GetInputAge(const CTxIn &txin);
 int GetInputAgeIX(const uint256 &nTXHash, const CTxIn &txin);
 int GetIXConfirmations(const uint256 &nTXHash);
-CAmount GetZnodePayment(const Consensus::Params &params, bool fMTP);
+CAmount GetZnodePayment(const Consensus::Params &params);
 
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
 bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);

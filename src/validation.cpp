@@ -1933,8 +1933,7 @@ bool ReadBlockHeaderFromDisk(CBlock &block, const CDiskBlockPos &pos) {
     return true;
 }
 
-CAmount GetBlockSubsidyWithMTPFlag(int nHeight, const Consensus::Params &consensusParams, bool fMTP, bool fShorterBlockDistance) {
-    // Genesis block is 0 coin
+CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, int nTime) {
     if (nHeight == 0)
         return 0;
 
@@ -1951,33 +1950,6 @@ CAmount GetBlockSubsidyWithMTPFlag(int nHeight, const Consensus::Params &consens
     // Subsidy is cut in half every 1,051,200 blocks until the eight halving.
     nSubsidy >>= halvings;
     return nSubsidy;
-
-    // CAmount nSubsidy;
-
-    // if (nHeight < consensusParams.nSubsidyHalvingFirst)
-    //     nSubsidy = 50 * COIN;
-    // else if (nHeight < consensusParams.nSubsidyHalvingSecond)
-    //     nSubsidy = 25 * COIN;
-    // else if (nHeight < consensusParams.stage4StartBlock)
-    //     nSubsidy = 25 * COIN / 2;
-    // else if (nHeight < consensusParams.stage4StartBlock + consensusParams.nSubsidyHalvingInterval)
-    //     nSubsidy = 25 * COIN;
-    // else
-    //     nSubsidy = consensusParams.tailEmissionBlockSubsidy;    // 1 coin tail emission
-        
-    // if (nHeight > 0 && fMTP)
-    //     nSubsidy /= consensusParams.nMTPRewardReduction;
-
-    // if (nHeight > 0 && fShorterBlockDistance)
-    //     nSubsidy /= 2;
-
-    // return nSubsidy;
-}
-
-CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, int nTime) {
-    return GetBlockSubsidyWithMTPFlag(nHeight, consensusParams,
-            nTime >= 0,
-            nTime >= 0);
 }
 
 CAmount GetMasternodePayment(int nHeight, int nTime, CAmount blockValue)
@@ -2223,7 +2195,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 }
 }// namespace Consensus
 
-bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight, bool fMTP) {
+bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight) {
     // Check for founders inputs
     if ((nHeight > params.nCheckBugFixedAtBlock) && (nHeight < params.nSubsidyHalvingFirst)) {
         int reductionFactor = 1;
@@ -2305,7 +2277,7 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
                 FOUNDER_5_SCRIPT = GetScriptForDestination(CPrivoraAddress("TCsTzQZKVn4fao8jDmB9zQBk9YQNEZ3XfS").Get());
             }
 
-            CAmount znodePayment = GetZnodePayment(params, fMTP);
+            CAmount znodePayment = GetZnodePayment(params);
             BOOST_FOREACH(const CTxOut &output, tx.vout) {
                 if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(1 * COIN)/reductionFactor) {
                     found_1 = true;
@@ -3899,7 +3871,7 @@ int GetInputAge(const CTxIn &txin) {
     }
 }
 
-CAmount GetZnodePayment(const Consensus::Params &params, bool fMTP) {
+CAmount GetZnodePayment(const Consensus::Params &params) {
 //    CAmount ret = blockValue * 30/100 ; // start at 30%
 //    int nMNPIBlock = Params().GetConsensus().nZnodePaymentsStartBlock;
 ////    int nMNPIBlock = Params().GetConsensus().nZnodePaymentsIncreaseBlock;
@@ -3915,7 +3887,6 @@ CAmount GetZnodePayment(const Consensus::Params &params, bool fMTP) {
 //    if (nHeight > nMNPIBlock + (nMNPIPeriod * 6)) ret += blockValue / 40; // 261680 - 45.0% - 2015-05-01
 //    if (nHeight > nMNPIBlock + (nMNPIPeriod * 7)) ret += blockValue / 40; // 278960 - 47.5% - 2015-06-01
 //    if (nHeight > nMNPIBlock + (nMNPIPeriod * 9)) ret += blockValue / 40; // 313520 - 50.0% - 2015-08-03
-    CAmount coin = fMTP ? COIN/params.nMTPRewardReduction : COIN;
     CAmount ret = 15 * coin; //15 or 7.5 PRIVORA
 
     return ret;

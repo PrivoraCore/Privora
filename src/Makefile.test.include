@@ -149,9 +149,6 @@ PRIVORA_TESTS = \
   test/mempool_tests.cpp \
   test/merkle_tests.cpp \
   test/miner_tests.cpp \
-  test/mtp_halving_tests.cpp \
-  test/mtp_tests.cpp \
-  test/mtp_trans_tests.cpp \
   test/privorapow_tests.cpp \
   test/multisig_tests.cpp \
   test/netbase_tests.cpp \

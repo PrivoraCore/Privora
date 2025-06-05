@@ -148,69 +148,6 @@ void ZerocoinTestingSetupBase::CreateAndProcessEmptyBlocks(size_t block_numbers,
 
     }
 
-MtpMalformedTestingSetup::MtpMalformedTestingSetup()
-{
-    CPubKey newKey;
-    BOOST_CHECK(pwalletMain->GetKeyFromPool(newKey));
-
-    std::string strAddress = CPrivoraAddress(newKey.GetID()).ToString();
-    pwalletMain->SetAddressBook(CPrivoraAddress(strAddress).Get(), "",
-                            ( "receive"));
-
-    scriptPubKey = CScript() <<  ToByteVector(newKey/*coinbaseKey.GetPubKey()*/) << OP_CHECKSIG;
-    bool mtp = false;
-    CBlock b;
-    for (int i = 0; i < 150; i++)
-    {
-        b = CreateAndProcessBlock(scriptPubKey, mtp);
-        coinbaseTxns.push_back(*b.vtx[0]);
-        LOCK(cs_main);
-        {
-            LOCK(pwalletMain->cs_wallet);
-            pwalletMain->AddToWalletIfInvolvingMe(*b.vtx[0], chainActive.Tip(), 0, true);
-        }
-    }
-}
-
-CBlock MtpMalformedTestingSetup::CreateBlock(
-    const CScript& scriptPubKeyMtpMalformed, bool mtp = false) {
-    const CChainParams& chainparams = Params();
-    std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(chainparams).CreateNewBlock(scriptPubKeyMtpMalformed);
-    CBlock block = pblocktemplate->block;
-
-    // IncrementExtraNonce creates a valid coinbase and merkleRoot
-    unsigned int extraNonce = 0;
-    IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
-
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())){
-        ++block.nNonce;
-    }
-    if(mtp) {
-        while (!CheckMerkleTreeProof(block, chainparams.GetConsensus())){
-            block.mtpHashValue = mtp::hash(block, Params().GetConsensus().powLimit);
-        }
-    }
-    else {
-        while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())){
-            ++block.nNonce;
-        }
-    }
-
-    //delete pblocktemplate;
-    return block;
-}
-
-// Create a new block with just given transactions, coinbase paying to
-// scriptPubKeyMtpMalformed, and try to add it to the current chain.
-CBlock MtpMalformedTestingSetup::CreateAndProcessBlock(
-        const CScript& scriptPubKeyMtpMalformed,
-        bool mtp = false) {
-
-    CBlock block = CreateBlock(scriptPubKeyMtpMalformed, mtp);
-    BOOST_CHECK_MESSAGE(ProcessBlock(block), "Processing block failed");
-    return block;
-}
-
 LelantusTestingSetup::LelantusTestingSetup() :
     params(lelantus::Params::get_default()) {
     CPubKey key;

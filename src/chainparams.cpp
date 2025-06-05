@@ -241,11 +241,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1479168000; // November 15th, 2016.
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
 
-        // Deployment of MTP
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].bit = 12;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nStartTime = SWITCH_TO_MTP_BLOCK_HEADER - 2*60; // 2 hours leeway
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nTimeout = SWITCH_TO_MTP_BLOCK_HEADER + consensus.nMinerConfirmationWindow*2 * 5*60;
-
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
@@ -293,16 +288,8 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInstantSendBlockFilteringStartHeight = 421150;   // Approx Nov 2 2021 06:00:00 GMT+0000
 
-        consensus.nMTPSwitchTime = SWITCH_TO_MTP_BLOCK_HEADER;
-        consensus.nMTPStartBlock = 117564;
-        consensus.nMTPFiveMinutesStartBlock = SWITCH_TO_MTP_5MIN_BLOCK;
-        consensus.nMTPStripDataTime = 1638954000;   // December 08, 2021 09:00 UTC
-
         consensus.nDifficultyAdjustStartBlock = 0;
         consensus.nFixedDifficulty = 0x2000ffff;
-        consensus.nPowTargetSpacingMTP = 5*60;
-        consensus.nInitialMTPDifficulty = 0x1c021e57;
-        consensus.nMTPRewardReduction = 2;
 
         consensus.nDisableZerocoinStartBlock = 157000;
 
@@ -558,11 +545,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1462060800; // May 1st 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
 
-        // Deployment of MTP
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].bit = 12;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nStartTime = 1539172800 - 2*60;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nTimeout = 1539172800 + consensus.nMinerConfirmationWindow*2 * 5*60;
-
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
@@ -614,16 +596,8 @@ public:
         consensus.nInstantSendKeepLock = 6;
         consensus.nInstantSendBlockFilteringStartHeight = 48136;
 
-        consensus.nMTPSwitchTime = 1539172800;
-        consensus.nMTPStartBlock = 1;
-        consensus.nMTPFiveMinutesStartBlock = 0;
-        consensus.nMTPStripDataTime = 1636362000;      // November 08 2021, 09:00 UTC
-
         consensus.nDifficultyAdjustStartBlock = 100;
         consensus.nFixedDifficulty = 0x2000ffff;
-        consensus.nPowTargetSpacingMTP = 5*60;
-        consensus.nInitialMTPDifficulty = 0x2000ffff;  // !!!! change it to the real value
-        consensus.nMTPRewardReduction = 2;
 
         consensus.nDisableZerocoinStartBlock = 1;
 
@@ -823,11 +797,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1462060800; // May 1st 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
 
-        // Deployment of MTP
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].bit = 12;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nStartTime = 1539172800 - 2*60;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nTimeout = 1539172800 + consensus.nMinerConfirmationWindow*2 * 5*60;
-
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
@@ -871,16 +840,8 @@ public:
         consensus.nInstantSendKeepLock = 6;
         consensus.nInstantSendBlockFilteringStartHeight = 1000;
 
-        consensus.nMTPSwitchTime = 0;
-        consensus.nMTPStartBlock = 1;
-        consensus.nMTPFiveMinutesStartBlock = 0;
-        consensus.nMTPStripDataTime = INT_MAX;
-
         consensus.nDifficultyAdjustStartBlock = 800;
         consensus.nFixedDifficulty = 0x2000ffff;
-        consensus.nPowTargetSpacingMTP = 5*60;
-        consensus.nInitialMTPDifficulty = 0x2000ffff;  // !!!! change it to the real value
-        consensus.nMTPRewardReduction = 2;
 
         consensus.nDisableZerocoinStartBlock = 1;
 
@@ -1058,9 +1019,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = INT_MAX;
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].bit = 12;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nStartTime = INT_MAX;
-        consensus.vDeployments[Consensus::DEPLOYMENT_MTP].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
@@ -1102,16 +1060,8 @@ public:
         consensus.nInstantSendKeepLock = 6;
         consensus.nInstantSendBlockFilteringStartHeight = 500;
 
-        consensus.nMTPSwitchTime = INT_MAX;
-        consensus.nMTPStartBlock = 0;
-        consensus.nMTPFiveMinutesStartBlock = 0;
-        consensus.nMTPStripDataTime = INT_MAX;
-
         consensus.nDifficultyAdjustStartBlock = 5000;
         consensus.nFixedDifficulty = 0x207fffff;
-        consensus.nPowTargetSpacingMTP = 5*60;
-        consensus.nInitialMTPDifficulty = 0x2070ffff;  // !!!! change it to the real value
-        consensus.nMTPRewardReduction = 2;
 
         consensus.nDisableZerocoinStartBlock = INT_MAX;
 
