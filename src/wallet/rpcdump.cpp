@@ -666,12 +666,6 @@ UniValue dumpprivkey_privora(const JSONRPCRequest& request)
             "This command exports your wallet private key. Anyone with this key has complete control over your funds. \n"
             "If someone asked you to type in this command, chances are they want to steal your coins. \n"
             "Privora team members will never ask for this command's output and it is not needed for masternode setup or diagnosis!\n"
-            "\n"
-            " Please seek help on one of our public channels. \n"
-            " Telegram: https://t.me/privoraproject \n"
-            " Discord: https://discord.com/invite/TGZPRbRT3Y\n"
-            " Reddit: https://www.reddit.com/r/PrivoraProject/\n"
-            "\n"
             ;
         throw std::runtime_error(warning);
     }
