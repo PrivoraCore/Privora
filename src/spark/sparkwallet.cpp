@@ -1617,7 +1617,7 @@ CWalletTx CSparkWallet::CreateSparkNameTransaction(CSparkNameTxData &nameData, C
 
     CRecipient devPayout;
     devPayout.nAmount = sparkNameFee;
-    devPayout.scriptPubKey = GetScriptForDestination(CPrivoraAddress(Params().GetConsensus().stage3DevelopmentFundAddress).Get());
+    devPayout.scriptPubKey = CScript(Params().GetConsensus().developmentOutputScriptHex.begin(), Params().GetConsensus().developmentOutputScriptHex.end());
     devPayout.fSubtractFeeFromAmount = false;
 
     CWalletTx wtxSparkSpend = CreateSparkSpendTransaction({devPayout}, {}, txFee, coinConrol,

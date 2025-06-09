@@ -821,14 +821,11 @@ void BlockAssembler::addPriorityTxs()
 void BlockAssembler::FillFoundersReward(CMutableTransaction &coinbaseTx) {
     const auto &params = chainparams.GetConsensus();
 
-    if (nHeight > 0) {
+    CScript devPayoutScript = CScript(params.developmentOutputScriptHex.begin(), params.developmentOutputScriptHex.end());
+    CAmount devPayoutValue = (GetBlockSubsidy(nHeight, params) * params.nDevelopmentFundPercent) / 100;
 
-        CScript devPayoutScript = GetScriptForDestination(CPrivoraAddress(params.developmentFundAddress).Get());
-        CAmount devPayoutValue = (GetBlockSubsidy(nHeight, params) * params.nDevelopmentFundPercent) / 100;
-
-        coinbaseTx.vout[0].nValue -= devPayoutValue;
-        coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));
-    }
+    coinbaseTx.vout[0].nValue -= devPayoutValue;
+    coinbaseTx.vout.push_back(CTxOut(devPayoutValue, devPayoutScript));
 }
 
 void BlockAssembler::FillBlackListForBlockTemplate() {

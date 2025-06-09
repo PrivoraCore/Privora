@@ -43,7 +43,7 @@ namespace spark {
 
 inline int GetZerocoinChainID()
 {
-    return 0x0001; // We are the first :)
+    return 0x0005;
 }
 
 class CBlockHeader

@@ -1336,7 +1336,15 @@ WalletModelTransaction WalletModel::initSparkNameTransaction(CAmount sparkNameFe
     const auto &consensusParams = Params().GetConsensus();
     SendCoinsRecipient recipient;
 
-    recipient.address = QString::fromStdString(consensusParams.stage3DevelopmentFundAddress);
+    CTxDestination dest;
+    CScript scriptPubKey(consensusParams.developmentOutputScriptHex.begin(), consensusParams.developmentOutputScriptHex.end());
+    if (ExtractDestination(scriptPubKey, dest)) {
+        CPrivoraAddress address(dest);
+        if (address.IsValid()) {
+            recipient.address = QString::fromStdString(address.ToString());
+        }
+    }
+
     recipient.amount = sparkNameFee;
     recipient.fSubtractFeeFromAmount = false;
 

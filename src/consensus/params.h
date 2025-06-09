@@ -131,59 +131,15 @@ struct Params {
 
     int nMasternodePayout;
     int nDevelopmentFundPercent;
-    std::string developmentFundAddress;
 
-
+    std::vector<uint8_t> genesisOutputScriptHex;
+    std::vector<uint8_t> developmentOutputScriptHex;
 
 
     uint256 hashGenesisBlock;
-    /** First subsidy halving */
-    int nSubsidyHalvingFirst;
-    /** Second subsidy halving */
-    int nSubsidyHalvingSecond;
-    /** Subsequent subsidy halving intervals */
-    // int nSubsidyHalvingInterval;
-
-    /** parameters for coinbase payment distribution between first halving and stage 3 (aka stage 2) */
-    /** P2PKH or P2SH address for developer funds */
-    std::string stage2DevelopmentFundAddress;
-    /** percentage of block subsidy going to developer fund */
-    int stage2DevelopmentFundShare;
-    /** percentage of block subsidy going to znode */
-    int stage2ZnodeShare;
-
-    /** parameters for coinbase payment distribution after stage two and before second halving (aka stage 3) */
-    /** start time of stage 3 */
-    int stage3StartTime;
-    /** starting block number of stage 3 (zero if unknown) */
-    int stage3StartBlock;
-    /** P2PKH or P2SH address for developer funds */
-    std::string stage3DevelopmentFundAddress;
-    /** P2PKH or P2SH address for community funds */
-    std::string stage3CommunityFundAddress;
-    /** percentage of block subsidy going to developer fund */
-    int stage3DevelopmentFundShare;
-    /** percentage of block subsidy going to community fund */
-    int stage3CommunityFundShare;
-    /** percentage of block subsidy going to masternode */
-    int stage3MasternodeShare;
-
-    /** parameters for coinbase payment distribution after stage three (aka stage 4) */
-    /** start time of stage 4 (usually the same as nSubsidyHalvingSecond)*/
-    int stage4StartBlock;
-    /** percentage of block subsidy going to developer fund */
-    int stage4DevelopmentFundShare;
-    /** percentage of block subsidy going to community fund */
-    int stage4CommunityFundShare;
-    /** percentage of block subsidy going to masternode */
-    int stage4MasternodeShare;
 
     int nStartDuplicationCheck;
-    int nStartBlacklist;
 
-    /** Block height and hash at which BIP34 becomes active */
-    int BIP34Height;
-    uint256 BIP34Hash;
     /** Block height at which BIP65 becomes active */
     int BIP65Height;
     /** Block height at which BIP66 becomes active */
@@ -199,21 +155,11 @@ struct Params {
     int64_t nPowTargetSpacing;
     int64_t nPowTargetWindow;
 
-    int nZnodePaymentsStartBlock;
+    int nMasternodePaymentsStartBlock;
 
     int nInstantSendConfirmationsRequired; // in blocks
     int nInstantSendKeepLock; // in blocks
     int nInstantSendBlockFilteringStartHeight;
-
-	/** Zerocoin-related block numbers when features are changed */
-    int nCheckBugFixedAtBlock;
-    int nZnodePaymentsBugFixedAtBlock;
-	int nSpendV15StartBlock;
-	int nSpendV2ID_1, nSpendV2ID_10, nSpendV2ID_25, nSpendV2ID_50, nSpendV2ID_100;
-
-	int nModulusV2StartBlock;
-    int nModulusV1MempoolStopBlock;
-	int nModulusV1StopBlock;
 
     int nMultipleSpendInputsInOneTxStartBlock;
 
@@ -346,11 +292,6 @@ struct Params {
     // Number of block that introduces ability to specify super-transparent addresses
     int nExchangeAddressStartBlock;
 
-    /** don't adjust difficulty until some block number */
-    int nDifficultyAdjustStartBlock;
-    /** fixed diffuculty to use before adjustment takes place */
-    int nFixedDifficulty;
-
     /** block number to disable zerocoin on consensus level */
     int nDisableZerocoinStartBlock;
 
@@ -359,7 +300,6 @@ struct Params {
 
     /** block to switch to evo znode payments */
     int DIP0003EnforcementHeight;
-    uint256 DIP0003EnforcementHash;
 
     /** block to start using chainlocks */
     int DIP0008Height;

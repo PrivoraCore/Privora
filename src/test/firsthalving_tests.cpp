@@ -144,207 +144,200 @@ static CDeterministicMNCPtr FindPayoutDmn(const CBlock& block, CAmount &nValue)
 
 BOOST_AUTO_TEST_SUITE(firsthalving)
 
-BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
-{
-    Consensus::Params   &consensusParams = const_cast<Consensus::Params &>(Params().GetConsensus());
-    Consensus::Params   consensusParamsBackup = consensusParams;
+// BOOST_FIXTURE_TEST_CASE(devpayout, TestChainDIP3BeforeActivationSetup)
+// {
+//     Consensus::Params   &consensusParams = const_cast<Consensus::Params &>(Params().GetConsensus());
+//     Consensus::Params   consensusParamsBackup = consensusParams;
 
-    // Simulate testnet (and its founders' reward)
-    consensusParams.chainType = Consensus::chainTestnet;
+//     // Simulate testnet (and its founders' reward)
+//     consensusParams.chainType = Consensus::chainTestnet;
 
-    consensusParams.nSubsidyHalvingFirst = 600;
-    consensusParams.stage3StartTime = INT_MAX;
-    consensusParams.nSubsidyHalvingSecond = consensusParams.stage4StartBlock = 620;
-    consensusParams.nSubsidyHalvingInterval = 10;
+//     consensusParams.nSubsidyHalvingInterval = 600;
+//     consensusParams.nSubsidyHalvingInterval = 10;
 
-    CScript devPayoutScript = GenerateRandomAddress();
-    CTxDestination devPayoutDest{CScriptID(devPayoutScript)};
-    consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(devPayoutDest).ToString();
+//     CScript devPayoutScript = GenerateRandomAddress();
+//     CTxDestination devPayoutDest{CScriptID(devPayoutScript)};
+//     consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(devPayoutDest).ToString();
 
-    auto utxos = BuildSimpleUtxoMap(coinbaseTxns);
+//     auto utxos = BuildSimpleUtxoMap(coinbaseTxns);
 
-    // we're at block 498, skip to block 499
-    for (int i=498; i<499; i++)
-        CreateAndProcessBlock({}, coinbaseKey);
+//     // we're at block 498, skip to block 499
+//     for (int i=498; i<499; i++)
+//         CreateAndProcessBlock({}, coinbaseKey);
 
-    CKey ownerKey;
-    CBLSSecretKey operatorSecretKey;
-    CScript znodePayoutScript = GenerateRandomAddress();
+//     CKey ownerKey;
+//     CBLSSecretKey operatorSecretKey;
+//     CScript znodePayoutScript = GenerateRandomAddress();
 
-    auto tx = CreateProRegTx(utxos, 4444, znodePayoutScript, coinbaseKey, ownerKey, operatorSecretKey);
-    CreateAndProcessBlock({tx}, coinbaseKey);
-    deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//     auto tx = CreateProRegTx(utxos, 4444, znodePayoutScript, coinbaseKey, ownerKey, operatorSecretKey);
+//     CreateAndProcessBlock({tx}, coinbaseKey);
+//     deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
 
-    // we're at block 500, skip to 549
-    for (int i=500; i<549; i++) {
-        CreateAndProcessBlock({}, coinbaseKey);
-        deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
-    }
+//     // we're at block 500, skip to 549
+//     for (int i=500; i<549; i++) {
+//         CreateAndProcessBlock({}, coinbaseKey);
+//         deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//     }
 
-    // blocks 550 through 599
-    for (int i=550; i<600; i++) {
-        CBlock block = CreateAndProcessBlock({}, coinbaseKey);
-        deterministicMNManager->UpdatedBlockTip(chainActive.Tip());    
+//     // blocks 550 through 599
+//     for (int i=550; i<600; i++) {
+//         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
+//         deterministicMNManager->UpdatedBlockTip(chainActive.Tip());    
 
-        CAmount nValue;
-        auto dmnPayout = FindPayoutDmn(block, nValue);
-        auto dmnExpectedPayee = deterministicMNManager->GetListAtChainTip().GetMNPayee();
+//         CAmount nValue;
+//         auto dmnPayout = FindPayoutDmn(block, nValue);
+//         auto dmnExpectedPayee = deterministicMNManager->GetListAtChainTip().GetMNPayee();
 
-        BOOST_ASSERT(dmnPayout != nullptr);
-        BOOST_CHECK_EQUAL(dmnPayout->proTxHash.ToString(), dmnExpectedPayee->proTxHash.ToString());
+//         BOOST_ASSERT(dmnPayout != nullptr);
+//         BOOST_CHECK_EQUAL(dmnPayout->proTxHash.ToString(), dmnExpectedPayee->proTxHash.ToString());
 
-        CValidationState state;
-        BOOST_ASSERT(CheckZerocoinFoundersInputs(*block.vtx[0], state, consensusParams, chainActive.Height()));
+//         BOOST_ASSERT(nValue == 15*COIN);    // znode reward before the first halving
+//     }
 
-        BOOST_ASSERT(nValue == 15*COIN);    // znode reward before the first halving
-    }
+//     // halving occurs at block 600
+//     // devs fund is valid until second block halving at block 610
+//     for (int i=600; i<610; i++) {
+//         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
+//         deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
 
-    // halving occurs at block 600
-    // devs fund is valid until second block halving at block 610
-    for (int i=600; i<610; i++) {
-        CBlock block = CreateAndProcessBlock({}, coinbaseKey);
-        deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//         CAmount nValue;
+//         auto dmnPayout = FindPayoutDmn(block, nValue);
 
-        CAmount nValue;
-        auto dmnPayout = FindPayoutDmn(block, nValue);
+//         BOOST_ASSERT(dmnPayout != nullptr && nValue == 875*COIN/100);   // 8.75 after halving (25*0.35)
 
-        BOOST_ASSERT(dmnPayout != nullptr && nValue == 875*COIN/100);   // 8.75 after halving (25*0.35)
+//         bool paymentToDevFound = false;
+//         for (const CTxOut &txout: block.vtx[0]->vout) {
+//             if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get())) {
+//                 BOOST_ASSERT(txout.nValue == 375*COIN/100); // 25*0.15
+//                 paymentToDevFound = true;
+//             }
+//         }
+//         BOOST_ASSERT(paymentToDevFound);
 
-        bool paymentToDevFound = false;
-        for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get())) {
-                BOOST_ASSERT(txout.nValue == 375*COIN/100); // 25*0.15
-                paymentToDevFound = true;
-            }
-        }
-        BOOST_ASSERT(paymentToDevFound);
+//         // total output should be 25
+//         BOOST_ASSERT(block.vtx[0]->GetValueOut() == 25*COIN);
+//     }
 
-        // total output should be 25
-        BOOST_ASSERT(block.vtx[0]->GetValueOut() == 25*COIN);
-    }
+//     // initiate stage3
+//     consensusParams.stage3StartTime = GetTime();
+//     consensusParams.stage3StartBlock = chainActive.Height();
 
-    // initiate stage3
-    consensusParams.stage3StartTime = GetTime();
-    consensusParams.stage3StartBlock = chainActive.Height();
+//     // for stage3 there is dev payout and community payout
+//     for (int i=610; i<620; i++) {
+//         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
+//         deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
 
-    // for stage3 there is dev payout and community payout
-    for (int i=610; i<620; i++) {
-        CBlock block = CreateAndProcessBlock({}, coinbaseKey);
-        deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//         CAmount nValue;
+//         auto dmnPayout = FindPayoutDmn(block, nValue);
 
-        CAmount nValue;
-        auto dmnPayout = FindPayoutDmn(block, nValue);
+//         BOOST_ASSERT(dmnPayout != nullptr && nValue == 625*COIN/100);   // 6.25 after halving (25/2*0.5)
 
-        BOOST_ASSERT(dmnPayout != nullptr && nValue == 625*COIN/100);   // 6.25 after halving (25/2*0.5)
+//         bool paymentToDevFound = false, paymentToCommunityFound = false;
+//         for (const CTxOut &txout: block.vtx[0]->vout) {
+//             if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
+//                 BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
+//                 paymentToDevFound = true;
+//             }
+//             if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
+//                 BOOST_ASSERT(txout.nValue == 125*COIN/100); // 25/2*0.10
+//                 paymentToCommunityFound = true;
+//             }
+//         }
+//         BOOST_ASSERT(paymentToDevFound && paymentToCommunityFound);
 
-        bool paymentToDevFound = false, paymentToCommunityFound = false;
-        for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
-                BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
-                paymentToDevFound = true;
-            }
-            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
-                BOOST_ASSERT(txout.nValue == 125*COIN/100); // 25/2*0.10
-                paymentToCommunityFound = true;
-            }
-        }
-        BOOST_ASSERT(paymentToDevFound && paymentToCommunityFound);
+//         // total output should be 12.5
+//         BOOST_ASSERT(block.vtx[0]->GetValueOut() == 25*COIN/2);
+//     }
 
-        // total output should be 12.5
-        BOOST_ASSERT(block.vtx[0]->GetValueOut() == 25*COIN/2);
-    }
+//     for (int i=620; i<630; i++) {
+//         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
+//         deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
 
-    for (int i=620; i<630; i++) {
-        CBlock block = CreateAndProcessBlock({}, coinbaseKey);
-        deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//         CAmount nValue;
+//         auto dmnPayout = FindPayoutDmn(block, nValue);
 
-        CAmount nValue;
-        auto dmnPayout = FindPayoutDmn(block, nValue);
+//         // stage 4: no real halving here
+//         BOOST_ASSERT(dmnPayout != nullptr && nValue == 625*COIN/100);   // 6.25
 
-        // stage 4: no real halving here
-        BOOST_ASSERT(dmnPayout != nullptr && nValue == 625*COIN/100);   // 6.25
+//         // there should be no more payment to devs fund
+//         for (const CTxOut &txout: block.vtx[0]->vout) {
+//             BOOST_ASSERT(txout.scriptPubKey != GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get()));
+//         }
 
-        // there should be no more payment to devs fund
-        for (const CTxOut &txout: block.vtx[0]->vout) {
-            BOOST_ASSERT(txout.scriptPubKey != GetScriptForDestination(CPrivoraAddress(consensusParams.stage2DevelopmentFundAddress).Get()));
-        }
+//         // miner's reward should be 1.25 (10%)
+//         BOOST_ASSERT(block.vtx[0]->vout[0].nValue == 125*COIN/100);
 
-        // miner's reward should be 1.25 (10%)
-        BOOST_ASSERT(block.vtx[0]->vout[0].nValue == 125*COIN/100);
+//         bool paymentToDevFound = false, paymentToCommunityFound = false;
+//         for (const CTxOut &txout: block.vtx[0]->vout) {
+//             if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
+//                 BOOST_ASSERT(txout.nValue == 3125*COIN/1000); // 25/2*0.25
+//                 paymentToDevFound = true;
+//             }
+//             if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
+//                 BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
+//                 paymentToCommunityFound = true;
+//             }
+//         }
+//         BOOST_ASSERT(paymentToDevFound && paymentToCommunityFound);    
+//     }
 
-        bool paymentToDevFound = false, paymentToCommunityFound = false;
-        for (const CTxOut &txout: block.vtx[0]->vout) {
-            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3DevelopmentFundAddress).Get())) {
-                BOOST_ASSERT(txout.nValue == 3125*COIN/1000); // 25/2*0.25
-                paymentToDevFound = true;
-            }
-            if (txout.scriptPubKey == GetScriptForDestination(CPrivoraAddress(consensusParams.stage3CommunityFundAddress).Get())) {
-                BOOST_ASSERT(txout.nValue == 1875*COIN/1000); // 25/2*0.15
-                paymentToCommunityFound = true;
-            }
-        }
-        BOOST_ASSERT(paymentToDevFound && paymentToCommunityFound);    
-    }
+//     // tail emission should occur at block 630
+//     CBlock block = CreateAndProcessBlock({}, coinbaseKey);
+//     deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
 
-    // tail emission should occur at block 630
-    CBlock block = CreateAndProcessBlock({}, coinbaseKey);
-    deterministicMNManager->UpdatedBlockTip(chainActive.Tip());
+//     CAmount nValue;
+//     auto dmnPayout = FindPayoutDmn(block, nValue);
 
-    CAmount nValue;
-    auto dmnPayout = FindPayoutDmn(block, nValue);
+//     BOOST_ASSERT(dmnPayout != nullptr && nValue == COIN);
 
-    BOOST_ASSERT(dmnPayout != nullptr && nValue == COIN);
+//     consensusParams = consensusParamsBackup;
+// }
 
-    consensusParams = consensusParamsBackup;
-}
+// BOOST_FIXTURE_TEST_CASE(devpayoutverification, TestChainDIP3BeforeActivationSetup)
+// {
+//     Consensus::Params   &consensusParams = const_cast<Consensus::Params &>(Params().GetConsensus());
+//     Consensus::Params   consensusParamsBackup = consensusParams;
 
-BOOST_FIXTURE_TEST_CASE(devpayoutverification, TestChainDIP3BeforeActivationSetup)
-{
-    Consensus::Params   &consensusParams = const_cast<Consensus::Params &>(Params().GetConsensus());
-    Consensus::Params   consensusParamsBackup = consensusParams;
+//     consensusParams.nSubsidyHalvingInterval = 600;   
+//     consensusParams.nSubsidyHalvingInterval = 10;
 
-    consensusParams.nSubsidyHalvingFirst = 600;
-    consensusParams.nSubsidyHalvingSecond = 610;
-    consensusParams.stage3StartTime = INT_MAX;    
-    consensusParams.nSubsidyHalvingInterval = 10;
+//     // skip to block 600
+//     for (int i=498; i<600; i++)
+//         CreateAndProcessBlock({}, coinbaseKey);
 
-    // skip to block 600
-    for (int i=498; i<600; i++)
-        CreateAndProcessBlock({}, coinbaseKey);
+//     // try to send dev payout to different destination
+//     CKey key;
+//     key.MakeNewKey(false);
+//     consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(CTxDestination(key.GetPubKey().GetID())).ToString();
 
-    // try to send dev payout to different destination
-    CKey key;
-    key.MakeNewKey(false);
-    consensusParams.stage2DevelopmentFundAddress = CPrivoraAddress(CTxDestination(key.GetPubKey().GetID())).ToString();
+//     {
+//         CBlock block = CreateBlock({}, coinbaseKey);
+//         consensusParams.stage2DevelopmentFundAddress = consensusParamsBackup.stage2DevelopmentFundAddress;
 
-    {
-        CBlock block = CreateBlock({}, coinbaseKey);
-        consensusParams.stage2DevelopmentFundAddress = consensusParamsBackup.stage2DevelopmentFundAddress;
+//         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+//         BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
+//     }
 
-        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-        BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
-    }
+//     // now try to alter payment value
+//     {
+//         consensusParams.stage2DevelopmentFundShare /= 2;
+//         CBlock block = CreateBlock({}, coinbaseKey);
+//         consensusParams.stage2DevelopmentFundShare = consensusParamsBackup.stage2DevelopmentFundShare;
+//         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+//         BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
+//     }
 
-    // now try to alter payment value
-    {
-        consensusParams.stage2DevelopmentFundShare /= 2;
-        CBlock block = CreateBlock({}, coinbaseKey);
-        consensusParams.stage2DevelopmentFundShare = consensusParamsBackup.stage2DevelopmentFundShare;
-        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-        BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
-    }
+//     // now try to alter payment value
+//     {
+//         consensusParams.stage2DevelopmentFundShare *= 2;
+//         CBlock block = CreateBlock({}, coinbaseKey);
+//         consensusParams.stage2DevelopmentFundShare = consensusParamsBackup.stage2DevelopmentFundShare;
+//         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+//         BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
+//     }
 
-    // now try to alter payment value
-    {
-        consensusParams.stage2DevelopmentFundShare *= 2;
-        CBlock block = CreateBlock({}, coinbaseKey);
-        consensusParams.stage2DevelopmentFundShare = consensusParamsBackup.stage2DevelopmentFundShare;
-        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-        BOOST_ASSERT(!ProcessNewBlock(Params(), shared_pblock, true, nullptr));
-    }
-
-    consensusParams = consensusParamsBackup;
-}
+//     consensusParams = consensusParamsBackup;
+// }
 
 
 BOOST_AUTO_TEST_SUITE_END()

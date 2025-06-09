@@ -27,16 +27,12 @@ uint256 CBlockHeader::GetHash() const {
     uint256 mix_hash;
         uint256 hash = GetProgPowHashFull(mix_hash);
         const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
-                    std::cout << hash.ToString() << " " << mix_hash.ToString() << std::endl;
-
         return hash;
 }
 
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
         uint256 hash = GetProgPowHashFull(mix_hash);
         const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
-                    std::cout << hash.ToString() << " " << mix_hash.ToString() << std::endl;
-
         return hash;
 }
 
