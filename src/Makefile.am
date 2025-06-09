@@ -247,7 +247,6 @@ PRIVORA_CORE_H = \
   lelantus.h \
   spark/state.h \
   sparkname.h \
-  blacklists.h \
   coin_containers.h \
   privora_params.h \
   addresstype.h \

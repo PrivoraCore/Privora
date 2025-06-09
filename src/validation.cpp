@@ -54,8 +54,6 @@
 
 #include "coins.h"
 
-#include "blacklists.h"
-
 #include "sigma/coinspend.h"
 #include "warnings.h"
 
