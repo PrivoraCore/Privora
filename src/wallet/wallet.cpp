@@ -3769,7 +3769,7 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
 
 void CWallet::AvailableCoins(std::vector <COutput> &vCoins, bool fOnlyConfirmed, const CCoinControl *coinControl, bool fIncludeZeroValue, bool fUseInstantSend) const
 {
-    static const int ZNODE_COIN_REQUIRED  = 1000;
+    static const int ZNODE_COIN_REQUIRED  = 10000;
     vCoins.clear();
     CoinType nCoinType = coinControl ? coinControl->nCoinType : CoinType::ALL_COINS;
 

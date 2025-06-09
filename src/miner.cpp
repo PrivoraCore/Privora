@@ -190,11 +190,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
 
-    pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus()) | 0x1000;
+    pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus()) | 0x00;
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
     if (chainparams.MineBlocksOnDemand())
-        pblock->nVersion = GetArg("-blockversion", pblock->nVersion) | 0x1000;
+        pblock->nVersion = GetArg("-blockversion", pblock->nVersion) | 0x00;
 
     nLockTimeCutoff = (STANDARD_LOCKTIME_VERIFY_FLAGS & LOCKTIME_MEDIAN_TIME_PAST)
                        ? nMedianTimePast

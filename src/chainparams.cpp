@@ -753,7 +753,7 @@ public:
         consensus.llmqForInstantSend = Consensus::LLMQ_5_60;
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nInstantSendBlockFilteringStartHeight = 500;
+        consensus.nInstantSendBlockFilteringStartHeight = 1;
 
         consensus.nMasternodePaymentsStartBlock = 150;
 
