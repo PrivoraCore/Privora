@@ -119,7 +119,7 @@ const std::map<std::string, std::vector<std::string> >& mapMultiArgs = _mapMulti
 bool fDebug = false;
 bool fPrintToConsole = false;
 bool fPrintToDebugLog = true;
-bool fNoDebug = false; //A temporary fix for https://github.com/privoraorg/privora/issues/1011
+bool fNoDebug = false; //A temporary fix for https://github.com/PrivoraCore/Privora/issues/1011
 
 bool fLogTimestamps = DEFAULT_LOGTIMESTAMPS;
 bool fLogTimeMicros = DEFAULT_LOGTIMEMICROS;
@@ -304,7 +304,7 @@ static std::string LogTimestampStr(const std::string &str, std::atomic_bool *fSt
 
 int LogPrintStr(const std::string &str)
 {
-    //A temporary fix for https://github.com/privoraorg/privora/issues/1011
+    //A temporary fix for https://github.com/PrivoraCore/Privora/issues/1011
     if (fNoDebug && str.compare(0, 6, "ERROR:", 0, 6) != 0)
         return 0;
 

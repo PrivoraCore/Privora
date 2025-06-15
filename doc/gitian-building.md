@@ -309,7 +309,7 @@ Clone the git repositories for privora and Gitian.
 
 ```bash
 git clone https://github.com/devrandom/gitian-builder.git
-git clone https://github.com/privoraorg/privora
+git clone https://github.com/PrivoraCore/Privora
 git clone https://github.com/privora-core/gitian.sigs.git
 ```
 

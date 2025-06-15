@@ -17,7 +17,7 @@ osx=true
 SIGNER=
 VERSION=
 commit=false
-url=${url:-https://github.com/privoraorg/privora}
+url=${url:-https://github.com/PrivoraCore/Privora}
 gsigsUrl=https://github.com/privora-core/gitian.sigs
 detachUrl=https://github.com/privora-core/privora-detached-sigs.git
 proc=2
@@ -41,7 +41,7 @@ version		Version number, commit, or branch to build. If building a commit or bra
 
 Options:
 -c|--commit	Indicate that the version argument is for a commit or branch
--u|--url	Specify the URL of the privoraorg repository. Default is https://github.com/privoraorg/privora.git
+-u|--url	Specify the URL of the privoraorg repository. Default is https://github.com/PrivoraCore/Privora.git
 -g|--gsigsUrl	Specify the URL of the gitian.sigs repository. Default is https://github.com/privora-core/gitian.sigs
 -d|--detachUrl	Specify the URL of the privora-detached-sigs repository. Default is https://github.com/privora-core/privora-detached-sigs
 -v|--verify 	Verify the Gitian build

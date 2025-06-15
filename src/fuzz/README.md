@@ -6,9 +6,9 @@ To quickly get started fuzzing libspark using honggfuzz:
 ### Build privora
 - clone this repo:
 ```
-git clone -b spark https://github.com/privoraorg/privora.git
+git clone -b spark https://github.com/PrivoraCore/Privora.git
 ```
-- Build privora: Follow instruction from https://github.com/privoraorg/privora/tree/spark#readme
+- Build privora: Follow instruction from https://github.com/PrivoraCore/Privora/tree/spark#readme
 
 Once the build is successful, we have to install honggfuzz and required dependencies.
 

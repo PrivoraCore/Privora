@@ -1,11 +1,11 @@
 # Privora
 
-[![Financial Contributors on Open Collective](https://opencollective.com/privora/all/badge.svg?label=financial+contributors)](https://opencollective.com/privora) [![latest-release](https://img.shields.io/github/release/privoraorg/privora)](https://github.com/privoraorg/privora/releases)
-[![GitHub last-release](https://img.shields.io/github/release-date/privoraorg/privora)](https://github.com/privoraorg/privora/releases)
-[![GitHub downloads](https://img.shields.io/github/downloads/privoraorg/privora/total)](https://github.com/privoraorg/privora/releases)
-[![GitHub commits-since-last-version](https://img.shields.io/github/commits-since/privoraorg/privora/latest/master)](https://github.com/privoraorg/privora/graphs/commit-activity)
-[![GitHub commits-per-month](https://img.shields.io/github/commit-activity/m/privoraorg/privora)](https://github.com/privoraorg/privora/graphs/code-frequency)
-[![GitHub last-commit](https://img.shields.io/github/last-commit/privoraorg/privora)](https://github.com/privoraorg/privora/commits/master)
+[![Financial Contributors on Open Collective](https://opencollective.com/privora/all/badge.svg?label=financial+contributors)](https://opencollective.com/privora) [![latest-release](https://img.shields.io/github/release/privoraorg/privora)](https://github.com/PrivoraCore/Privora/releases)
+[![GitHub last-release](https://img.shields.io/github/release-date/privoraorg/privora)](https://github.com/PrivoraCore/Privora/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/privoraorg/privora/total)](https://github.com/PrivoraCore/Privora/releases)
+[![GitHub commits-since-last-version](https://img.shields.io/github/commits-since/privoraorg/privora/latest/master)](https://github.com/PrivoraCore/Privora/graphs/commit-activity)
+[![GitHub commits-per-month](https://img.shields.io/github/commit-activity/m/privoraorg/privora)](https://github.com/PrivoraCore/Privora/graphs/code-frequency)
+[![GitHub last-commit](https://img.shields.io/github/last-commit/privoraorg/privora)](https://github.com/PrivoraCore/Privora/commits/master)
 
 [Privora](https://privora.org) formerly known as Zcoin, is a privacy focused cryptocurrency that utilizes the [Lelantus Spark protocol](https://eprint.iacr.org/2021/1173) which supports high anonymity sets without requiring trusted setup and relying on standard cryptographic assumptions.
 
@@ -42,7 +42,7 @@ This will start a detached docker container, which you can interact with using `
 
 ## Docker image on DockerHub
 
-If it doesn't already exist, create a `.privora` folder in your home (this is a workaround until [#1241](https://github.com/privoraorg/privora/issues/1241) is resolved):
+If it doesn't already exist, create a `.privora` folder in your home (this is a workaround until [#1241](https://github.com/PrivoraCore/Privora/issues/1241) is resolved):
 
 ```sh
 mkdir -p ${HOME}/.privora
@@ -135,7 +135,7 @@ sudo pacman -S git base-devel python cmake
 1.  Download the source:
 
 ```sh
-git clone https://github.com/privoraorg/privora
+git clone https://github.com/PrivoraCore/Privora
 cd privora
 ```
 
@@ -193,7 +193,7 @@ Now that you have your self-built or precompiled binaries, it's time to run Priv
 ## Code Contributors
 
 This project exists thanks to all the people who contribute. Would you like to help Privora and contribute? See the [[CONTRIBUTING](CONTRIBUTING.md)] file.
-<a href="https://github.com/privoraorg/privora/graphs/contributors"><img src="https://opencollective.com/privora/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/PrivoraCore/Privora/graphs/contributors"><img src="https://opencollective.com/privora/contributors.svg?width=890&button=false" /></a>
 
 ## Financial Contributors
 

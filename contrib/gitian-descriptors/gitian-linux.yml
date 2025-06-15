@@ -42,7 +42,7 @@ packages:
 # - "binutils-riscv64-linux-gnu"
 # - "g++-8-riscv64-linux-gnu"
 remotes:
-- "url": "https://github.com/privoraorg/privora"
+- "url": "https://github.com/PrivoraCore/Privora"
   "dir": "privora"
 files: []
 script: |

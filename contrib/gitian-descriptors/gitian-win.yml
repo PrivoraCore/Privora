@@ -25,7 +25,7 @@ packages:
 - "python3-pip"
 - "cmake"
 remotes:
-- "url": "https://github.com/privoraorg/privora"
+- "url": "https://github.com/PrivoraCore/Privora"
   "dir": "privora"
 files: []
 script: |

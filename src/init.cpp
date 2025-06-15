@@ -593,7 +593,7 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/privoraorg/privora>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/PrivoraCore/Privora>";
     const std::string URL_WEBSITE = "<https://privora.org/>";
 
     std::string copyright = CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2016, COPYRIGHT_YEAR) + " ");

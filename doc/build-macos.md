@@ -60,7 +60,7 @@ from the root of the repository.
 #### Download the Source
 Before building, download the Privora source code:
 ```bash
-git clone https://github.com/privoraorg/privora
+git clone https://github.com/PrivoraCore/Privora
 cd privora
 ```
 

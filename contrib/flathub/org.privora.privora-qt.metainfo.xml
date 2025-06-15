@@ -11,7 +11,7 @@
     https://privora.org/
   </url>
   <url type="bugtracker">
-    https://github.com/privoraorg/privora/issues/new?title=[flatpak]
+    https://github.com/PrivoraCore/Privora/issues/new?title=[flatpak]
   </url>
   <launchable type="desktop-id">
     org.privora.privora-qt.desktop

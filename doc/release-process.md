@@ -3,7 +3,7 @@ Release Process
 
 Before every release candidate:
 
-* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/privoraorg/privora/blob/master/doc/translation_process.md#synchronising-translations).
+* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/PrivoraCore/Privora/blob/master/doc/translation_process.md#synchronising-translations).
 
 * Update manpages, see [gen-manpages.sh](https://github.com/privora/privora/blob/master/contrib/devtools/README.md#gen-manpagessh).
 
@@ -34,7 +34,7 @@ Check out the source code in the following directory hierarchy.
     git clone https://github.com/privora-core/gitian.sigs.git
     git clone https://github.com/privora-core/privora-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
-    git clone https://github.com/privoraorg/privora
+    git clone https://github.com/PrivoraCore/Privora
 
 ### Privora maintainers/release engineers, update version in sources
 
