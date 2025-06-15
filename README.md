@@ -1,13 +1,7 @@
 # Privora
+[Privora](https://privora.org) is a privacy focused cryptocurrency that utilizes the [Lelantus Spark protocol](https://eprint.iacr.org/2021/1173) which supports high anonymity sets without requiring trusted setup and relying on standard cryptographic assumptions.
 
-[![Financial Contributors on Open Collective](https://opencollective.com/privora/all/badge.svg?label=financial+contributors)](https://opencollective.com/privora) [![latest-release](https://img.shields.io/github/release/privoraorg/privora)](https://github.com/PrivoraCore/Privora/releases)
-[![GitHub last-release](https://img.shields.io/github/release-date/privoraorg/privora)](https://github.com/PrivoraCore/Privora/releases)
-[![GitHub downloads](https://img.shields.io/github/downloads/privoraorg/privora/total)](https://github.com/PrivoraCore/Privora/releases)
-[![GitHub commits-since-last-version](https://img.shields.io/github/commits-since/privoraorg/privora/latest/master)](https://github.com/PrivoraCore/Privora/graphs/commit-activity)
-[![GitHub commits-per-month](https://img.shields.io/github/commit-activity/m/privoraorg/privora)](https://github.com/PrivoraCore/Privora/graphs/code-frequency)
-[![GitHub last-commit](https://img.shields.io/github/last-commit/privoraorg/privora)](https://github.com/PrivoraCore/Privora/commits/master)
-
-[Privora](https://privora.org) formerly known as Zcoin, is a privacy focused cryptocurrency that utilizes the [Lelantus Spark protocol](https://eprint.iacr.org/2021/1173) which supports high anonymity sets without requiring trusted setup and relying on standard cryptographic assumptions.
+At Privora, we believe privacy isn't something you should struggle for - it should be part of every transaction by default. That's why we've created a next-generation mixer that puts real privacy back in your hands. Whether you're sending, receiving, or simply protecting your crypto, Privora makes the process secure, simple, and private - without requiring trust.
 
 The Lelantus Spark cryptographic library and implementation was audited by [HashCloak](https://privora.org/about/research/papers/lelantus_spark_code_audit_report.pdf). The Lelantus Spark cryptography paper has undergone two separate audits by [HashCloak](https://privora.org/about/research/papers/Lelantus_Spark_Audit_Report.pdf) and [Daniel (Linfeng) Zhao](https://privora.org/about/research/papers/LinfengSparkAudit.pdf).
 
@@ -39,26 +33,6 @@ docker run -d --name privorad -v "${HOME}/.privora:/home/privorad/.privora" priv
 ```
 
 This will start a detached docker container, which you can interact with using `docker exec`. See the section "Interact with the container" for a list of useful commands you can use to manage your node. Make sure to change `privorad` with `privora-local`, if you have built the local Docker image.
-
-## Docker image on DockerHub
-
-If it doesn't already exist, create a `.privora` folder in your home (this is a workaround until [#1241](https://github.com/PrivoraCore/Privora/issues/1241) is resolved):
-
-```sh
-mkdir -p ${HOME}/.privora
-```
-
-Pull our [latest official Docker image](https://hub.docker.com/r/privoraorg/privorad):
-
-```sh
-docker pull privoraorg/privorad
-```
-
-Start Privora daemon:
-
-```sh
-docker run -d --name privorad -v "${HOME}/.privora:/home/privorad/.privora" privoraorg/privorad
-```
 
 ## Interact with the container
 
@@ -187,35 +161,3 @@ See [doc/build-windows.md](doc/build-windows.md) for instructions on building on
 # Run Privora
 
 Now that you have your self-built or precompiled binaries, it's time to run Privora! Depending by your skill level and/or setup, you might want to use the command line tool or the graphic user interface. If you have problems or need support, [contact the community](https://privora.org/community/social/).
-
-# Contributors
-
-## Code Contributors
-
-This project exists thanks to all the people who contribute. Would you like to help Privora and contribute? See the [[CONTRIBUTING](CONTRIBUTING.md)] file.
-<a href="https://github.com/PrivoraCore/Privora/graphs/contributors"><img src="https://opencollective.com/privora/contributors.svg?width=890&button=false" /></a>
-
-## Financial Contributors
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/privora/contribute)]
-
-You can also donate to the [MAGIC Privora Fund](https://magicgrants.org/funds/privora/) which allows some US entities to claim a charitable deduction.
-
-## Individuals
-
-<a href="https://opencollective.com/privora"><img src="https://opencollective.com/privora/individuals.svg?width=890"></a>
-
-## Organizations
-
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/privora/contribute)]
-
-<a href="https://opencollective.com/privora/organization/0/website"><img src="https://opencollective.com/privora/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/1/website"><img src="https://opencollective.com/privora/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/2/website"><img src="https://opencollective.com/privora/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/3/website"><img src="https://opencollective.com/privora/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/4/website"><img src="https://opencollective.com/privora/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/5/website"><img src="https://opencollective.com/privora/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/6/website"><img src="https://opencollective.com/privora/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/7/website"><img src="https://opencollective.com/privora/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/8/website"><img src="https://opencollective.com/privora/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/privora/organization/9/website"><img src="https://opencollective.com/privora/organization/9/avatar.svg"></a>
