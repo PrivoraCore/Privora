@@ -25,6 +25,8 @@
 #ifdef ENABLE_WALLET
 #include "paymentserver.h"
 #include "walletmodel.h"
+#include "askpassphrasedialog.h"
+
 #endif
 
 #include "init.h"
@@ -544,6 +546,24 @@ void PrivoraApplication::initializeResult(int retval)
             window->message(title, message, style);
         });
         QTimer::singleShot(100, paymentServer, &PaymentServer::uiReady);
+
+        if (walletModel->getEncryptionStatus() == WalletModel::Unencrypted) {
+
+            AskPassphraseDialog* dlg = new AskPassphraseDialog(AskPassphraseDialog::Encrypt, window);
+            dlg->setModel(walletModel);
+            dlg->setWindowTitle("Encrypt Wallet");
+
+            connect(dlg, &QDialog::finished, this, [=](int result) {
+                if (result == QDialog::Accepted) {
+                    walletModel->updateStatus();
+                } else {
+                    QApplication::quit(); // Exit immediately if canceled
+                }
+                dlg->deleteLater();
+            });
+
+            dlg->show(); // non-blocking
+        }
 #endif
     } else {
         quit(); // Exit main loop
