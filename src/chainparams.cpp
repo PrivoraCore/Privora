@@ -158,8 +158,8 @@ public:
         consensus.nMasternodePayout = 40;
         consensus.nDevelopmentFundPercent = 10;
 
-        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x19,0xe8,0xa2,0xd1,0xa2,0x31,0x16,0x5d,0x45,0x0f,0x1c,0x3d,0x26,0x0d,0x9f,0xfc,0x0d,0x7c,0x57,0xa4,0x88,0xac};
-        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0x7a,0x73,0x87,0x85,0x95,0x71,0xd2,0xff,0xca,0x8a,0x7e,0xf7,0xef,0x15,0x3a,0xce,0x45,0x61,0xf9,0xb8,0x88,0xac};
+        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x59,0x52,0x68,0xb1,0x2c,0x5b,0x5b,0x27,0x1c,0xd4,0x08,0x3f,0x42,0x10,0x9a,0x94,0xfa,0x27,0x0f,0x56,0x88,0xac};
+        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0x53,0xf1,0x91,0x7d,0x9c,0x12,0x87,0x48,0xc4,0x3c,0x19,0xab,0xa4,0xba,0x28,0xdb,0xe3,0xa1,0xdd,0x92,0x88,0xac};
 
         consensus.nStartDuplicationCheck = 0;
 
@@ -190,7 +190,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000001745");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0007229e4654a3037b5d2a9642a846fdb6a67f519702768d3dd3a678d2dcb20a");
+        consensus.defaultAssumeValid = uint256S("0x000460385688f4b6743d03fcda2f9f7ff8d6179af91f2314cdc4cdc2e8277364");
 
         consensus.nMasternodePaymentsStartBlock = 10000;
 
@@ -222,12 +222,12 @@ public:
         pchMessageStart[3] = 0x77;
 
         std::vector<unsigned char> extraNonce = {0x34, 0xab, 0x6c, 0xfe};
-        genesis = CreateGenesisBlock(1749384000, 2330, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
-
+        genesis = CreateGenesisBlock(1749384000, 2675, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHashFull(genesis.mix_hash);
-        assert(consensus.hashGenesisBlock == uint256S("0x0007229e4654a3037b5d2a9642a846fdb6a67f519702768d3dd3a678d2dcb20a"));
-        assert(genesis.hashMerkleRoot == uint256S("0x6b4e4f4568408907285bb00dced1103aa1879fdc61bb27b28c20534845e9bbb0"));
-        assert(genesis.mix_hash == uint256S("0x3a70e04064c32aeb425812cb9ecbb94af3bd822d44f6d7b3416ae2a9ebc4cfbd"));
+
+        assert(consensus.hashGenesisBlock == uint256S("0x000460385688f4b6743d03fcda2f9f7ff8d6179af91f2314cdc4cdc2e8277364"));
+        assert(genesis.hashMerkleRoot == uint256S("0x088a0d227113b9c2cf6d306e051ecbc7c77e65f2944bbcdbb172a425a50d8163"));
+        assert(genesis.mix_hash == uint256S("0x255797b21d14b0c1a7f180f4af669dab55b10fff290fca824eedf8bb23fa2501"));
 
         vSeeds.push_back(CDNSSeedData("dns-mainnet-1.privora.org", "dns-mainnet-1.privora.org", false));
         vSeeds.push_back(CDNSSeedData("dns-mainnet-2.privora.org", "dns-mainnet-2.privora.org", false));
@@ -256,7 +256,7 @@ public:
 
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
-                (0, uint256S("0x0007229e4654a3037b5d2a9642a846fdb6a67f519702768d3dd3a678d2dcb20a"))
+                (0, uint256S("0x000460385688f4b6743d03fcda2f9f7ff8d6179af91f2314cdc4cdc2e8277364"))
         };
 
         chainTxData = ChainTxData{
@@ -294,7 +294,7 @@ public:
 
         consensus.nZerocoinToSigmaRemintWindowSize = INT_MAX;
 
-        consensus.evoSporkKeyID = "PjJYELp783TABDxhUCD4Xb79PS2EEHYbDb";
+        consensus.evoSporkKeyID = "PfadcTvPhr8L9k6jaRbXT1mwgp8U8jXcp1";
         consensus.nEvoSporkStartBlock = 1;
         consensus.nEvoSporkStopBlock = 0;
         consensus.nEvoSporkStopBlockExtensionVersion = 0;
@@ -348,8 +348,8 @@ public:
         consensus.nMasternodePayout = 40;
         consensus.nDevelopmentFundPercent = 10;
 
-        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x1f,0x8c,0x31,0xd1,0xa9,0xa7,0xfa,0xf5,0x85,0x33,0xf2,0xb9,0x20,0x37,0x48,0x71,0x14,0x91,0xa9,0xc2,0x88,0xac};
-        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0x07,0x91,0xec,0x8e,0x66,0x4f,0xe3,0x28,0xc9,0x19,0x01,0xcf,0xc9,0xd6,0xdb,0xbe,0x02,0x61,0xaa,0xfa,0x88,0xac};
+        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0xcc,0xe3,0xe3,0xa9,0x9b,0xa4,0x56,0xb5,0x34,0x5c,0x71,0x13,0x43,0xd1,0x33,0x85,0xba,0x10,0x4e,0xb6,0x88,0xac};
+        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0xf6,0x9e,0x1c,0xa9,0xc5,0xaa,0xa6,0x5c,0x14,0xa6,0xbf,0xdc,0x2e,0x81,0x57,0x0a,0xa9,0xd4,0x7a,0xf5,0x88,0xac};
 
         consensus.nStartDuplicationCheck = 0;
 
@@ -380,7 +380,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000001745");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000345d9426a940aca152a26c3eb00ede55165dd0d34ab5766fddf6b48293bc6");
+        consensus.defaultAssumeValid = uint256S("0x0005ae521ee504a91b4c012c1fd75b0228bf057b482475a3f2db137963b6d484");
 
         consensus.nMasternodePaymentsStartBlock = 10000;
 
@@ -408,12 +408,12 @@ public:
         pchMessageStart[3] = 0x40;
 
         std::vector<unsigned char> extraNonce = { 0xac, 0xb3, 0x21, 0x64 };
-        genesis = CreateGenesisBlock(1749384000, 843, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1749384000, 2222, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHashFull(genesis.mix_hash);
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000345d9426a940aca152a26c3eb00ede55165dd0d34ab5766fddf6b48293bc6"));
-        assert(genesis.hashMerkleRoot == uint256S("0x86419aef7c300a8757185d77e0e183bed93ff7c0257ddbced1e23cebd4d0e9bb"));
-        assert(genesis.mix_hash == uint256S("0xd9da891720e8d94fe7d2e9d257b2cfd7b46ae8a9c918672d358900241db8fd1b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0005ae521ee504a91b4c012c1fd75b0228bf057b482475a3f2db137963b6d484"));
+        assert(genesis.hashMerkleRoot == uint256S("0xed280e0df72772a30cfc9869453ca382a181f956c541803d74f58325cec5bbe1"));
+        assert(genesis.mix_hash == uint256S("0x36e0658c32f63dceb0d9066a958454307974c0d7fe9e8a7389fc50859365b68f"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -443,7 +443,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x000345d9426a940aca152a26c3eb00ede55165dd0d34ab5766fddf6b48293bc6"))
+            (0, uint256S("0x0005ae521ee504a91b4c012c1fd75b0228bf057b482475a3f2db137963b6d484"))
         };
 
         chainTxData = ChainTxData{
@@ -481,7 +481,7 @@ public:
         consensus.nZerocoinToSigmaRemintWindowSize = INT_MAX;
         consensus.nDisableZerocoinStartBlock = INT_MAX;
 
-        consensus.evoSporkKeyID = "Tkd96mATUVqpcLHcUQYbiVMkvTsdJDTzaa";
+        consensus.evoSporkKeyID = "TwnodAoZDovgCPq14Qif3EzeYj7FEF4vqf";
         consensus.nEvoSporkStartBlock = 22000;
         consensus.nEvoSporkStopBlock = 40000;
         consensus.nEvoSporkStopBlockExtensionVersion = 0;
@@ -533,8 +533,8 @@ public:
         consensus.nMasternodePayout = 40;
         consensus.nDevelopmentFundPercent = 10;
 
-        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x24,0x2c,0xe,0x36,0x94,0xb6,0x4e,0x3d,0x21,0x44,0x01,0x6f,0xe3,0xb3,0x95,0xa6,0x2d,0xcd,0x66,0x4b,0xf8,0x8,0xac};
-        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0xb1,0xa0,0x35,0xe1,0x68,0x52,0xe3,0x6b,0xf8,0xb7,0x30,0x39,0x5d,0xbd,0x45,0xf0,0xb7,0xa5,0x1f,0x27,0x88,0xac};
+        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x8d,0xb1,0xc0,0x8a,0x11,0x7e,0xa1,0xc0,0xca,0x87,0xdf,0xab,0x4d,0x25,0x4d,0xf9,0x1c,0x8d,0x0d,0x42,0x88,0xac};
+        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0x4d,0x82,0x9d,0x11,0xa9,0x0e,0x07,0x4a,0xb3,0xd8,0x3e,0x15,0xf4,0x00,0xf4,0x87,0xc1,0xf6,0x03,0x27,0x88,0xac};
 
         consensus.nStartDuplicationCheck = 0;
 
@@ -565,7 +565,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000001745");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0007b7d63bfa4d68633b66b7c8f35aff2520a925c502821c821fddb9ecf16d7e");
+        consensus.defaultAssumeValid = uint256S("0x0003b9c73fd3a75bafce67b7151eb182272609a8682bccbfd3ffa96cfa70790e");
 
         // Znode params testnet
         consensus.nMasternodePaymentsStartBlock = 10000;
@@ -592,12 +592,12 @@ public:
         pchMessageStart[3] = 0x14;
 
         std::vector<unsigned char> extraNonce = { 0x0f, 0xd4, 0x7c, 0x35 };
-        genesis = CreateGenesisBlock(1749384000, 100, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1749384000, 3314, 0x1f0affff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHashFull(genesis.mix_hash);
 
-        assert(consensus.hashGenesisBlock == uint256S("0x0007b7d63bfa4d68633b66b7c8f35aff2520a925c502821c821fddb9ecf16d7e"));
-        assert(genesis.hashMerkleRoot == uint256S("0x0a0eef29fa17cd3358bf81bd1198ca8d87acb74c2fb6b9ddb608300c50dba79e"));
-        assert(genesis.mix_hash == uint256S("0xac84b070724809403c015438761e5faeff582a08defd9bcb09df01b9049e5873"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0003b9c73fd3a75bafce67b7151eb182272609a8682bccbfd3ffa96cfa70790e"));
+        assert(genesis.hashMerkleRoot == uint256S("0x4d3a4ef78d054e41ad581e1fd70763d7252f2b1e39ae9fc2cd6a6956e5b8500d"));
+        assert(genesis.mix_hash == uint256S("0x79d4c419de713143ea68ef7fa6ebed99d912e5d0a1754854a31bf8c1b0dd0d4c"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -628,7 +628,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x0007b7d63bfa4d68633b66b7c8f35aff2520a925c502821c821fddb9ecf16d7e"))
+            (0, uint256S("0x0003b9c73fd3a75bafce67b7151eb182272609a8682bccbfd3ffa96cfa70790e"))
         };
 
         chainTxData = ChainTxData{
@@ -661,7 +661,7 @@ public:
         consensus.nMaxValueLelantusMint = INT_MAX;
         consensus.nZerocoinToSigmaRemintWindowSize = INT_MAX;
 
-        consensus.evoSporkKeyID = "TdFcWhVGVr7VbH4UAgw5gqfRcypPxBzwUh";
+        consensus.evoSporkKeyID = "TgNeV8KvhbCm6ebcMCg971qQfN5JgqjPQN";
         consensus.nEvoSporkStartBlock = 1;
         consensus.nEvoSporkStopBlock = 40000;
         consensus.nEvoSporkStopBlockExtensionVersion = 0;
@@ -713,8 +713,8 @@ public:
         consensus.nMasternodePayout = 40;
         consensus.nDevelopmentFundPercent = 10;
 
-        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0xd5,0x88,0x6d,0xb4,0x48,0x48,0x72,0xd2,0x2a,0x0f,0x75,0xf8,0xbb,0x7c,0xe4,0xc0,0x4e,0x27,0x8f,0x47,0x88,0xac};
-        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0xf2,0x19,0x3b,0xd1,0x69,0x73,0x2c,0x1a,0x8d,0x4f,0x0c,0x7f,0x87,0xd3,0x1b,0xc1,0x68,0xdf,0x98,0x84,0x88,0xac};
+        consensus.genesisOutputScriptHex = {0x76,0xa9,0x14,0x05,0xf7,0x77,0x70,0x36,0x92,0xb6,0xba,0xc7,0xee,0x13,0x72,0x64,0xee,0x7a,0x0d,0xca,0xbd,0xf6,0x8f,0x88,0xac};
+        consensus.developmentOutputScriptHex = {0x76,0xa9,0x14,0xbd,0x94,0xb6,0xd2,0x3f,0xd9,0xc8,0x22,0x0c,0x94,0xb3,0x95,0xf7,0xa7,0xb5,0xe9,0xe2,0x5c,0x18,0x2a,0x88,0xac};
 
         consensus.nStartDuplicationCheck = 0;
 
@@ -761,7 +761,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000000002");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x053a0fe01d0d314afe13b84bdd2eba5f5c76a34e8c1e2a40e69e9c3f028da3df");
+        consensus.defaultAssumeValid = uint256S("0x5d69514c1f578cf29fdc475267d41578861f5c67578d1b288496a2a2b03360c8");
 
         pchMessageStart[0] = 0xf4;
         pchMessageStart[1] = 0x0b;
@@ -769,12 +769,12 @@ public:
         pchMessageStart[3] = 0x6c;
 
         std::vector<unsigned char> extraNonce = {0x02, 0x04, 0x06, 0x08};
-        genesis = CreateGenesisBlock(1749384000, 1, 0x207fffff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1749384000, 2, 0x207fffff, 2, consensus.genesisOutputScriptHex, consensus.developmentOutputScriptHex, 90 * COIN, 15 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHashFull(genesis.mix_hash);
 
-        assert(consensus.hashGenesisBlock == uint256S("0x053a0fe01d0d314afe13b84bdd2eba5f5c76a34e8c1e2a40e69e9c3f028da3df"));
-        assert(genesis.hashMerkleRoot == uint256S("0x38b69b8b4093adc0068b3c2cc11744a9fcc92a8bca0f0a056aa544febee84634"));
-        assert(genesis.mix_hash == uint256S("0xc50977e27552c2996681e2fdca3d3e2b3923d4f518c48c67bb6c061c5e72b741"));
+        assert(consensus.hashGenesisBlock == uint256S("0x5d69514c1f578cf29fdc475267d41578861f5c67578d1b288496a2a2b03360c8"));
+        assert(genesis.hashMerkleRoot == uint256S("0xb5cf6abce03bf6d7955330313d4ddd0a349b7aed58e248deccdda9e2a1c278af"));
+        assert(genesis.mix_hash == uint256S("0x8ed1d8ec91bedfeb65bb3687c5c48960c1ee1416db827a94ff2795a1ea02e5e5"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -792,7 +792,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x053a0fe01d0d314afe13b84bdd2eba5f5c76a34e8c1e2a40e69e9c3f028da3df"))
+            (0, uint256S("0x5d69514c1f578cf29fdc475267d41578861f5c67578d1b288496a2a2b03360c8"))
         };
 
         chainTxData = ChainTxData{
@@ -836,7 +836,7 @@ public:
         consensus.nDisableZerocoinStartBlock = INT_MAX;
 
         // evo spork
-        consensus.evoSporkKeyID = "TfNLtqNtq8JjHW2dhMA1uUoBUUisw864TJ";
+        consensus.evoSporkKeyID = "TrbDrGEk8chbH3s1QwRDWyKrtRYxHXRzbz";
         consensus.nEvoSporkStartBlock = 550;
         consensus.nEvoSporkStopBlock = 950;
         consensus.nEvoSporkStopBlockExtensionVersion = 0;
