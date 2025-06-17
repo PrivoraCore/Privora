@@ -7,7 +7,7 @@ The Lelantus Spark cryptographic library and implementation was audited by [Hash
 
 Privora also utilises [Dandelion++](https://arxiv.org/abs/1805.11060) to obscure the originating IP of transactions without relying on any external services such as Tor/i2P.
 
-Privora uses a hybrid PoW and LLMQ Chainlocks system combining fair distribution of supply with protection against 51% attacks and quick finality of blocks and transactions. PrivoraPOW (a ProgPOW variant) is used as its Proof-of-Work algorithm which targets GPUs and is FPGA/ASIC resistant.
+Privora uses a hybrid PoW and LLMQ Chainlocks system combining fair distribution of supply with protection against 51% attacks and quick finality of blocks and transactions. FiroPOW (a ProgPOW variant) is used as its Proof-of-Work algorithm which targets GPUs and is FPGA/ASIC resistant.
 
 # Running with Docker
 
