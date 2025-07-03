@@ -9,7 +9,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 90031;
+static const int PROTOCOL_VERSION = 90032;
 
 //! legacy znode protocol version
 static const int LEGACY_ZNODES_PROTOCOL_VERSION = 90026;
@@ -21,7 +21,7 @@ static const int INIT_PROTO_VERSION = 90013;
 static const int GETHEADERS_VERSION = 90020;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 90030;
+static const int MIN_PEER_PROTO_VERSION = 90032;
 
 //! disconnect from all older peers after Znode payment HF
 static const int MIN_PEER_PROTO_VERSION_AFTER_ZNODE_PAYMENT_HF = 90026;
@@ -52,7 +52,7 @@ static const int SHORT_IDS_BLOCKS_VERSION = 90013;
 static const int INVALID_CB_NO_BAN_VERSION = 90013;
 
 //! minimum version of official client to connect to
-static const int MIN_PRIVORA_CLIENT_VERSION = 141000; // 0.14.10.0
+static const int MIN_PRIVORA_CLIENT_VERSION = 141420; // 0.14.14.2
 
 //! introduction of DIP3/deterministic masternodes
 static const int DMN_PROTO_VERSION = 90030;

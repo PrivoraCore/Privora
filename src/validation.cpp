@@ -2646,7 +2646,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     int64_t nTimeStart = GetTimeMicros();
     //btzc: update nHeight, isVerifyDB
     // Check it again in case a previous version let a bad block in
-    LogPrintf("ConnectBlock nHeight=%s, hash=%s\n", pindex->nHeight, block.GetHash().ToString());
+    uint256 mix_hash;
+    LogPrintf("ConnectBlock nHeight=%s, hash=%s\n", pindex->nHeight, block.GetHashFull(mix_hash).ToString());
     if (!CheckBlock(block, state, chainparams.GetConsensus(), !fJustCheck, !fJustCheck, pindex->nHeight, false)) {
         LogPrintf("--> failed\n");
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
@@ -4336,10 +4337,8 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const 
 
     if (fCheckPOW)
     {
-        uint256 final_hash;
-        final_hash = block.GetProgPowHashLight();
-
-        if (!CheckProofOfWork(final_hash, block.nBits, consensusParams))
+        uint256 mix_hash;
+        if (!CheckProofOfWork(block.GetHashFull(mix_hash), block.nBits, consensusParams))
         {
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
         }
@@ -4850,7 +4849,9 @@ bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams,
 {
     AssertLockHeld(cs_main);
     assert(pindexPrev && pindexPrev == chainActive.Tip());
-    if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, block.GetHash()))
+
+    uint256 mix_hash;
+    if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, block.GetHashFull(mix_hash)))
         return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
     CCoinsViewCache viewNew(pcoinsTip);

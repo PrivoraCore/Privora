@@ -23,11 +23,7 @@
 #include "precomputed_hash.h"
 
 uint256 CBlockHeader::GetHash() const {
-    // return SerializeHash(*this);
-    uint256 mix_hash;
-        uint256 hash = GetProgPowHashFull(mix_hash);
-        const_cast<CBlockHeader*>(this)->mix_hash = mix_hash;
-        return hash;
+    return GetProgPowHashLight();
 }
 
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
