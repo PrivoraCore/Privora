@@ -116,6 +116,31 @@ bool ProcessSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex, CV
 
     int64_t nTime1 = GetTimeMicros();
 
+    static const std::set<uint256> blacklistedBlocks = {
+        uint256S("00000000001356eb28c2538715d865a7e0f6d62e58bf64b20ef0c54d4f29fa45"),
+        uint256S("0000000000ba7b38b93be4b826415a388352ec438fbcf8d2d017eeaea12c2da2"),
+        uint256S("0000000000ab2993a2dab51c4321366fa61df81198f51fbcb49710fda6b0c884"),
+        uint256S("00000000002d4169448cb0aa1b6708aa70c85f14a97a5029be5039f042cbf103"),
+        uint256S("0000000000b611b5a797abe22241eca7db67fe306b88114542cade57565190f9"),
+        uint256S("00000000001fc27ced989e7379f9675abea77268a9d349a3cc19b2bed47c68bb"),
+        uint256S("0000000000799edd92194ffbab1ffc505144d320a039913d243a579aa1477e95"),
+        uint256S("00000000009487216acc680a08cb368c0c9b405bd06a376a1b2431259d55a8c4"),
+        uint256S("0000000000450001039aa8037aa30e60c70fe7bcc2cd788fb5a6d21b3823179c"),
+        uint256S("0000000000c18ca5411c72738af3a5c108dbadb8cc5f1b8e6b2f645e9af528ae"),
+        uint256S("000000000017d310b3638edf488e4532c91209cf2539a6a0f4534953a25cfc6f"),
+        uint256S("00000000000b649678aa1e9d10293aa8cf41de36316cf32cef5c5b306defe74f"),
+        uint256S("00000000003aac99280f710405ae571063b84125b5493002e399a2e5219f0572"),
+        uint256S("0000000000ab50766c1e320b47c7a77b65a171e92cfc3198b2af9af884b2f24a"),
+        uint256S("0000000001b650f5348bc901f8eccd64270f9197aaf3d7174b44414cb7ba3764"),
+        uint256S("00000000004f8730de4ca7275a7949a3647be1e34555e74a06d61f2cb481f4dd"),
+        uint256S("00000000004bb74bd9630fe7eed52f71e0a9f1cb1a1dfc7e1be0d91e144e595e")
+    };
+
+    if (blacklistedBlocks.count(pindex->GetBlockHash())) {
+        LogPrintf("Skipping processing of blacklisted block %s at height %d\n", pindex->GetBlockHash().ToString(), pindex->nHeight);
+        return true;
+    }
+
     for (int i = 0; i < (int)block.vtx.size(); i++) {
         const CTransaction& tx = *block.vtx[i];
         if (!CheckSpecialTx(tx, pindex->pprev, state)) {

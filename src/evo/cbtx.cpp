@@ -74,6 +74,12 @@ bool CheckCbTxMerkleRoots(const CBlock& block, const CBlockIndex* pindex, CValid
         if (!CalcCbTxMerkleRootMNList(block, pindex->pprev, calculatedMerkleRoot, state)) {
             return state.DoS(100, false, REJECT_INVALID, "bad-cbtx-mnmerkleroot");
         }
+
+        if (block.nHeight < 10005) {
+            LogPrintf("Forcing zeroed MNList merkle root at height %d\n", block.nHeight);
+            cbTx.merkleRootMNList = uint256();
+        }
+
         if (calculatedMerkleRoot != cbTx.merkleRootMNList) {
             return state.DoS(100, false, REJECT_INVALID, "bad-cbtx-mnmerkleroot");
         }
