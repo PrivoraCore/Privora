@@ -136,8 +136,8 @@ bool ProcessSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex, CV
         uint256S("00000000004bb74bd9630fe7eed52f71e0a9f1cb1a1dfc7e1be0d91e144e595e")
     };
 
-    if (blacklistedBlocks.count(pindex->GetBlockHash())) {
-        LogPrintf("Skipping processing of blacklisted block %s at height %d\n", pindex->GetBlockHash().ToString(), pindex->nHeight);
+    if (blacklistedBlocks.count(block.GetHash())) {
+        LogPrintf("Skipping processing of blacklisted block %s at height %d\n", block.GetHash().ToString(), block.nHeight);
         return true;
     }
 
