@@ -667,27 +667,7 @@ bool CDeterministicMNManager::BuildNewListFromBlock(const CBlock& block, const C
                 dmn->collateralOutpoint = proTx.collateralOutpoint;
             }
 
-            static const std::set<uint256> blacklistedCollaterals = {
-                uint256S("c15b448bb82dd58a4d526053773865a741f45e9ffbed2debb138877f6d17d933"),
-                uint256S("2541949a725c9f6a1c3b2d1960dc26760494b956c9b83bae1d349a73ebb0d6a9"),
-                uint256S("9397d124853bf701d9c2430fe69db1f58a74e3e9e589716c50f3b5179197c140"),
-                uint256S("72bd4f88bc3a769265a20b257ab97f502b14ad28d4475fb287928b658a887b98"),
-                uint256S("2ac3aae990d1522cb52a38bc8b4ccd8ada1b8b758dcd8cf0cf428d813b3888a6"),
-                uint256S("d2872435154121d77587aefd2274af51c95d4aa94e2a14f2d8c2e29b320b3dac"),
-                uint256S("8dedad64967b0f35e6036ad794df7ab15c39cd3ebc1fb34d618868f856b8211e"),
-                uint256S("29861c1113a0df85a9971e89b4f603cb7d6e6c07db28049eb474f449fcc65b82"),
-                uint256S("e2bbc161fde50fd7502d5160f8efac85bbe2225b867148c8521e280a926fefb5"),
-                uint256S("6327d7a6a018204b5a71eca82a2669cf1db20871bef2aa52653edffceb5469a2"),
-                uint256S("a21bf6fed5704d1646676a5bfc007406e07530d51967592a8ecf71987d2601f1"),
-                uint256S("79f817410465c69648ea473c93ae226745c8c2bc248ed252510d17297938cbe7"),
-                uint256S("39eadf8c0e71d20a9d5395b41b3860bd93bee6687ea96278175bed6738dc9da0"),
-                uint256S("71662d43bafd772388ea03c91bbc22de8f72fff82cd963ba43e355de6326fbb3"),
-                uint256S("c4677c4601f7befebf0d77475fe6aa327738d20af522ef8b49dc56d260fc50a5"),
-                uint256S("50445c5acf1a53af410a150d1c80c808e971d60321f60ff12694f5760336629f"),
-                uint256S("469cbb4439bfde453776de321d9f73620c137ccef0a78863147c6863a40e6ef7")
-            };
-
-            if (blacklistedCollaterals.count(dmn->collateralOutpoint.hash)) {
+            if (Params().GetConsensus().blacklistedCollaterals.count(dmn->collateralOutpoint.hash)) {
                 LogPrintf("Skipping blacklisted MN collateral: %s (ProRegTx: %s) at height %d\n", dmn->collateralOutpoint.hash.ToString(), tx.GetHash().ToString(), nHeight);
                 continue;
             }

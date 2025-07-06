@@ -52,7 +52,7 @@ static const int SHORT_IDS_BLOCKS_VERSION = 90013;
 static const int INVALID_CB_NO_BAN_VERSION = 90013;
 
 //! minimum version of official client to connect to
-static const int MIN_PRIVORA_CLIENT_VERSION = 141400; // 0.14.14.0
+static const int MIN_PRIVORA_CLIENT_VERSION = 141402; // 0.14.14.2
 
 //! introduction of DIP3/deterministic masternodes
 static const int DMN_PROTO_VERSION = 90030;

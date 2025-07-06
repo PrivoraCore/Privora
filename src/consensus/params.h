@@ -315,6 +315,15 @@ struct Params {
     /** whitelisted transactions */
     std::set<uint256> txidWhitelist;
 
+    /** blacklisted collaterals */
+    std::set<uint256> blacklistedCollaterals;
+
+    /** blacklisted blocks */
+    std::set<uint256> blacklistedBlocks;
+
+    /** blacklist merkle  root bypass */
+    int merkleRootBypass;
+
     int nEvoZnodeMinimumConfirmations;
 
     std::map<LLMQType, LLMQParams> llmqs;

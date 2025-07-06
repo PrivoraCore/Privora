@@ -75,7 +75,7 @@ bool CheckCbTxMerkleRoots(const CBlock& block, const CBlockIndex* pindex, CValid
             return state.DoS(100, false, REJECT_INVALID, "bad-cbtx-mnmerkleroot");
         }
 
-        if (block.nHeight < 10005) {
+        if (block.nHeight < Params().GetConsensus().merkleRootBypass) {
             LogPrintf("Forcing zeroed MNList merkle root at height %d\n", block.nHeight);
             cbTx.merkleRootMNList = uint256();
         }
